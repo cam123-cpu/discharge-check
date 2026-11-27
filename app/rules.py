@@ -84,7 +84,7 @@ _TIMEFRAME = re.compile(
 _DATE = re.compile(r"\b(\d{4}-\d{2}-\d{2}|\d{1,2}/\d{1,2}/\d{4})\b")
 _TIME = re.compile(r"\b([01]?\d|2[0-3]):[0-5]\d\b")
 _SIGNED = re.compile(r"^[^\n]*\b(electronically signed|signed by|e-signed|authenticated by|attestation)\b[^\n]*$", re.I | re.M)
-_DISCHARGE_DATE = re.compile(r"\bdischarge date\s*:\s*(\S+)", re.I)
+_DISCHARGE_DATE = re.compile(r"\bdischarge date[ \t]*:[ \t]*(\S{1,40})", re.I)
 
 
 def _clip(s: str, n: int = 240) -> str:
@@ -132,7 +132,7 @@ def discharge_date(docs: list[Doc], hint: str = "") -> date | None:
     return None
 
 
-_MED_LINE = re.compile(r"^\s*(?:[-*•]|\d+[.)])\s*([A-Za-z][A-Za-z-]{2,})", re.M)
+_MED_LINE = re.compile(r"^[ \t]*(?:[-*•]|\d{1,3}[.)])[ \t]*([A-Za-z][A-Za-z-]{2,40})", re.M)
 _MED_STOP = {"take", "the", "and", "new", "continue", "stop", "start", "hold", "resume", "none", "medications", "changed", "increase", "decrease"}
 
 

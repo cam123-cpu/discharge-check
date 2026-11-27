@@ -40,8 +40,12 @@ python3 -m venv .venv && . .venv/bin/activate
 pip install -r requirements-dev.txt
 cp .env.example .env          # then fill DATA_KEY and SESSION_PEPPER (commands are in the file)
 python -m scripts.seed        # creates demo users (prints passwords once) and 5 synthetic discharges
-uvicorn app.main:get_app --factory --port 8000
+uvicorn app.main:get_app --factory --port 8000 --no-server-header
 ```
+
+In a deployment, set `FORCE_HTTPS=1` and `ALLOWED_HOSTS`, and when a proxy
+terminates TLS add `--proxy-headers --forwarded-allow-ips=<proxy IP>` so the
+app sees the real scheme and client IP (rate limits and the access log use it).
 
 Open http://localhost:8000, sign in as `compliance@demo.test`, open each
 discharge and press **Run check**.
@@ -65,14 +69,21 @@ pip-audit -r requirements.txt
 | Lock record access / block field tampering | `org_id`, `role` and authorship come from the session, never from the form; forms accept only named fields with validation |
 | Secure session cookies | Random token, only a keyed hash stored, `HttpOnly`, `SameSite=Strict`, `Secure` when `FORCE_HTTPS=1`, 8-hour expiry |
 | Hash passwords | Argon2id |
-| Rate limit login / bot protection | 5 failures per email and per IP per 15 minutes; hidden honeypot field; login form token; equal timing for unknown emails |
-| Parameterize queries | All SQL uses placeholders |
-| Validate input / escape output | Server-side validation on every field; Jinja autoescaping; strict CSP with no inline scripts |
-| Restrict file uploads | Extension allow-list, 2 MB cap, UTF-8 text only, no binaries, filename sanitized, SSN pattern refused |
-| Trim API responses | `/api/compliance/summary` returns aggregates only; no patient labels or text |
-| Security headers / HTTPS | CSP, HSTS, X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy, `no-store` on pages; HTTP redirects to HTTPS with `FORCE_HTTPS=1` |
+| Rate limit login / bot protection | 5 failures per email and 50 per IP per 15 minutes (a hospital shares one IP); a successful sign-in clears only that account's counter; hidden honeypot field; login form token; equal timing for unknown emails |
+| Rate limit costly actions | Per user: 30 checks and 120 uploads per hour |
+| Automatic logoff | Sessions end after 30 idle minutes and 8 hours in total (HIPAA 164.312(a)(2)(iii)) |
+| Parameterize queries | All SQL uses placeholders; path ids are range-checked before they reach SQLite |
+| Validate input / escape output | Server-side validation on every field; Jinja autoescaping; strict CSP with no inline scripts; no page shows text taken from the URL (messages travel in a signed one-time cookie); validation errors never echo input |
+| Restrict file uploads | Extension allow-list, 2 MB cap enforced before the body is parsed (also for signed-out callers), UTF-8 text only, no binaries, control and invisible characters stripped, filename sanitized, SSN pattern refused |
+| Hostile files | Every text regex has bounded repetition (tested on 190 KB of crafted input); FHIR fields of the wrong type are rejected with a message, never a crash; nested JSON and oversized attachments are refused |
+| Prompt injection into model review | Documents are fenced in tags that the record cannot close; a model "pass" needs a quote of 8+ characters found in the cited document, and that document must be a kind the rule accepts; records containing text aimed at an AI reviewer are flagged, and on those the model can only make results stricter, never clear a gap |
+| Record integrity | Removing a document is a soft delete kept for retention, allowed to the uploader or an administrator only |
+| Errors | Unhandled errors return a plain page with security headers and no stack trace |
 | Scan dependencies | `pip-audit` (clean at time of writing) |
-| HIPAA-style access log | Every record view, upload, delete and check is logged and visible to compliance |
+| HIPAA-style access log | Every sign-in, sign-out, record view, upload, removal, check, compliance view and export is logged; compliance staff can page and filter it |
+| Database file | Created owner-only (0600) in an owner-only folder |
+
+Full findings from the November 2026 penetration test: [docs/security-review-2026-11.md](docs/security-review-2026-11.md).
 
 ## Not done yet
 

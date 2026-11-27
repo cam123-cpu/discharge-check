@@ -2,18 +2,23 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
 import secrets
 from collections import defaultdict
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
+from typing import Annotated
 
 import anthropic
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi import Path as PathParam
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from . import analysis
 from .config import Settings, load_settings
@@ -21,17 +26,24 @@ from .db import Database
 from .ingest import DOC_KINDS, IngestError, parse_upload
 from .rules import RULES, RULES_BY_ID, RULES_VERSION, Doc
 from .security import (
+    FLASH_COOKIE,
     SESSION_COOKIE,
     Cipher,
+    Flash,
     LoginLimiter,
-    SecurityHeadersMiddleware,
+    RateLimiter,
+    SecurityMiddleware,
     Sessions,
     burn_password_check,
     csrf_ok,
     verify_password,
 )
 
+log = logging.getLogger(__name__)
 HERE = Path(__file__).parent
+# Path ids: positive and inside SQLite's 64-bit range (a larger number used to crash the query).
+Id = Annotated[int, PathParam(ge=1, le=2**53)]
+AUDIT_PAGE = 100
 PRE_COOKIE = "dc_pre"
 DISPOSITIONS = [
     "Home",
@@ -54,6 +66,14 @@ _LABEL_RE = re.compile(r"^[A-Za-z0-9 .,'()#/-]{1,80}$")
 _EMAIL_RE = re.compile(r"^[^@\s]{1,64}@[^@\s]{1,190}$")
 
 
+AUDIT_ACTIONS = {
+    "login": "Signed in", "login_failed": "Sign-in failed", "logout": "Signed out",
+    "patient_create": "Discharge added", "patient_view": "Discharge viewed", "document_upload": "Document added",
+    "document_view": "Document viewed", "document_delete": "Document removed", "check_run": "Check run",
+    "compliance_view": "Compliance overview viewed", "compliance_api": "Compliance data exported", "audit_view": "Access log viewed",
+}
+
+
 class AuthRequired(Exception):
     pass
 
@@ -64,10 +84,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     cipher = Cipher(settings.data_key)
     sessions = Sessions(db, settings)
     limiter = LoginLimiter(db, settings)
-    client = anthropic.Anthropic(api_key=settings.anthropic_api_key) if settings.anthropic_api_key else None
+    rate = RateLimiter(db)
+    flash = Flash(settings.session_pepper, settings.force_https)
+    client = (anthropic.Anthropic(api_key=settings.anthropic_api_key, timeout=settings.model_timeout_seconds, max_retries=2)
+              if settings.anthropic_api_key else None)
 
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
-    app.add_middleware(SecurityHeadersMiddleware, force_https=settings.force_https)
+    # Multipart overhead on top of the file itself.
+    app.add_middleware(SecurityMiddleware, force_https=settings.force_https, max_body=settings.max_upload_bytes + 64 * 1024)
+    if "*" not in settings.allowed_hosts:
+        app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(settings.allowed_hosts))
     app.mount("/static", StaticFiles(directory=HERE / "static"), name="static")
     templates = Jinja2Templates(directory=HERE / "templates")
     templates.env.globals.update(DOC_KINDS=DOC_KINDS, ROLE_LABELS=ROLE_LABELS, RULES_VERSION=RULES_VERSION)
@@ -103,19 +129,47 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return user
 
     def render(request: Request, name: str, ctx: dict, status: int = 200):
-        return templates.TemplateResponse(request, name, ctx, status_code=status)
+        f = flash.read(request.cookies.get(FLASH_COOKIE))
+        ctx = {"notice": f["n"], "warnings": f["w"], "error": f["e"], **ctx}
+        resp = templates.TemplateResponse(request, name, ctx, status_code=status)
+        if request.cookies.get(FLASH_COOKIE):
+            resp.delete_cookie(FLASH_COOKIE, path="/")
+        return resp
+
+    def go(url: str, notice: str = "", warnings: list[str] | None = None, error: str = ""):
+        resp = RedirectResponse(url, status_code=303)
+        if notice or warnings or error:
+            flash.set(resp, notice, warnings, error)
+        return resp
 
     @app.exception_handler(AuthRequired)
     async def _auth(request: Request, exc: AuthRequired):
-        return RedirectResponse("/login", status_code=303)
+        if request.url.path.startswith("/api/"):
+            return JSONResponse({"error": "Sign in first."}, status_code=401)
+        resp = RedirectResponse("/login", status_code=303)
+        if request.cookies.get(SESSION_COOKIE):  # had a session, and it ended
+            flash.set(resp, error="Your session ended. Sign in again.")
+            resp.delete_cookie(SESSION_COOKIE, path="/")
+        return resp
+
+    def error_response(request: Request, code: int):
+        messages = {400: "The request was not valid.", 401: "Sign in first.", 403: "You do not have access to this page.",
+                    404: "That page or record does not exist.", 405: "That action is not allowed here.",
+                    413: "The upload is too large.", 429: "Too many requests. Wait a few minutes and try again."}
+        msg = messages.get(code, "Something went wrong.")
+        if request.url.path.startswith("/api/"):
+            return JSONResponse({"error": msg}, status_code=code)
+        user = sessions.lookup(request.cookies.get(SESSION_COOKIE)) if code in (403, 404) else None
+        return templates.TemplateResponse(request, "error.html", {"user": user, "message": msg, "code": code}, status_code=code)
 
     @app.exception_handler(StarletteHTTPException)
     async def _http(request: Request, exc: StarletteHTTPException):
-        messages = {403: "You do not have access to this page.", 404: "That page or record does not exist.", 413: "The upload is too large."}
-        msg = messages.get(exc.status_code, "Something went wrong.")
-        if request.url.path.startswith("/api/"):
-            return JSONResponse({"error": msg}, status_code=exc.status_code)
-        return render(request, "error.html", {"user": None, "message": msg, "code": exc.status_code}, exc.status_code)
+        return error_response(request, exc.status_code)
+
+    @app.exception_handler(RequestValidationError)
+    async def _invalid(request: Request, exc: RequestValidationError):
+        # FastAPI's default echoes the submitted values (passwords included) back as JSON.
+        return error_response(request, 404 if any(e.get("loc", [""])[0] == "path" for e in exc.errors()) else 400)
 
     # ---------- login ----------
 
@@ -124,14 +178,20 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         from fastapi.responses import Response
         return Response(status_code=204)
 
+    @app.get("/robots.txt", include_in_schema=False)
+    def robots():
+        return Response("User-agent: *\nDisallow: /\n", media_type="text/plain")
+
     @app.get("/", include_in_schema=False)
     def home(request: Request):
         return RedirectResponse("/patients" if sessions.lookup(request.cookies.get(SESSION_COOKIE)) else "/login", status_code=303)
 
     @app.get("/login", response_class=HTMLResponse)
-    def login_page(request: Request, error: str = ""):
+    def login_page(request: Request):
+        if sessions.lookup(request.cookies.get(SESSION_COOKIE)):
+            return RedirectResponse("/patients", status_code=303)
         token = secrets.token_urlsafe(24)
-        resp = render(request, "login.html", {"user": None, "pre": token, "error": error[:120]})
+        resp = render(request, "login.html", {"user": None, "pre": token})
         set_cookie(resp, PRE_COOKIE, token, 900)
         return resp
 
@@ -140,28 +200,29 @@ def create_app(settings: Settings | None = None) -> FastAPI:
               pre: str = Form("", max_length=64), website: str = Form("", max_length=200)):
         ip = client_ip(request)
         email = email.strip().lower()
-        bad = RedirectResponse("/login?error=Email+or+password+is+incorrect.", status_code=303)
+        bad = go("/login", error="Email or password is incorrect.")
         if website:  # honeypot field, invisible to people
             return bad
         if not csrf_ok(request.cookies.get(PRE_COOKIE, ""), pre):
-            return RedirectResponse("/login?error=Your+session+expired.+Try+again.", status_code=303)
-        keys = (f"ip:{ip}", f"email:{email}")
-        if limiter.blocked(*keys):
-            return RedirectResponse("/login?error=Too+many+attempts.+Wait+15+minutes.", status_code=303)
+            return go("/login", error="The sign-in form expired. Try again.")
+        if limiter.blocked(ip, email):
+            with db.connect() as conn:
+                db.audit(conn, None, None, "login_blocked", f"email:{email[:80]}", ip)
+            return go("/login", error=f"Too many attempts. Wait {settings.login_window_minutes} minutes and try again.")
         user = None
         if _EMAIL_RE.match(email):
             with db.connect() as conn:
                 user = conn.execute("SELECT id, org_id, password_hash FROM users WHERE email = ?", (email,)).fetchone()
         if user is None:
             burn_password_check(password)
-            limiter.record_failure(*keys)
+            limiter.record_failure(ip, email)
             return bad
         if not verify_password(user["password_hash"], password):
-            limiter.record_failure(*keys)
+            limiter.record_failure(ip, email)
             with db.connect() as conn:
                 db.audit(conn, user["org_id"], user["id"], "login_failed", ip=ip)
             return bad
-        limiter.clear(*keys)
+        limiter.clear(email)
         token = sessions.create(user["id"])
         with db.connect() as conn:
             db.audit(conn, user["org_id"], user["id"], "login", ip=ip)
@@ -173,7 +234,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.post("/logout")
     def logout(request: Request, user=Depends(check_csrf)):
         sessions.destroy(request.cookies.get(SESSION_COOKIE))
-        resp = RedirectResponse("/login", status_code=303)
+        with db.connect() as conn:
+            db.audit(conn, user["org_id"], user["user_id"], "logout", ip=client_ip(request))
+        resp = go("/login", notice="You are signed out.")
         resp.delete_cookie(SESSION_COOKIE, path="/")
         return resp
 
@@ -201,9 +264,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 errors.append(f"{name} has characters that are not allowed.")
         if data["discharge_date"]:
             try:
-                date.fromisoformat(data["discharge_date"])
+                d = date.fromisoformat(data["discharge_date"])
+                if not (date(2000, 1, 1) <= d <= date.today() + timedelta(days=30)):
+                    errors.append("Discharge date must be between 2000 and 30 days from today.")
+                data["discharge_date"] = d.isoformat()
             except ValueError:
-                errors.append("Discharge date must be a valid date.")
+                errors.append("Discharge date must be a valid date (YYYY-MM-DD).")
         if data["disposition"] and data["disposition"] not in DISPOSITIONS:
             errors.append("Choose a disposition from the list.")
         if errors:
@@ -217,6 +283,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             db.audit(conn, user["org_id"], user["user_id"], "patient_create", f"patient:{pid}", client_ip(request))
         return RedirectResponse(f"/patients/{pid}", status_code=303)
 
+    def limited(user, action: str, limit: int) -> bool:
+        return rate.allow(f"{action}:user:{user['user_id']}", limit, timedelta(hours=1))
+
     def load_patient(conn, user, patient_id: int):
         p = db.patient(conn, user["org_id"], patient_id)
         if p is None:
@@ -228,82 +297,94 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return [Doc(index=i, kind=r["kind"], filename=r["filename"], text=cipher.decrypt(r["body_enc"]), author=r["author"]) for i, r in enumerate(rows)]
 
     @app.get("/patients/{patient_id}", response_class=HTMLResponse)
-    def patient_detail(request: Request, patient_id: int, user=Depends(current_user), notice: str = ""):
+    def patient_detail(request: Request, patient_id: Id, user=Depends(current_user)):
         with db.connect() as conn:
             p = load_patient(conn, user, patient_id)
             docs = db.documents(conn, user["org_id"], patient_id)
             a = db.latest_analysis(conn, user["org_id"], patient_id)
             db.audit(conn, user["org_id"], user["user_id"], "patient_view", f"patient:{patient_id}", client_ip(request))
         result = json.loads(cipher.decrypt(a["result_enc"])) if a else None
+        stale = bool(a and docs and max(d["created_at"] for d in docs) > a["created_at"])
+        # Gaps first, grouped by section; finished items fold away below them.
         groups: dict[str, list] = defaultdict(list)
+        done: dict[str, list] = defaultdict(list)
         if result:
             for f in result["findings"]:
                 rule = RULES_BY_ID.get(f["rule_id"])
                 if rule:
-                    groups[rule.group].append({"rule": rule, **f})
+                    (groups if f["status"] in ("fail", "unclear") else done)[rule.group].append({"rule": rule, **f})
         return render(request, "patient.html", {
-            "user": user, "p": p, "docs": docs, "analysis": a, "result": result, "groups": dict(groups),
-            "notice": notice[:200], "model_on": client is not None, "nav": "patients",
-            "warnings": [w for w in request.query_params.getlist("warn")][:3],
+            "user": user, "p": p, "docs": docs, "analysis": a, "result": result, "groups": dict(groups), "done": dict(done),
+            "model_on": client is not None, "nav": "patients", "stale": stale,
+            "can_delete": lambda d: user["role"] == "admin" or d["uploaded_by"] == user["user_id"],
         })
 
     @app.post("/patients/{patient_id}/documents")
-    async def upload_document(request: Request, patient_id: int, user=Depends(check_csrf),
+    async def upload_document(request: Request, patient_id: Id, user=Depends(check_csrf),
                               kind: str = Form(..., max_length=40), confirm: str = Form(""), file: UploadFile = File(...)):
+        with db.connect() as conn:
+            load_patient(conn, user, patient_id)
+        back = f"/patients/{patient_id}"
         if confirm != "yes":
-            return RedirectResponse(f"/patients/{patient_id}?notice=Confirm+the+record+is+synthetic+or+de-identified.", status_code=303)
+            return go(back, error="Confirm the record is synthetic or de-identified.")
+        if not limited(user, "upload", settings.uploads_per_hour):
+            return go(back, error="Upload limit reached for this hour. Try again later.")
         raw = await file.read(settings.max_upload_bytes + 1)
         try:
             parsed = parse_upload(raw, file.filename or "upload.txt", kind, settings.max_upload_bytes)
         except IngestError as exc:
-            from urllib.parse import quote
-            return RedirectResponse(f"/patients/{patient_id}?notice={quote(str(exc))}", status_code=303)
+            return go(back, error=str(exc))
         with db.connect() as conn:
-            load_patient(conn, user, patient_id)
             conn.execute(
                 "INSERT INTO documents (org_id, patient_id, kind, filename, author, body_enc, uploaded_by) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 (user["org_id"], patient_id, parsed.kind, parsed.filename, parsed.author, cipher.encrypt(parsed.text), user["user_id"]),
             )
             db.audit(conn, user["org_id"], user["user_id"], "document_upload", f"patient:{patient_id}", client_ip(request))
-        from urllib.parse import urlencode
-        q = urlencode([("notice", f"Added {parsed.filename}. Run the check to update results.")] + [("warn", w) for w in parsed.warnings])
-        return RedirectResponse(f"/patients/{patient_id}?{q}", status_code=303)
+        return go(back, notice=f"Added {parsed.filename}. Run the check to update the results.", warnings=parsed.warnings)
 
     @app.get("/patients/{patient_id}/documents/{doc_id}", response_class=HTMLResponse)
-    def view_document(request: Request, patient_id: int, doc_id: int, user=Depends(current_user)):
+    def view_document(request: Request, patient_id: Id, doc_id: Id, user=Depends(current_user)):
         with db.connect() as conn:
             p = load_patient(conn, user, patient_id)
-            row = conn.execute("SELECT * FROM documents WHERE id = ? AND patient_id = ? AND org_id = ?", (doc_id, patient_id, user["org_id"])).fetchone()
+            row = db.document(conn, user["org_id"], patient_id, doc_id)
             if row is None:
                 raise HTTPException(status_code=404)
             db.audit(conn, user["org_id"], user["user_id"], "document_view", f"document:{doc_id}", client_ip(request))
         return render(request, "document.html", {"user": user, "p": p, "doc": row, "text": cipher.decrypt(row["body_enc"]), "nav": "patients"})
 
     @app.post("/patients/{patient_id}/documents/{doc_id}/delete")
-    def delete_document(request: Request, patient_id: int, doc_id: int, user=Depends(check_csrf)):
+    def delete_document(request: Request, patient_id: Id, doc_id: Id, user=Depends(check_csrf)):
+        """Removal is a soft delete: the record leaves the patient's file and
+        every check, but stays in the database for the retention period."""
         with db.connect() as conn:
             load_patient(conn, user, patient_id)
-            n = conn.execute("DELETE FROM documents WHERE id = ? AND patient_id = ? AND org_id = ?", (doc_id, patient_id, user["org_id"])).rowcount
-            if n == 0:
+            row = db.document(conn, user["org_id"], patient_id, doc_id)
+            if row is None:
                 raise HTTPException(status_code=404)
+            if user["role"] != "admin" and row["uploaded_by"] != user["user_id"]:
+                raise HTTPException(status_code=403)
+            conn.execute("UPDATE documents SET deleted_at = datetime('now'), deleted_by = ? WHERE id = ?", (user["user_id"], doc_id))
             db.audit(conn, user["org_id"], user["user_id"], "document_delete", f"document:{doc_id}", client_ip(request))
-        return RedirectResponse(f"/patients/{patient_id}?notice=Document+removed.", status_code=303)
+        return go(f"/patients/{patient_id}", notice=f"Removed {row['filename']}. Run the check again to update the results.")
 
     @app.post("/patients/{patient_id}/check")
-    def run_check(request: Request, patient_id: int, user=Depends(check_csrf)):
+    def run_check(request: Request, patient_id: Id, user=Depends(check_csrf)):
+        back = f"/patients/{patient_id}"
         with db.connect() as conn:
             p = load_patient(conn, user, patient_id)
             docs = load_docs(conn, user, patient_id)
         if not docs:
-            return RedirectResponse(f"/patients/{patient_id}?notice=Upload+at+least+one+document+first.", status_code=303)
+            return go(back, error="Upload at least one document first.")
+        if not limited(user, "check", settings.checks_per_hour):
+            return go(back, error=f"You have run {settings.checks_per_hour} checks in the last hour. Try again later.")
         result = analysis.analyze(docs, disposition_hint=p["disposition"], discharge_hint=p["discharge_date"],
                                   client=client, model=settings.model)
         with db.connect() as conn:
             analysis.store(db, conn, cipher, user["org_id"], patient_id, user["user_id"], result)
             db.audit(conn, user["org_id"], user["user_id"], "check_run", f"patient:{patient_id}", client_ip(request))
-        note = result["message"] or "Check complete."
-        from urllib.parse import quote
-        return RedirectResponse(f"/patients/{patient_id}?notice={quote(note)}", status_code=303)
+        if result["message"]:
+            return go(back, error=result["message"])
+        return go(back, notice="Check complete.")
 
     # ---------- compliance ----------
 
@@ -348,11 +429,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/compliance", response_class=HTMLResponse)
     def compliance(request: Request, user=Depends(require_role("compliance", "admin"))):
         s = compliance_summary(user["org_id"])
+        with db.connect() as conn:  # the page lists patient labels with their gaps
+            db.audit(conn, user["org_id"], user["user_id"], "compliance_view", ip=client_ip(request))
         return render(request, "compliance.html", {"user": user, "s": s, "nav": "compliance"})
 
     @app.get("/api/compliance/summary")
-    def compliance_api(user=Depends(require_role("compliance", "admin"))):
+    def compliance_api(request: Request, user=Depends(require_role("compliance", "admin"))):
         s = compliance_summary(user["org_id"])
+        with db.connect() as conn:
+            db.audit(conn, user["org_id"], user["user_id"], "compliance_api", ip=client_ip(request))
         # Aggregates only: no patient labels or document text leave through the API.
         return {"rules_version": RULES_VERSION, "patients_checked": s["patients_checked"],
                 "rules": [{k: r[k] for k in ("id", "citation", "pass", "fail", "unclear", "fail_rate")} for r in s["rules"]]}
@@ -362,14 +447,22 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return render(request, "rules.html", {"user": user, "rules": RULES, "nav": "rules"})
 
     @app.get("/audit", response_class=HTMLResponse)
-    def audit(request: Request, user=Depends(require_role("admin", "compliance"))):
+    def audit(request: Request, user=Depends(require_role("admin", "compliance")), page: int = 1, action: str = ""):
+        page = max(1, min(page, 10_000))
+        action = action if action in AUDIT_ACTIONS else ""
+        where, args = "a.org_id = ?", [user["org_id"]]
+        if action:
+            where += " AND a.action = ?"
+            args.append(action)
         with db.connect() as conn:
             rows = conn.execute(
-                """SELECT a.at, a.action, a.target, a.ip, u.display_name FROM audit_log a
-                   LEFT JOIN users u ON u.id = a.user_id WHERE a.org_id = ? ORDER BY a.id DESC LIMIT 300""",
-                (user["org_id"],),
+                f"""SELECT a.at, a.action, a.target, a.ip, u.display_name FROM audit_log a
+                    LEFT JOIN users u ON u.id = a.user_id WHERE {where} ORDER BY a.id DESC LIMIT ? OFFSET ?""",
+                (*args, AUDIT_PAGE + 1, (page - 1) * AUDIT_PAGE),
             ).fetchall()
-        return render(request, "audit.html", {"user": user, "rows": rows, "nav": "audit"})
+            db.audit(conn, user["org_id"], user["user_id"], "audit_view", ip=client_ip(request))
+        return render(request, "audit.html", {"user": user, "rows": rows[:AUDIT_PAGE], "page": page, "action": action,
+                                              "more": len(rows) > AUDIT_PAGE, "actions": AUDIT_ACTIONS, "nav": "audit"})
 
     @app.get("/privacy", response_class=HTMLResponse)
     def privacy(request: Request):

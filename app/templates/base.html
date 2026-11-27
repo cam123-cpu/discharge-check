@@ -8,6 +8,7 @@
 <script src="/static/app.js" defer></script>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <header class="top">
   <div class="top-inner">
     <a class="wordmark" href="/">Discharge Check</a>
@@ -28,7 +29,10 @@
     {% endif %}
   </div>
 </header>
-<main class="page">
+<main class="page" id="main">
+{% if error %}<p class="alert" role="alert">{{ error }}</p>{% endif %}
+{% if notice %}<p class="notice" role="status">{{ notice }}</p>{% endif %}
+{% for w in warnings %}<p class="alert warn" role="alert">{{ w }}</p>{% endfor %}
 {% block content %}{% endblock %}
 </main>
 <footer class="foot">

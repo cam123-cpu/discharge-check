@@ -23,8 +23,6 @@
   </form>
 </div>
 
-{% if notice %}<p class="notice" role="status">{{ notice }}</p>{% endif %}
-{% for w in warnings %}<p class="alert" role="alert">{{ w }}</p>{% endfor %}
 
 <div class="cols">
 <section class="main-col" aria-labelledby="checks-h">
@@ -34,8 +32,11 @@
     <strong>{{ result.tally.fail }}</strong> missing, <strong>{{ result.tally.unclear }}</strong> to review, <strong>{{ result.tally['pass'] }}</strong> complete
     <span class="muted">· checked {{ analysis.created_at }} UTC by {{ 'Claude with quote verification' if result.engine == 'model' else 'pattern rules' }}</span>
   </p>
+  {% if stale %}<p class="alert warn" role="status">Documents were added after this check ran. Run the check again before relying on these results.</p>{% endif %}
+  {% if result.guarded %}<p class="alert" role="alert">A document in this record contains text addressed to an AI reviewer. The model was not allowed to mark anything complete that the pattern rules did not also find. Review the record before signing.</p>{% endif %}
   {% if not model_on %}<p class="muted small">Pattern rules only. Add an Anthropic API key on the server for model review and richer briefs.</p>{% endif %}
-  {% for group, items in groups.items() %}
+  {% macro checklist(gs) -%}
+  {% for group, items in gs.items() %}
   <h3 class="group">{{ group }}</h3>
   <ol class="checks">
     {% for f in items %}
@@ -53,6 +54,14 @@
     {% endfor %}
   </ol>
   {% endfor %}
+  {%- endmacro %}
+  {% if groups %}{{ checklist(groups) }}{% else %}<p class="notice">Nothing is missing. Every rule that applies to this discharge is complete.</p>{% endif %}
+  {% if done %}
+  <details class="done"{% if not groups %} open{% endif %}>
+    <summary>{{ result.tally['pass'] }} complete{% if result.tally.not_applicable %}, {{ result.tally.not_applicable }} not applicable{% endif %}</summary>
+    {{ checklist(done) }}
+  </details>
+  {% endif %}
   {% else %}
   <p>No check has run yet. Upload the discharge summary and any nursing or case management notes, then run the check.</p>
   {% endif %}
@@ -100,10 +109,12 @@
         <td><a href="/patients/{{ p.id }}/documents/{{ d.id }}">{{ d.filename }}</a>{% if d.author %}<br><span class="small muted">{{ d.author }}</span>{% endif %}</td>
         <td>{{ DOC_KINDS[d.kind] }}</td>
         <td>
-          <form method="post" action="/patients/{{ p.id }}/documents/{{ d.id }}/delete" class="inline">
+          {% if can_delete(d) %}
+          <form method="post" action="/patients/{{ p.id }}/documents/{{ d.id }}/delete" class="inline" data-confirm="Remove {{ d.filename }} from this record? It stays in the audit trail.">
             <input type="hidden" name="csrf" value="{{ user.csrf_token }}">
             <button type="submit" class="linkish danger">Remove</button>
           </form>
+          {% endif %}
         </td>
       </tr>
       {% endfor %}

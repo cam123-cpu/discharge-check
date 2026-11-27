@@ -1,10 +1,32 @@
 {% extends "base.html" %}
 {% block title %}Access log · Discharge Check{% endblock %}
 {% block content %}
-<h1>Access log</h1>
-<p class="meta">Most recent 300 events for your organization. Every record view, upload and check is logged.</p>
+<div class="pagehead">
+  <div>
+    <h1>Access log</h1>
+    <p class="meta">Every sign-in, record view, upload, removal and check for your organization, newest first.</p>
+  </div>
+  <form method="get" action="/audit" class="filter">
+    <label>Show
+      <select name="action">
+        <option value="">All events</option>
+        {% for k, v in actions.items() %}<option value="{{ k }}" {% if action == k %}selected{% endif %}>{{ v }}</option>{% endfor %}
+      </select>
+    </label>
+    <button type="submit">Filter</button>
+  </form>
+</div>
+{% if rows %}
 <table class="grid compact">
-  <thead><tr><th>Time (UTC)</th><th>User</th><th>Action</th><th>Target</th><th>IP</th></tr></thead>
-  <tbody>{% for r in rows %}<tr><td class="mono">{{ r.at }}</td><td>{{ r.display_name or '' }}</td><td>{{ r.action.replace('_', ' ') }}</td><td class="mono">{{ r.target }}</td><td class="mono">{{ r.ip }}</td></tr>{% endfor %}</tbody>
+  <thead><tr><th>Time (UTC)</th><th>User</th><th>Event</th><th>Record</th><th>IP</th></tr></thead>
+  <tbody>{% for r in rows %}<tr><td class="mono">{{ r.at }}</td><td>{{ r.display_name or 'Unknown' }}</td><td>{{ actions.get(r.action, r.action.replace('_', ' ')) }}</td><td class="mono">{{ r.target }}</td><td class="mono">{{ r.ip }}</td></tr>{% endfor %}</tbody>
 </table>
+<nav class="pager" aria-label="Pages">
+  {% if page > 1 %}<a href="/audit?page={{ page - 1 }}{% if action %}&amp;action={{ action }}{% endif %}">Newer</a>{% endif %}
+  <span class="muted">Page {{ page }}</span>
+  {% if more %}<a href="/audit?page={{ page + 1 }}{% if action %}&amp;action={{ action }}{% endif %}">Older</a>{% endif %}
+</nav>
+{% else %}
+<p class="muted">No events{% if action %} of this kind{% endif %}.</p>
+{% endif %}
 {% endblock %}
