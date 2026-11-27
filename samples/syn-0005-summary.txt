@@ -1,0 +1,35 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-18
+Discharge Date: 2026-11-21
+Attending: Dr. Nadia Petrov
+
+Discharge Diagnosis:
+1. NSTEMI, status post drug-eluting stent to LAD
+
+Brief Hospital Course:
+Cath with stent to LAD. Did well.
+
+Discharge Disposition: Home
+
+Discharge Medications:
+- Aspirin 81 mg daily
+- Ticagrelor 90 mg twice daily
+- Atorvastatin 80 mg nightly
+- Metoprolol tartrate 25 mg twice daily
+
+Medication Changes:
+- New: ticagrelor 90 mg twice daily for 12 months, do not stop without talking to cardiology
+- Changed: atorvastatin increased from 20 mg to 80 mg
+
+Allergies: Penicillin (rash)
+
+Pending Results: None.
+
+Code Status: Full code
+
+Followup Instructions:
+- Cardiology clinic with Dr. Petrov in 1 week
+- Cardiac rehabilitation referral placed; program will call within 2 weeks
+
+Electronically signed by Nadia Petrov, MD on 2026-11-22

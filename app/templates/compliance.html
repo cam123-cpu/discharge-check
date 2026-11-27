@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Compliance · Discharge Check{% endblock %}
+{% block content %}
+<div class="pagehead">
+  <div>
+    <h1>Compliance overview</h1>
+    <p class="meta">Latest check for each of {{ s.patients_checked }} discharges. Rates count only discharges where the rule applies.</p>
+  </div>
+</div>
+
+<h2>By rule</h2>
+<table class="grid">
+  <thead><tr><th>Rule</th><th>Citation</th><th class="num">Missing</th><th class="num">Review</th><th class="num">Complete</th><th>Missing rate</th></tr></thead>
+  <tbody>
+  {% for r in s.rules %}
+  <tr>
+    <td>{{ r.title }}</td>
+    <td class="cite">{{ r.citation }}</td>
+    <td class="num">{{ r.fail }}</td>
+    <td class="num">{{ r.unclear }}</td>
+    <td class="num">{{ r['pass'] }}</td>
+    <td>{% if r.fail_rate is not none %}<span class="bar" aria-hidden="true"><span class="bar-fill" data-w="{{ r.fail_rate }}"></span></span> <span class="num-inline">{{ r.fail_rate }}%</span>{% else %}<span class="muted">No applicable discharges</span>{% endif %}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<div class="cols even">
+  <section>
+    <h2>By attending</h2>
+    <table class="grid compact">
+      <thead><tr><th>Attending</th><th class="num">Discharges</th><th class="num">Missing items</th><th class="num">To review</th></tr></thead>
+      <tbody>{% for a in s.by_attending %}<tr><td>{{ a.name }}</td><td class="num">{{ a.checked }}</td><td class="num">{{ a.fail }}</td><td class="num">{{ a.unclear }}</td></tr>{% endfor %}</tbody>
+    </table>
+  </section>
+  <section>
+    <h2>By unit</h2>
+    <table class="grid compact">
+      <thead><tr><th>Unit</th><th class="num">Discharges</th><th class="num">Missing items</th><th class="num">To review</th></tr></thead>
+      <tbody>{% for a in s.by_unit %}<tr><td>{{ a.name }}</td><td class="num">{{ a.checked }}</td><td class="num">{{ a.fail }}</td><td class="num">{{ a.unclear }}</td></tr>{% endfor %}</tbody>
+    </table>
+  </section>
+</div>
+
+<h2>Discharges with missing items</h2>
+{% if s.open %}
+<table class="grid">
+  <thead><tr><th>Patient</th><th>Attending</th><th>Missing</th></tr></thead>
+  <tbody>{% for o in s.open %}<tr><td><a href="/patients/{{ o.patient_id }}">{{ o.label }}</a></td><td>{{ o.attending }}</td><td>{{ o.fails | join('; ') }}</td></tr>{% endfor %}</tbody>
+</table>
+{% else %}<p class="muted">None.</p>{% endif %}
+{% endblock %}

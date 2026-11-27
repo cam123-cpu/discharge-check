@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}{{ p.label }} · Discharge Check{% endblock %}
+{% macro status(s) -%}
+<span class="st st-{{ s }}">{{ {'pass': 'Complete', 'fail': 'Missing', 'unclear': 'Review', 'not_applicable': 'Not applicable'}[s] }}</span>
+{%- endmacro %}
+{% macro quoted(items) -%}
+<ul class="brief-list">
+{% for it in items %}
+  <li>{{ it.text }}{% if it.quote %}<q class="{% if not it.grounded %}ungrounded{% endif %}">{{ it.quote }}</q>{% if not it.grounded %}<span class="flag">Quote not found in record</span>{% endif %}{% endif %}</li>
+{% endfor %}
+</ul>
+{%- endmacro %}
+{% block content %}
+<p class="crumb"><a href="/patients">Discharges</a></p>
+<div class="pagehead">
+  <div>
+    <h1>{{ p.label }}</h1>
+    <p class="meta">{{ p.unit or 'Unit not recorded' }} · {{ p.attending or 'Attending not recorded' }} · Discharged <span class="mono">{{ p.discharge_date or 'date not recorded' }}</span> · {{ p.disposition or 'Disposition not recorded' }}</p>
+  </div>
+  <form method="post" action="/patients/{{ p.id }}/check" data-busy="Checking the record...">
+    <input type="hidden" name="csrf" value="{{ user.csrf_token }}">
+    <button type="submit" class="primary" {% if not docs %}disabled{% endif %}>{% if result %}Run check again{% else %}Run check{% endif %}</button>
+  </form>
+</div>
+
+{% if notice %}<p class="notice" role="status">{{ notice }}</p>{% endif %}
+{% for w in warnings %}<p class="alert" role="alert">{{ w }}</p>{% endfor %}
+
+<div class="cols">
+<section class="main-col" aria-labelledby="checks-h">
+  <h2 id="checks-h">Before signing</h2>
+  {% if result %}
+  <p class="summary-line">
+    <strong>{{ result.tally.fail }}</strong> missing, <strong>{{ result.tally.unclear }}</strong> to review, <strong>{{ result.tally['pass'] }}</strong> complete
+    <span class="muted">· checked {{ analysis.created_at }} UTC by {{ 'Claude with quote verification' if result.engine == 'model' else 'pattern rules' }}</span>
+  </p>
+  {% if not model_on %}<p class="muted small">Pattern rules only. Add an Anthropic API key on the server for model review and richer briefs.</p>{% endif %}
+  {% for group, items in groups.items() %}
+  <h3 class="group">{{ group }}</h3>
+  <ol class="checks">
+    {% for f in items %}
+    <li class="check check-{{ f.status }}">
+      <div class="check-head">
+        {{ status(f.status) }}
+        <span class="check-title">{{ f.rule.title }}</span>
+        <span class="cite">{{ f.rule.citation }}</span>
+      </div>
+      {% if f.evidence %}<blockquote>{{ f.evidence }}{% if f.source %}<cite>{{ f.source }}</cite>{% endif %}</blockquote>{% endif %}
+      {% if f.note %}<p class="note">{{ f.note }}</p>{% endif %}
+      {% if f.status in ('fail', 'unclear') %}<p class="fix"><span>To fix:</span> {{ f.rule.fix }}</p>{% endif %}
+      {% if f.pattern_status %}<p class="small muted">Pattern rules said {{ f.pattern_status.replace('_', ' ') }}; the model review differs, so a person should confirm.</p>{% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+  {% endfor %}
+  {% else %}
+  <p>No check has run yet. Upload the discharge summary and any nursing or case management notes, then run the check.</p>
+  {% endif %}
+</section>
+
+<aside class="side-col">
+  <section aria-labelledby="brief-h">
+    <h2 id="brief-h">Patient brief</h2>
+    {% if result and result.model_brief %}
+      {% set b = result.model_brief %}
+      <p class="lead">{{ b.one_liner }}</p>
+      <p>{{ b.hospital_course }}</p>
+      {% if b.active_problems %}<h3>Active problems</h3>{{ quoted(b.active_problems) }}{% endif %}
+      {% if b.medication_changes %}<h3>Medication changes</h3>{{ quoted(b.medication_changes) }}{% endif %}
+      {% if b.follow_up %}<h3>Follow-up</h3>{{ quoted(b.follow_up) }}{% endif %}
+      {% if b.pending_items %}<h3>Pending at discharge</h3>{{ quoted(b.pending_items) }}{% endif %}
+      {% if b.readmission_risk_factors %}<h3>Readmission risk factors</h3>{{ quoted(b.readmission_risk_factors) }}{% endif %}
+      {% if b.handoff_notes_for_pcp %}<h3>For the PCP</h3>{{ quoted(b.handoff_notes_for_pcp) }}{% endif %}
+    {% elif result %}
+      {% set b = result.brief %}
+      <dl class="facts">
+        <dt>Stay</dt><dd class="mono">{{ b.admission_date or '?' }} to {{ b.discharge_date or '?' }}{% if b.length_of_stay_days is not none %} ({{ b.length_of_stay_days }} days){% endif %}</dd>
+        {% if b.reason %}<dt>Reason</dt><dd>{{ b.reason }}</dd>{% endif %}
+        {% if b.disposition %}<dt>Disposition</dt><dd>{{ b.disposition }}</dd>{% endif %}
+        {% if b.goals_of_care %}<dt>Goals of care</dt><dd>{{ b.goals_of_care }}</dd>{% endif %}
+        {% if b.functional_status %}<dt>Function</dt><dd>{{ b.functional_status }}</dd>{% endif %}
+      </dl>
+      {% if b.hospital_course %}<h3>Hospital course</h3><p>{{ b.hospital_course }}</p>{% endif %}
+      {% for key, label in [('diagnoses','Diagnoses'), ('medication_changes','Medication changes'), ('medications','Discharge medications'), ('allergies','Allergies'), ('follow_up','Follow-up'), ('pending','Pending at discharge')] %}
+        {% if b[key] %}<h3>{{ label }}</h3><ul class="brief-list">{% for x in b[key] %}<li>{{ x }}</li>{% endfor %}</ul>{% endif %}
+      {% endfor %}
+    {% else %}
+      <p class="muted">The brief appears after the first check.</p>
+    {% endif %}
+  </section>
+
+  <section aria-labelledby="docs-h">
+    <h2 id="docs-h">Record</h2>
+    {% if docs %}
+    <table class="grid compact">
+      <thead><tr><th>Document</th><th>Type</th><th></th></tr></thead>
+      <tbody>
+      {% for d in docs %}
+      <tr>
+        <td><a href="/patients/{{ p.id }}/documents/{{ d.id }}">{{ d.filename }}</a>{% if d.author %}<br><span class="small muted">{{ d.author }}</span>{% endif %}</td>
+        <td>{{ DOC_KINDS[d.kind] }}</td>
+        <td>
+          <form method="post" action="/patients/{{ p.id }}/documents/{{ d.id }}/delete" class="inline">
+            <input type="hidden" name="csrf" value="{{ user.csrf_token }}">
+            <button type="submit" class="linkish danger">Remove</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}<p class="muted">No documents yet.</p>{% endif %}
+
+    <form method="post" action="/patients/{{ p.id }}/documents" enctype="multipart/form-data" class="stack upload" data-busy="Uploading...">
+      <input type="hidden" name="csrf" value="{{ user.csrf_token }}">
+      <label>Document type
+        <select name="kind" required>
+          {% for k, v in DOC_KINDS.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}
+        </select>
+      </label>
+      <label>File (.txt, .md or FHIR .json, up to 2 MB) <input type="file" name="file" accept=".txt,.md,.json" required></label>
+      <label class="check-label"><input type="checkbox" name="confirm" value="yes" required> This record is synthetic or de-identified</label>
+      <div><button type="submit">Upload</button></div>
+    </form>
+  </section>
+</aside>
+</div>
+{% endblock %}

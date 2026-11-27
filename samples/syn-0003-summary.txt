@@ -1,0 +1,37 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD) - DRAFT
+
+Admission Date: 2026-10-05
+Discharge Date: 2026-10-10
+Attending: Dr. Samuel Brooks
+
+Chief Complaint: Worsening shortness of breath.
+
+Discharge Diagnosis:
+1. COPD exacerbation
+2. Tobacco use disorder
+
+Brief Hospital Course:
+66-year-old man with severe COPD (FEV1 38%) admitted with an exacerbation triggered by a viral illness. Treated with nebulized bronchodilators, prednisone 40 mg daily and doxycycline. Weaned from 4 L to 2 L nasal cannula, his home baseline. Smoking cessation counseling provided and nicotine patch started.
+
+Condition at Discharge: Stable on home oxygen 2 L.
+
+Discharge Disposition: Home with home health services (nursing and respiratory therapy)
+
+Discharge Medications:
+- Prednisone 40 mg by mouth daily for 2 more days
+- Tiotropium 18 mcg inhaled daily
+- Budesonide-formoterol 160-4.5 mcg two puffs twice daily
+- Albuterol inhaler 2 puffs every 4 hours as needed
+- Nicotine patch 21 mg daily
+
+Medication Changes:
+- New: nicotine patch 21 mg daily
+- New: prednisone short course, stop after 2 more days
+
+Pending Results: Respiratory viral panel pending; PCP to follow up.
+
+Code Status: Full code. Goals of care not discussed this admission.
+
+Followup Instructions:
+- Follow up with pulmonology
+- Follow up with PCP

@@ -1,0 +1,382 @@
+{
+  "version": "2026-11-27",
+  "post_acute_pattern": "\\b(SNF|skilled nursing|home health|HHA|inpatient rehab|IRF|acute rehab|LTCH|long[- ]term (acute )?care hospital)\\b",
+  "rules": [
+    {
+      "id": "final_diagnosis",
+      "group": "Discharge summary contents",
+      "title": "Final diagnosis recorded",
+      "citation": "42 CFR 482.24(c)(4)(viii)",
+      "kinds": [
+        "discharge_summary"
+      ],
+      "sections": [
+        "discharge diagnosis",
+        "discharge diagnoses",
+        "final diagnosis",
+        "final diagnoses",
+        "principal diagnosis",
+        "primary diagnosis"
+      ],
+      "patterns": [],
+      "question": "Does the discharge summary state the final (discharge) diagnosis?",
+      "fix": "Add a Discharge Diagnosis section naming the principal diagnosis and active secondary diagnoses."
+    },
+    {
+      "id": "hospital_course",
+      "group": "Discharge summary contents",
+      "title": "Outcome of hospitalization described",
+      "citation": "42 CFR 482.24(c)(4)(vii)",
+      "kinds": [
+        "discharge_summary"
+      ],
+      "sections": [
+        "brief hospital course",
+        "hospital course",
+        "summary of hospitalization"
+      ],
+      "patterns": [],
+      "min_chars": 80,
+      "question": "Does the summary describe the hospital course and the outcome of the hospitalization?",
+      "fix": "Add a hospital course that states what was treated and how the patient responded."
+    },
+    {
+      "id": "discharge_condition",
+      "group": "Discharge summary contents",
+      "title": "Condition at discharge stated",
+      "citation": "42 CFR 482.24(c)(4)(vii)",
+      "kinds": [
+        "discharge_summary"
+      ],
+      "sections": [
+        "discharge condition",
+        "condition at discharge"
+      ],
+      "patterns": [
+        "\\bcondition (at|on) discharge\\b",
+        "\\b(mental status|level of consciousness)\\b"
+      ],
+      "question": "Does the summary state the patient's condition at discharge (clinical status, mental status, activity)?",
+      "fix": "State the condition at discharge, including mental status and activity level."
+    },
+    {
+      "id": "disposition",
+      "group": "Discharge summary contents",
+      "title": "Disposition stated",
+      "citation": "42 CFR 482.24(c)(4)(vii)",
+      "kinds": [
+        "discharge_summary",
+        "case_management"
+      ],
+      "sections": [
+        "discharge disposition",
+        "disposition"
+      ],
+      "patterns": [
+        "\\bdischarged? (to|home)\\b"
+      ],
+      "question": "Does the record state where the patient was discharged to (home, home with services, SNF, rehab, hospice, another hospital)?",
+      "fix": "State the disposition, for example Home with home health services, or Skilled nursing facility."
+    },
+    {
+      "id": "followup",
+      "group": "Discharge summary contents",
+      "title": "Follow-up care arranged with a timeframe",
+      "citation": "42 CFR 482.24(c)(4)(vii)",
+      "kinds": [
+        "discharge_summary",
+        "nursing_instructions"
+      ],
+      "sections": [
+        "followup instructions",
+        "follow-up instructions",
+        "follow up instructions",
+        "follow-up",
+        "followup",
+        "follow up",
+        "follow-up appointments"
+      ],
+      "patterns": [],
+      "needs_timeframe": true,
+      "question": "Are follow-up appointments or instructions documented with who the patient should see and when?",
+      "fix": "List each follow-up visit with clinician or clinic and a date or timeframe (for example within 7 days)."
+    },
+    {
+      "id": "pcp_named",
+      "group": "Handoff to next provider",
+      "title": "Primary care or follow-up clinician identified",
+      "citation": "42 CFR 482.43(b)",
+      "kinds": [
+        "discharge_summary",
+        "nursing_instructions",
+        "case_management"
+      ],
+      "sections": [
+        "pcp",
+        "primary care provider",
+        "primary care physician"
+      ],
+      "patterns": [
+        "\\b(PCP|primary care (provider|physician|doctor))\\b\\s*(:|is|-|,)?\\s*(Dr\\.?|[A-Z][a-z]+)"
+      ],
+      "question": "Is the patient's primary care provider (or the clinician responsible for follow-up) identified by name?",
+      "fix": "Name the PCP or the outpatient clinician who owns follow-up, with contact details."
+    },
+    {
+      "id": "discharge_meds",
+      "group": "Handoff to next provider",
+      "title": "Discharge medication list present",
+      "citation": "42 CFR 482.43(b)",
+      "kinds": [
+        "discharge_summary"
+      ],
+      "sections": [
+        "discharge medications",
+        "discharge medication list",
+        "medications on discharge",
+        "medications at discharge"
+      ],
+      "patterns": [],
+      "question": "Is there a complete discharge medication list?",
+      "fix": "Add the reconciled discharge medication list with dose and frequency."
+    },
+    {
+      "id": "med_changes",
+      "group": "Handoff to next provider",
+      "title": "Medication changes explained",
+      "citation": "42 CFR 482.43(b)",
+      "kinds": [
+        "discharge_summary",
+        "nursing_instructions"
+      ],
+      "sections": [
+        "medication changes",
+        "medications stopped",
+        "changes to medications"
+      ],
+      "patterns": [
+        "\\b(new|newly started|started|stop(ped)?|discontinued?|held|increased|decreased|changed)\\b[^\\n]{0,60}\\b(medication|dose|mg|tablet)",
+        "\\bno (medication )?changes\\b"
+      ],
+      "question": "Does the record say which medications were started, stopped, or changed (or that there were no changes)?",
+      "fix": "Add a Medication Changes list: new, changed, and stopped medications with the reason."
+    },
+    {
+      "id": "pending_results",
+      "group": "Handoff to next provider",
+      "title": "Pending results addressed",
+      "citation": "42 CFR 482.43(b)",
+      "kinds": [
+        "discharge_summary"
+      ],
+      "sections": [
+        "pending results",
+        "pending labs",
+        "pending tests",
+        "results pending at discharge",
+        "tests pending"
+      ],
+      "patterns": [
+        "\\bpending\\b",
+        "\\bno (tests|results|labs) (are )?pending\\b"
+      ],
+      "question": "Does the summary list test results still pending at discharge, or state that none are pending, and who will follow them up?",
+      "fix": "List results pending at discharge and who will follow them up, or write None pending."
+    },
+    {
+      "id": "goals_of_care",
+      "group": "Handoff to next provider",
+      "title": "Goals of care and treatment preferences",
+      "citation": "42 CFR 482.43(b)",
+      "kinds": [
+        "discharge_summary",
+        "case_management"
+      ],
+      "sections": [
+        "goals of care",
+        "code status",
+        "treatment preferences",
+        "advance directives"
+      ],
+      "patterns": [
+        "\\b(goals of care|code status|full code|DNR|DNI|POLST|MOLST|advance directive|treatment preferences?)\\b"
+      ],
+      "question": "Does the record document the patient's post-discharge goals of care and treatment preferences (for example code status, advance directive, stated goals)?",
+      "fix": "Document goals of care and treatment preferences, including code status."
+    },
+    {
+      "id": "functional_status",
+      "group": "Handoff to next provider",
+      "title": "Functional status at discharge",
+      "citation": "42 CFR 482.43(b)",
+      "kinds": [
+        "discharge_summary",
+        "nursing_instructions",
+        "case_management"
+      ],
+      "sections": [
+        "functional status",
+        "activity",
+        "mobility"
+      ],
+      "patterns": [
+        "\\b(ambulat\\w+|independent with|walker|cane|wheelchair|bedbound|assist(ance)? with|ADLs?|activity:)\\b"
+      ],
+      "question": "Does the record describe the patient's functional status or mobility at discharge?",
+      "fix": "Describe mobility and ability to perform daily activities at discharge."
+    },
+    {
+      "id": "info_transmitted",
+      "group": "Handoff to next provider",
+      "title": "Summary sent to the next provider",
+      "citation": "42 CFR 482.43(b)",
+      "kinds": [
+        "discharge_summary",
+        "case_management",
+        "nursing_instructions"
+      ],
+      "sections": [],
+      "patterns": [
+        "\\b(sent|faxed|routed|transmitted|forwarded|shared|copied) (electronically )?to\\b[^\\n]{0,80}\\b(PCP|primary care|Dr\\.?|facility|SNF|agency|clinic|provider)",
+        "\\bcc:\\s*\\S+"
+      ],
+      "question": "Is there evidence the discharge information was sent to the PCP or post-acute provider?",
+      "fix": "Document that the summary was transmitted to the PCP or receiving facility, and how."
+    },
+    {
+      "id": "dp_evaluation",
+      "group": "Discharge planning",
+      "title": "Discharge planning evaluation documented",
+      "citation": "42 CFR 482.43(a)",
+      "kinds": [
+        "case_management",
+        "discharge_summary"
+      ],
+      "sections": [
+        "discharge planning evaluation",
+        "discharge planning assessment",
+        "discharge plan"
+      ],
+      "patterns": [
+        "\\bdischarge planning (evaluation|assessment)\\b",
+        "\\bpost[- ]hospital (needs|services)\\b"
+      ],
+      "question": "Is a discharge planning evaluation (likely post-hospital needs and their availability) documented?",
+      "fix": "Have case management document the discharge planning evaluation in the record."
+    },
+    {
+      "id": "dp_discussed",
+      "group": "Discharge planning",
+      "title": "Plan discussed with patient or representative",
+      "citation": "42 CFR 482.43(a)",
+      "kinds": [
+        "case_management",
+        "discharge_summary",
+        "nursing_instructions"
+      ],
+      "sections": [],
+      "patterns": [
+        "\\b(discussed|reviewed|explained)\\b[^\\n]{0,80}\\bwith (the )?(patient|pt|family|daughter|son|wife|husband|spouse|caregiver|representative|healthcare proxy|HCP)\\b",
+        "\\b(patient|pt|family|caregiver)\\b[^\\n]{0,40}\\b(verbalized understanding|agree[sd]? with (the )?plan)\\b"
+      ],
+      "question": "Does the record show the discharge plan or evaluation was discussed with the patient or their representative?",
+      "fix": "Document that the plan was discussed with the patient or representative and their response."
+    },
+    {
+      "id": "pac_list",
+      "group": "Post-acute referral",
+      "title": "Post-acute provider list presented",
+      "citation": "42 CFR 482.43(d)",
+      "kinds": [
+        "case_management",
+        "discharge_summary"
+      ],
+      "post_acute_only": true,
+      "sections": [],
+      "patterns": [
+        "\\blist of\\b[^\\n]{0,60}\\b(agencies|facilities|providers|SNFs|HHAs)\\b",
+        "\\b(provider|facility|agency) list\\b[^\\n]{0,40}\\b(given|provided|presented|reviewed)\\b"
+      ],
+      "question": "For a referral to home health, SNF, IRF or LTCH: is it documented that the patient was given a list of available Medicare-participating providers?",
+      "fix": "Document that the Medicare-participating provider list was presented to the patient or representative."
+    },
+    {
+      "id": "pac_choice",
+      "group": "Post-acute referral",
+      "title": "Patient choice of provider respected",
+      "citation": "42 CFR 482.43(d)",
+      "kinds": [
+        "case_management",
+        "discharge_summary"
+      ],
+      "post_acute_only": true,
+      "sections": [],
+      "patterns": [
+        "\\bfreedom (of|to) cho(ice|ose)\\b",
+        "\\b(patient|family|pt)\\b[^\\n]{0,40}\\b(chose|selected|choice|preference|preferred)\\b"
+      ],
+      "question": "Is it documented that the patient was told of their freedom to choose a post-acute provider and that their choice was respected?",
+      "fix": "Document freedom of choice and which provider the patient chose."
+    },
+    {
+      "id": "pac_quality_data",
+      "group": "Post-acute referral",
+      "title": "Quality data shared for provider choice",
+      "citation": "42 CFR 482.43(a)(8) (IMPACT Act)",
+      "kinds": [
+        "case_management",
+        "discharge_summary"
+      ],
+      "post_acute_only": true,
+      "sections": [],
+      "patterns": [
+        "\\b(quality (data|ratings?|measures?|information)|star ratings?|care compare)\\b"
+      ],
+      "question": "Is it documented that quality and resource-use data were shared to help the patient choose a post-acute provider?",
+      "fix": "Document that quality data (for example Care Compare star ratings) was reviewed with the patient."
+    },
+    {
+      "id": "authenticated",
+      "group": "Record completion",
+      "title": "Signed, dated and timed",
+      "citation": "42 CFR 482.24(c)(1)",
+      "kinds": [
+        "discharge_summary"
+      ],
+      "deterministic_only": true,
+      "sections": [],
+      "patterns": [],
+      "question": "Is the discharge summary authenticated (signed), dated and timed?",
+      "fix": "Sign the summary electronically; the signature must carry a date and time."
+    },
+    {
+      "id": "timeliness",
+      "group": "Record completion",
+      "title": "Completed within 30 days of discharge",
+      "citation": "42 CFR 482.24(c)(4)(viii)",
+      "kinds": [
+        "discharge_summary"
+      ],
+      "deterministic_only": true,
+      "sections": [],
+      "patterns": [],
+      "question": "Was the record completed within 30 days of discharge?",
+      "fix": "Complete and sign the record; it is past or near the 30-day limit."
+    },
+    {
+      "id": "meds_consistent",
+      "group": "Record completion",
+      "title": "Nursing instructions match the summary's medications",
+      "citation": "42 CFR 482.43(b); hospital policy",
+      "kinds": [
+        "discharge_summary",
+        "nursing_instructions"
+      ],
+      "cross_document": true,
+      "sections": [],
+      "patterns": [],
+      "question": "Do the medications in the nursing discharge instructions match the discharge summary's medication list? Name any medication that appears in one but not the other.",
+      "fix": "Reconcile the nursing instructions and the physician summary so the patient receives one medication list."
+    }
+  ]
+}

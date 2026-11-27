@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Patients · Discharge Check{% endblock %}
+{% block content %}
+<div class="pagehead">
+  <h1>Discharges</h1>
+  <a class="button" href="/patients/new">Add discharge</a>
+</div>
+{% if patients %}
+<table class="grid">
+  <thead><tr><th>Patient</th><th>Unit</th><th>Attending</th><th>Discharged</th><th>Disposition</th><th class="num">Docs</th><th>Last check</th></tr></thead>
+  <tbody>
+  {% for p in patients %}
+  <tr>
+    <td><a href="/patients/{{ p.id }}">{{ p.label }}</a></td>
+    <td>{{ p.unit }}</td>
+    <td>{{ p.attending }}</td>
+    <td class="mono">{{ p.discharge_date }}</td>
+    <td>{{ p.disposition }}</td>
+    <td class="num">{{ p.doc_count }}</td>
+    <td>
+      {% if p.last_failed is none %}<span class="muted">Not checked</span>
+      {% elif p.last_failed == 0 and p.last_unclear == 0 %}<span class="st st-pass">Complete</span>
+      {% else %}<span class="st st-fail">{{ p.last_failed }} missing</span>{% if p.last_unclear %} <span class="st st-unclear">{{ p.last_unclear }} to review</span>{% endif %}
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No discharges yet. Add one, then upload its discharge summary, nursing instructions or case management note.</p>
+{% endif %}
+{% endblock %}

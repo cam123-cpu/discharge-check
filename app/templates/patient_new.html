@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Add discharge · Discharge Check{% endblock %}
+{% block content %}
+<h1>Add discharge</h1>
+<p class="muted">Use a study ID or synthetic label, never a real patient name.</p>
+{% if errors %}<div class="alert" role="alert"><ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+<form method="post" action="/patients" class="stack narrow">
+  <input type="hidden" name="csrf" value="{{ user.csrf_token }}">
+  <label>Label <input name="label" required maxlength="80" value="{{ form.label or '' }}" placeholder="SYN-0042"></label>
+  <label>Unit <input name="unit" maxlength="80" value="{{ form.unit or '' }}" placeholder="4 West Medicine"></label>
+  <label>Attending <input name="attending" maxlength="80" value="{{ form.attending or '' }}"></label>
+  <label>Discharge date <input type="date" name="discharge_date" value="{{ form.discharge_date or '' }}"></label>
+  <label>Disposition
+    <select name="disposition">
+      <option value="">Not recorded</option>
+      {% for d in dispositions %}<option {% if form.disposition == d %}selected{% endif %}>{{ d }}</option>{% endfor %}
+    </select>
+  </label>
+  <div><button type="submit" class="primary">Save</button> <a href="/patients">Cancel</a></div>
+</form>
+{% endblock %}

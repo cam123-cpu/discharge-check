@@ -1,0 +1,39 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-02
+Discharge Date: 2026-11-09
+Attending: Dr. Marcus Chen
+
+Chief Complaint: Fever, cough and confusion.
+
+Discharge Diagnosis:
+1. Community-acquired pneumonia, right lower lobe
+2. Acute metabolic encephalopathy, resolved
+3. Type 2 diabetes mellitus
+
+Brief Hospital Course:
+84-year-old woman from home admitted with right lower lobe pneumonia and delirium. Treated with ceftriaxone and azithromycin, transitioned to oral amoxicillin-clavulanate on day 4. Delirium cleared by day 3. Physical therapy evaluated and recommended short-term skilled nursing for strengthening given deconditioning. Blood cultures from admission remain in process.
+
+Condition at Discharge: Improved. Mental status at baseline, alert and oriented to person and place.
+
+Discharge Disposition: Skilled nursing facility (Maplewood Care Center)
+
+Discharge Medications:
+- Amoxicillin-clavulanate 875 mg by mouth twice daily for 3 more days
+- Metformin 500 mg by mouth twice daily
+- Insulin glargine 10 units at bedtime
+- Acetaminophen 650 mg every 6 hours as needed
+
+Medication Changes:
+- New: amoxicillin-clavulanate to complete 7-day course
+- New: insulin glargine 10 units nightly for hyperglycemia during admission
+
+Functional Status: Requires assistance with transfers; ambulates 40 feet with rolling walker and one assist.
+
+Followup Instructions:
+- SNF physician to see within 48 hours of arrival
+- PCP Dr. Hannah Lowe after SNF discharge, within 2 weeks of returning home
+
+Summary faxed to Maplewood Care Center and copied to PCP Dr. Hannah Lowe.
+
+Electronically signed by Marcus Chen, MD on 2026-11-09 18:05

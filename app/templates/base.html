@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Discharge Check{% endblock %}</title>
+<link rel="stylesheet" href="/static/app.css">
+<script src="/static/app.js" defer></script>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <a class="wordmark" href="/">Discharge Check</a>
+    {% if user %}
+    <nav class="mainnav" aria-label="Main">
+      <a href="/patients" {% if nav == 'patients' %}aria-current="page"{% endif %}>Patients</a>
+      {% if user.role in ('compliance', 'admin') %}<a href="/compliance" {% if nav == 'compliance' %}aria-current="page"{% endif %}>Compliance</a>{% endif %}
+      <a href="/rules" {% if nav == 'rules' %}aria-current="page"{% endif %}>Rules</a>
+      {% if user.role in ('compliance', 'admin') %}<a href="/audit" {% if nav == 'audit' %}aria-current="page"{% endif %}>Access log</a>{% endif %}
+    </nav>
+    <div class="who">
+      <span>{{ user.display_name }}, {{ ROLE_LABELS[user.role] }} · {{ user.org_name }}</span>
+      <form method="post" action="/logout" class="inline">
+        <input type="hidden" name="csrf" value="{{ user.csrf_token }}">
+        <button type="submit" class="linkish">Sign out</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</header>
+<main class="page">
+{% block content %}{% endblock %}
+</main>
+<footer class="foot">
+  <p>Prototype. Use synthetic or de-identified records only. Results support human review and do not replace it.</p>
+  <p><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · Rule library {{ RULES_VERSION }}</p>
+</footer>
+</body>
+</html>

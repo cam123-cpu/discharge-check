@@ -1,0 +1,188 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "syn4",
+        "name": [
+          {
+            "family": "Example",
+            "given": [
+              "Synthetic"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "status": "finished",
+        "period": {
+          "start": "2026-11-16",
+          "end": "2026-11-19"
+        },
+        "reasonCode": [
+          {
+            "text": "Elective right total hip arthroplasty"
+          }
+        ],
+        "hospitalization": {
+          "dischargeDisposition": {
+            "text": "Inpatient rehabilitation facility (IRF), Lakeside Rehabilitation Hospital"
+          }
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "category": [
+          {
+            "text": "encounter-diagnosis"
+          }
+        ],
+        "code": {
+          "text": "Primary osteoarthritis of right hip, status post total hip arthroplasty"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "category": [
+          {
+            "text": "encounter-diagnosis"
+          }
+        ],
+        "code": {
+          "text": "Acute blood loss anemia"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Apixaban 2.5 mg"
+        },
+        "dosageInstruction": [
+          {
+            "text": "by mouth twice daily for 35 days"
+          }
+        ],
+        "note": [
+          {
+            "text": "new, DVT prophylaxis"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Oxycodone 5 mg"
+        },
+        "dosageInstruction": [
+          {
+            "text": "every 6 hours as needed for severe pain"
+          }
+        ],
+        "note": [
+          {
+            "text": "new"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Acetaminophen 1000 mg"
+        },
+        "dosageInstruction": [
+          {
+            "text": "every 8 hours"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "stopped",
+        "medicationCodeableConcept": {
+          "text": "Meloxicam 15 mg"
+        },
+        "note": [
+          {
+            "text": "stopped while on apixaban"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "AllergyIntolerance",
+        "code": {
+          "text": "Sulfa drugs (hives)"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "status": "preliminary",
+        "code": {
+          "text": "Surgical pathology, right femoral head"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Appointment",
+        "status": "booked",
+        "description": "Orthopedic surgery wound check, Dr. Felix Grant",
+        "start": "2026-11-30T09:00:00Z"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "status": "active",
+        "code": {
+          "text": "CBC to check hemoglobin at rehab facility"
+        },
+        "occurrencePeriod": {
+          "start": "2026-11-21"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DocumentReference",
+        "status": "current",
+        "author": [
+          {
+            "display": "Dr. Felix Grant"
+          }
+        ],
+        "content": [
+          {
+            "attachment": {
+              "contentType": "text/plain",
+              "data": "RElTQ0hBUkdFIFNVTU1BUlkgKFNZTlRIRVRJQyBSRUNPUkQpCgpBZG1pc3Npb24gRGF0ZTogMjAyNi0xMS0xNgpEaXNjaGFyZ2UgRGF0ZTogMjAyNi0xMS0xOQoKQnJpZWYgSG9zcGl0YWwgQ291cnNlOgo3OC15ZWFyLW9sZCB3b21hbiB1bmRlcndlbnQgZWxlY3RpdmUgcmlnaHQgdG90YWwgaGlwIGFydGhyb3BsYXN0eSBmb3Igb3N0ZW9hcnRocml0aXMgb24gMjAyNi0xMS0xNi4gUG9zdC1vcGVyYXRpdmUgY291cnNlIG5vdGFibGUgZm9yIGFjdXRlIGJsb29kIGxvc3MgYW5lbWlhLCBoZW1vZ2xvYmluIG5hZGlyIDguNCwgbm90IHRyYW5zZnVzZWQuIFBhaW4gY29udHJvbGxlZCBvbiBvcmFsIHJlZ2ltZW4gYnkgcG9zdC1vcGVyYXRpdmUgZGF5IDIuIFBoeXNpY2FsIHRoZXJhcHkgcmVjb21tZW5kcyBpbnBhdGllbnQgcmVoYWJpbGl0YXRpb24gZm9yIGdhaXQgdHJhaW5pbmcgZ2l2ZW4gbGltaXRlZCBob21lIHN1cHBvcnQuCgpDb25kaXRpb24gYXQgRGlzY2hhcmdlOiBTdGFibGUsIGFsZXJ0IGFuZCBvcmllbnRlZCwgcGFpbiBjb250cm9sbGVkLgoKRnVuY3Rpb25hbCBTdGF0dXM6IFdlaWdodCBiZWFyaW5nIGFzIHRvbGVyYXRlZCwgYW1idWxhdGVzIDYwIGZlZXQgd2l0aCBhIGZyb250LXdoZWVsZWQgd2Fsa2VyIGFuZCBjb250YWN0IGd1YXJkIGFzc2lzdC4KCkdvYWxzIG9mIENhcmU6IEZ1bGwgY29kZS4gUGF0aWVudCdzIGdvYWwgaXMgdG8gcmV0dXJuIGhvbWUgdG8gbGl2ZSBpbmRlcGVuZGVudGx5IHdpdGggaGVyIGNhdC4KCkRpc2NoYXJnZSBwbGFubmluZyBldmFsdWF0aW9uIGNvbXBsZXRlZCBieSBjYXNlIG1hbmFnZW1lbnQuIERpc2N1c3NlZCB3aXRoIHRoZSBwYXRpZW50IGFuZCBoZXIgbmllY2U7IHBhdGllbnQgcHJlZmVycyBMYWtlc2lkZSBSZWhhYmlsaXRhdGlvbiBIb3NwaXRhbC4gUHJvdmlkZWQgbGlzdCBvZiBNZWRpY2FyZS1jZXJ0aWZpZWQgaW5wYXRpZW50IHJlaGFiaWxpdGF0aW9uIGZhY2lsaXRpZXM7IHBhdGllbnQgaW5mb3JtZWQgb2YgZnJlZWRvbSBvZiBjaG9pY2UgYW5kIHNlbGVjdGVkIExha2VzaWRlLiBDYXJlIENvbXBhcmUgcXVhbGl0eSByYXRpbmdzIHJldmlld2VkIHdpdGggcGF0aWVudCBhbmQgbmllY2UuCg=="
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

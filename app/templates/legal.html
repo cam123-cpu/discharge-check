@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+{% if page == 'privacy' %}
+<h1>Privacy</h1>
+<p>Draft for the prototype. Have counsel review before any pilot.</p>
+<ul class="prose">
+  <li>This prototype accepts only synthetic or de-identified records. Uploads that look like they contain Social Security numbers are refused.</li>
+  <li>Document text, briefs and check results are encrypted at rest. Passwords are stored as Argon2 hashes.</li>
+  <li>Every view of a record, upload and check is written to an access log that compliance staff can read.</li>
+  <li>When model review is turned on, record text is sent to Anthropic's API to produce the check and brief. Real patient data would require a Business Associate Agreement first.</li>
+  <li>Records stay within your organization; users in other organizations cannot read them.</li>
+</ul>
+{% else %}
+<h1>Terms</h1>
+<p>Draft for the prototype. Have counsel review before any pilot.</p>
+<ul class="prose">
+  <li>Discharge Check is a documentation review aid. It does not give medical advice or make clinical decisions.</li>
+  <li>Results may be wrong or incomplete. A qualified person must review every record before signing.</li>
+  <li>You agree not to upload records that identify real patients during the prototype.</li>
+</ul>
+{% endif %}
+{% endblock %}

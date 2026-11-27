@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}{{ doc.filename }} · Discharge Check{% endblock %}
+{% block content %}
+<p class="crumb"><a href="/patients">Discharges</a> / <a href="/patients/{{ p.id }}">{{ p.label }}</a></p>
+<h1>{{ doc.filename }}</h1>
+<p class="meta">{{ DOC_KINDS[doc.kind] }}{% if doc.author %} · {{ doc.author }}{% endif %} · added {{ doc.created_at }} UTC</p>
+<pre class="doc">{{ text }}</pre>
+{% endblock %}

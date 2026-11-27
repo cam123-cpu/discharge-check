@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Rules · Discharge Check{% endblock %}
+{% block content %}
+<h1>Rule library</h1>
+<p class="meta">Version {{ RULES_VERSION }}. Rules live in <code>app/rules.json</code> so state requirements and hospital policies can be added without code changes.</p>
+<table class="grid">
+  <thead><tr><th>Group</th><th>Rule</th><th>Citation</th><th>What is checked</th></tr></thead>
+  <tbody>
+  {% for r in rules %}
+  <tr><td>{{ r.group }}</td><td>{{ r.title }}</td><td class="cite">{{ r.citation }}</td><td>{{ r.question }}{% if r.post_acute_only %} <span class="muted">(post-acute referrals only)</span>{% endif %}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
