@@ -78,6 +78,14 @@ class Settings:
     uploads_per_hour: int = 120  # per user
     allowed_hosts: tuple[str, ...] = ("*",)
     model_timeout_seconds: float = 180.0
+    # Two-factor. Roles listed here must set up an authenticator app before
+    # they can use the app (empty: two-factor is optional for everyone).
+    mfa_required_roles: tuple[str, ...] = ()
+    mfa_issuer: str = "Discharge Check"
+    pending_login_minutes: int = 5
+    mfa_max_attempts: int = 5  # per pending sign-in, and per account per login window
+    # Hospital SSO: the public base URL builds the redirect URI the IdP sends users back to.
+    public_base_url: str = "http://localhost:8000"
 
 
 def load_settings() -> Settings:
@@ -105,4 +113,6 @@ def load_settings() -> Settings:
         force_https=force_https,
         database_path=db,
         allowed_hosts=hosts or ("*",),
+        mfa_required_roles=tuple(r.strip() for r in os.environ.get("MFA_REQUIRED_ROLES", "").split(",") if r.strip()),
+        public_base_url=os.environ.get("PUBLIC_BASE_URL", "http://localhost:8000").rstrip("/"),
     )

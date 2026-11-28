@@ -25,7 +25,68 @@ CREATE TABLE IF NOT EXISTS users (
     display_name TEXT NOT NULL,
     role TEXT NOT NULL CHECK (role IN ('physician','nurse','case_manager','compliance','admin')),
     password_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    -- Two-factor (TOTP). Secrets are encrypted with DATA_KEY.
+    totp_secret_enc BLOB,
+    totp_pending_enc BLOB,
+    totp_enabled_at TEXT,
+    totp_last_step INTEGER NOT NULL DEFAULT 0
+);
+
+-- Single-use recovery codes for two-factor. Only a keyed hash is stored.
+CREATE TABLE IF NOT EXISTS recovery_codes (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    code_hash TEXT NOT NULL,
+    used_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_recovery_user ON recovery_codes(user_id);
+
+-- A password was right and a second step is still owed. Short-lived; only a
+-- keyed hash of the token is stored, like sessions.
+CREATE TABLE IF NOT EXISTS pending_logins (
+    token_hash TEXT PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    expires_at TEXT NOT NULL,
+    attempts INTEGER NOT NULL DEFAULT 0
+);
+
+-- Hospital single sign-on. One row per identity provider; an org may have several.
+CREATE TABLE IF NOT EXISTS sso_providers (
+    id INTEGER PRIMARY KEY,
+    org_id INTEGER NOT NULL REFERENCES orgs(id),
+    slug TEXT NOT NULL UNIQUE,
+    display_name TEXT NOT NULL,
+    protocol TEXT NOT NULL DEFAULT 'oidc' CHECK (protocol IN ('oidc','saml')),
+    issuer TEXT NOT NULL,
+    client_id TEXT NOT NULL,
+    client_secret_enc BLOB,
+    email_domains TEXT NOT NULL DEFAULT '',
+    default_role TEXT NOT NULL DEFAULT '',
+    auto_provision INTEGER NOT NULL DEFAULT 0,
+    enforce INTEGER NOT NULL DEFAULT 0,
+    enabled INTEGER NOT NULL DEFAULT 1,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+-- Links a provider's stable subject id to a local user.
+CREATE TABLE IF NOT EXISTS sso_identities (
+    id INTEGER PRIMARY KEY,
+    provider_id INTEGER NOT NULL REFERENCES sso_providers(id) ON DELETE CASCADE,
+    subject TEXT NOT NULL,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE (provider_id, subject)
+);
+
+-- In-flight SSO redirects: state, nonce and PKCE verifier, single use.
+CREATE TABLE IF NOT EXISTS sso_states (
+    state_hash TEXT PRIMARY KEY,
+    provider_id INTEGER NOT NULL REFERENCES sso_providers(id) ON DELETE CASCADE,
+    nonce TEXT NOT NULL,
+    code_verifier TEXT NOT NULL,
+    browser_hash TEXT NOT NULL,
+    expires_at TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS sessions (
@@ -33,7 +94,9 @@ CREATE TABLE IF NOT EXISTS sessions (
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     csrf_token TEXT NOT NULL,
     expires_at TEXT NOT NULL,
-    last_seen TEXT NOT NULL DEFAULT ''
+    last_seen TEXT NOT NULL DEFAULT '',
+    auth_method TEXT NOT NULL DEFAULT 'password',
+    mfa_setup_required INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS login_attempts (
@@ -115,6 +178,12 @@ MIGRATIONS = [
     ("sessions", "last_seen", "ALTER TABLE sessions ADD COLUMN last_seen TEXT NOT NULL DEFAULT ''"),
     ("documents", "deleted_at", "ALTER TABLE documents ADD COLUMN deleted_at TEXT"),
     ("documents", "deleted_by", "ALTER TABLE documents ADD COLUMN deleted_by INTEGER REFERENCES users(id)"),
+    ("users", "totp_secret_enc", "ALTER TABLE users ADD COLUMN totp_secret_enc BLOB"),
+    ("users", "totp_pending_enc", "ALTER TABLE users ADD COLUMN totp_pending_enc BLOB"),
+    ("users", "totp_enabled_at", "ALTER TABLE users ADD COLUMN totp_enabled_at TEXT"),
+    ("users", "totp_last_step", "ALTER TABLE users ADD COLUMN totp_last_step INTEGER NOT NULL DEFAULT 0"),
+    ("sessions", "auth_method", "ALTER TABLE sessions ADD COLUMN auth_method TEXT NOT NULL DEFAULT 'password'"),
+    ("sessions", "mfa_setup_required", "ALTER TABLE sessions ADD COLUMN mfa_setup_required INTEGER NOT NULL DEFAULT 0"),
 ]
 
 

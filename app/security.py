@@ -73,24 +73,36 @@ class Sessions:
     def _hash(self, token: str) -> str:
         return hmac.new(self.settings.session_pepper.encode(), token.encode(), hashlib.sha256).hexdigest()
 
-    def create(self, user_id: int) -> str:
+    def create(self, user_id: int, auth_method: str = "password", mfa_setup_required: bool = False) -> str:
         token = secrets.token_urlsafe(32)
         expires = (_now() + timedelta(hours=self.settings.session_hours)).isoformat()
         with self.db.connect() as conn:
             conn.execute("DELETE FROM sessions WHERE user_id = ? OR expires_at < ?", (user_id, _now().isoformat()))
             conn.execute(
-                "INSERT INTO sessions (token_hash, user_id, csrf_token, expires_at, last_seen) VALUES (?, ?, ?, ?, ?)",
-                (self._hash(token), user_id, secrets.token_urlsafe(32), expires, _now().isoformat()),
+                "INSERT INTO sessions (token_hash, user_id, csrf_token, expires_at, last_seen, auth_method, mfa_setup_required)"
+                " VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (self._hash(token), user_id, secrets.token_urlsafe(32), expires, _now().isoformat(), auth_method,
+                 int(mfa_setup_required)),
             )
         return token
+
+    def destroy_user(self, user_id: int) -> None:
+        """End every session of one user, e.g. after two-factor is turned off."""
+        with self.db.connect() as conn:
+            conn.execute("DELETE FROM sessions WHERE user_id = ?", (user_id,))
+
+    def mark_mfa_set_up(self, user_id: int) -> None:
+        with self.db.connect() as conn:
+            conn.execute("UPDATE sessions SET mfa_setup_required = 0 WHERE user_id = ?", (user_id,))
 
     def lookup(self, token: str | None):
         if not token or len(token) > 128:
             return None
         with self.db.connect() as conn:
             row = conn.execute(
-                """SELECT s.token_hash, s.csrf_token, s.expires_at, s.last_seen, u.id AS user_id, u.org_id, u.email,
-                          u.display_name, u.role, o.name AS org_name
+                """SELECT s.token_hash, s.csrf_token, s.expires_at, s.last_seen, s.auth_method, s.mfa_setup_required,
+                          u.id AS user_id, u.org_id, u.email, u.display_name, u.role, o.name AS org_name,
+                          (u.totp_enabled_at IS NOT NULL) AS mfa_enabled
                    FROM sessions s JOIN users u ON u.id = s.user_id JOIN orgs o ON o.id = u.org_id
                    WHERE s.token_hash = ?""",
                 (self._hash(token),),
@@ -168,6 +180,52 @@ class LoginLimiter:
         # Only the account's own counter. Clearing the IP counter on success
         # would let one valid account reset the limit for guesses on others.
         self.rl.clear(f"email:{email}")
+
+
+class PendingLogins:
+    """The step between a correct password and a session. The browser holds a
+    random token; the database holds its keyed hash, the user id, an expiry
+    and an attempt counter. A pending sign-in grants no access by itself."""
+
+    def __init__(self, db: Database, settings: Settings):
+        self.db = db
+        self.settings = settings
+
+    def _hash(self, token: str) -> str:
+        return hmac.new(self.settings.session_pepper.encode(), b"pending:" + token.encode(), hashlib.sha256).hexdigest()
+
+    def create(self, user_id: int) -> str:
+        token = secrets.token_urlsafe(32)
+        expires = (_now() + timedelta(minutes=self.settings.pending_login_minutes)).isoformat()
+        with self.db.connect() as conn:
+            conn.execute("DELETE FROM pending_logins WHERE user_id = ? OR expires_at < ?", (user_id, _now().isoformat()))
+            conn.execute("INSERT INTO pending_logins (token_hash, user_id, expires_at) VALUES (?, ?, ?)",
+                         (self._hash(token), user_id, expires))
+        return token
+
+    def lookup(self, token: str | None):
+        """The row (token_hash, user_id, attempts), or None when missing,
+        expired or out of attempts."""
+        if not token or len(token) > 128:
+            return None
+        with self.db.connect() as conn:
+            row = conn.execute("SELECT token_hash, user_id, expires_at, attempts FROM pending_logins WHERE token_hash = ?",
+                               (self._hash(token),)).fetchone()
+            if row is None:
+                return None
+            if row["expires_at"] < _now().isoformat() or row["attempts"] >= self.settings.mfa_max_attempts:
+                conn.execute("DELETE FROM pending_logins WHERE token_hash = ?", (row["token_hash"],))
+                return None
+        return row
+
+    def fail(self, token_hash: str) -> None:
+        with self.db.connect() as conn:
+            conn.execute("UPDATE pending_logins SET attempts = attempts + 1 WHERE token_hash = ?", (token_hash,))
+
+    def consume(self, token_hash: str) -> bool:
+        """Single use: True only for the one request that deletes the row."""
+        with self.db.connect() as conn:
+            return conn.execute("DELETE FROM pending_logins WHERE token_hash = ?", (token_hash,)).rowcount == 1
 
 
 def csrf_ok(expected: str, provided) -> bool:
