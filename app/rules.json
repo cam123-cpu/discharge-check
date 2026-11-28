@@ -1,5 +1,5 @@
 {
-  "version": "2026-11-27",
+  "version": "2026-11-28",
   "post_acute_pattern": "\\b(SNF|skilled nursing|home health|HHA|inpatient rehab|IRF|acute rehab|LTCH|long[- ]term (acute )?care hospital)\\b",
   "rules": [
     {
@@ -117,7 +117,7 @@
         "primary care physician"
       ],
       "patterns": [
-        "\\b(PCP|primary care (provider|physician|doctor))\\b\\s*(:|is|-|,)?\\s*(Dr\\.?|[A-Z][a-z]+)"
+        "\\b(PCP|primary care (provider|physician|doctor))\\b[ \\t]*(?:(?::|is|-|,)[ \\t]*)?(?!(?i:none|unknown|not|no|n/a)\\b)(Dr\\.?[ \\t]+[A-Z]|(?-i:[A-Z][a-z]+[ \\t]+[A-Z][a-z]+))"
       ],
       "question": "Is the patient's primary care provider (or the clinician responsible for follow-up) identified by name?",
       "fix": "Name the PCP or the outpatient clinician who owns follow-up, with contact details."
@@ -238,7 +238,7 @@
       "sections": [],
       "patterns": [
         "\\b(sent|faxed|routed|transmitted|forwarded|shared|copied) (electronically )?to\\b[^\\n]{0,80}\\b(PCP|primary care|Dr\\.?|facility|SNF|agency|clinic|provider)",
-        "\\bcc:\\s*\\S+"
+        "\\bcc:[ \\t]*(?!(none|n/a|nobody)\\b)[A-Za-z]\\S*"
       ],
       "question": "Is there evidence the discharge information was sent to the PCP or post-acute provider?",
       "fix": "Document that the summary was transmitted to the PCP or receiving facility, and how."

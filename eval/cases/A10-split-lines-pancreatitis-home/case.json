@@ -65,6 +65,6 @@
       "authenticated",
       "timeliness"
     ],
-    "regex_detectable": false
+    "regex_detectable": true
   }
 }

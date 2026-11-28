@@ -112,22 +112,66 @@ def phi_screen(text: str) -> list[str]:
 
 
 # ---------------- prompt-injection screen ----------------
-# Clinical notes do not address AI systems. Text that does is either a test or
-# an attempt to steer the model review, so the analysis treats the model's
-# "complete" verdicts on such a record as needing a human check.
+# Clinical notes do not address AI systems or reviewers, and they do not
+# certify themselves complete. Text that does is either a test or an attempt to
+# steer the review, so the analysis treats the model's "complete" verdicts on
+# such a record as needing a human check, and the pattern engine ignores the
+# lines involved (rules.screen_text). A regex is a tripwire, not a defense:
+# the model's own judgement and the server-side quote checks still apply.
 
 _INJECTION = re.compile(
+    # direct instructions
     r"(\b(ignore|disregard|forget|override)\b[^\n]{0,40}\b(previous|prior|above|earlier|all|any|system|these|those)\b[^\n]{0,40}\b(instructions?|rules?|prompts?|directions?|guidelines?)\b"
     r"|\bsystem prompt\b|\bnew instructions?\b|\byou are (now )?(an? |the )?(ai|assistant|language model|llm|reviewer|claude|gpt)\b"
     r"|\b(ai|model|llm|automated) (reviewer|checker|review|system)s?\b[^\n]{0,40}\b(must|should|will|shall)\b"
-    r"|\bmark (all|every|each|these|the)\b[^\n]{0,40}\b(as )?(pass(ed)?|complete|compliant)\b"
-    r"|<\s*/?\s*(document|rules|system|instructions?)\b|^[ \t]*(assistant|system|human)[ \t]*:)",
+    r"|\bmark (all|every|each|these|the|them|this|it)\b[^\n]{0,40}\b(as )?(pass(ed)?|complete|compliant|met|n/?a|not applicable)\b"
+    r"|\b(record|mark|treat|count|score)\b[^\n.]{0,60}\bas (n/?a|not applicable|pass(ed)?|complete|compliant|documented|present|met|satisfied)\b"
+    r"|\b(cite|quote) this (goal|resource|note|document|block|line|section)\b|\bsatisfied by this (resource|note|document|block)\b"
+    # text addressed to a reviewer or an automated system
+    r"|\b(note|message|addendum|instructions?|reminder) (to|for) (the )?(automated |ai |automatic |reviewing |compliance )?(reviewer|reviewing system|review(ing)? (tool|software)|auditor|checker)\b"
+    r"|\b(addendum|note|instructions?) for the (automated|automatic|ai|reviewing)\b"
+    r"|\bfor the (automated|automatic|ai|reviewing) (review|reviewer|system|audit|checker)\b"
+    r"|\b(automated|automatic|ai) (review|reviewer|audit|auditor|checker)\b"
+    r"|^[ \t]*(reviewer|auditor)( note)?[ \t]*:"
+    # self-certification of compliance
+    r"|\b(all|every) (cms |required |regulatory )?(discharge )?(elements?|items?|rules?|requirements?|criteria)\b[^\n]{0,40}\b(verified|complete|met|present|compliant|satisfied)\b"
+    r"|\b(this|the) (record|note|chart|case|encounter)\b[^\n]{0,20}\b(pre-?approved|already (been )?(audited|verified|approved))\b"
+    r"|\bcontent in this block\b|\bis authoritative\b"
+    # the same in Spanish and Portuguese, the most common non-English note languages in US hospitals
+    r"|\b(revisor|revisora|revisi[oó]n|auditor[ií]a|sistema) autom[aá]tic[oa]\b|\bm[aá]rque(lo|la|los|las)?\b|\bcomo cumplid[oa]s?\b"
+    # fake markup and fake conversation turns
+    r"|<\s*/?\s*(document|rules|system|instructions?)\b|<!--|^[ \t]*(assistant|system|human|user)[ \t]*:)",
     re.I | re.M,
 )
 
 
+def _paragraphs(text: str) -> list[tuple[int, int]]:
+    """(first line, last line + 1) of each blank-line-separated block."""
+    lines, out, start = text.split("\n"), [], None
+    for i, ln in enumerate(lines + [""]):
+        if ln.strip() and start is None:
+            start = i
+        elif not ln.strip() and start is not None:
+            out.append((start, i))
+            start = None
+    return out
+
+
+def injection_lines(text: str) -> set[int]:
+    """Indexes of lines that carry text aimed at a reviewer. An instruction
+    split over several short lines is caught by joining each paragraph, and
+    then every line of that paragraph is returned."""
+    text = unicodedata.normalize("NFKC", text)
+    lines = text.split("\n")
+    hits = {i for i, ln in enumerate(lines) if _INJECTION.search(ln)}
+    for a, b in _paragraphs(text):
+        if b - a > 1 and not hits.intersection(range(a, b)) and _INJECTION.search(" ".join(l.strip() for l in lines[a:b])):
+            hits.update(range(a, b))
+    return hits
+
+
 def injection_signals(text: str) -> bool:
-    return bool(_INJECTION.search(unicodedata.normalize("NFKC", text)))
+    return bool(injection_lines(text))
 
 
 # ---------------- sections ----------------

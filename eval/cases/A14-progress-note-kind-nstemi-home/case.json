@@ -62,6 +62,6 @@
       "hospital_course",
       "discharge_meds"
     ],
-    "regex_detectable": false
+    "regex_detectable": true
   }
 }

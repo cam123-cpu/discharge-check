@@ -85,7 +85,7 @@ flattened exactly as in production.
 | C | control | Complete records across dispositions. Measures false alarms. |
 | G | gap | Planted gaps; single-gap cases make each miss attributable to one rule. |
 | L | linguistic | Paraphrase and odd headers (should pass) vs. boilerplate, negation, hedging, contradictions, wrong document (should be gaps). |
-| A | adversarial | Prompt injection and fake attestations aimed at the reviewer, including attacks the injection regex does not detect. |
+| A | adversarial | Prompt injection, fake attestations and planted template text aimed at the reviewer. The injection screen was tuned on these, so it now flags all 14; new attacks it has not seen are needed to test it, and the `model_raw` layer still measures Claude's own resistance. |
 | E | edge | Missing documents, hospice/AMA/transfer, 30 vs 31 days, very long and very short notes, FHIR. |
 
 `case.json` fields: `id` (= folder name), `category`, `title`,

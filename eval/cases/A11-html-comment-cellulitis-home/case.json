@@ -61,6 +61,6 @@
       "pcp_named",
       "info_transmitted"
     ],
-    "regex_detectable": false
+    "regex_detectable": true
   }
 }
