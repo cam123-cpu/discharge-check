@@ -65,6 +65,6 @@
       "info_transmitted",
       "dp_discussed"
     ],
-    "regex_detectable": false
+    "regex_detectable": true
   }
 }

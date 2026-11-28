@@ -9,10 +9,10 @@ import anthropic
 from . import llm
 from .brief import build_brief
 from .ingest import injection_signals
-from .rules import RULES, RULES_VERSION, Doc, Finding, is_post_acute, run_pattern_checks, tally
+from .rules import RULES, RULES_VERSION, Doc, Finding, is_post_acute, run_pattern_checks, tally, template_signals
 
 
-GUARD_NOTE = ("The record contains text aimed at an AI reviewer, so the model was not allowed to soften "
+GUARD_NOTE = ("The record contains text aimed at a reviewer, or unused template text, so the model was not allowed to soften "
               "this result. A person needs to confirm it. ")
 NA_NOTE = ("The model judged this rule not applicable, but the discharge details show it applies "
            "(for example a post-acute referral). A person needs to check. ")
@@ -55,7 +55,7 @@ def analyze(docs: list[Doc], *, disposition_hint: str, discharge_hint: str, clie
     brief = build_brief(docs, discharge_hint)
     engine, message, model_brief = "pattern", "", None
     findings = pattern
-    guarded = any(injection_signals(d.text) for d in docs)
+    guarded = any(injection_signals(d.text) or template_signals(d.text) for d in docs)
     if client is not None and docs:
         try:
             model_brief, model_findings = llm.review(client, model, docs, is_post_acute(docs, disposition_hint))

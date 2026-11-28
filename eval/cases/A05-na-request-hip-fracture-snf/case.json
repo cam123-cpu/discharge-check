@@ -68,6 +68,6 @@
       "pac_choice",
       "pac_quality_data"
     ],
-    "regex_detectable": false
+    "regex_detectable": true
   }
 }

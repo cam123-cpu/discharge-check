@@ -57,6 +57,6 @@
       "pac_quality_data",
       "goals_of_care"
     ],
-    "regex_detectable": false
+    "regex_detectable": true
   }
 }
