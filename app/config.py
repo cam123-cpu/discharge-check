@@ -60,6 +60,19 @@ ROOT = Path(__file__).resolve().parent.parent
 _load_dotenv(ROOT / ".env")
 
 
+def sqlite_path(env: dict[str, str] | None = None, root: Path | None = None) -> Path:
+    env = os.environ if env is None else env
+    db = Path(env.get("DATABASE_PATH") or "data/app.db")
+    return db if db.is_absolute() else (root or ROOT) / db
+
+
+def database_target(env: dict[str, str] | None = None, root: Path | None = None) -> str | Path:
+    """DATABASE_URL when set (Postgres in any deployment), else the SQLite
+    file at DATABASE_PATH. Needs no secrets, so migrations can call it."""
+    env = os.environ if env is None else env
+    return (env.get("DATABASE_URL") or "").strip() or sqlite_path(env, root)
+
+
 @dataclass(frozen=True)
 class Settings:
     data_key: str
@@ -67,6 +80,9 @@ class Settings:
     anthropic_api_key: str | None
     force_https: bool
     database_path: Path
+    # Postgres or SQLite, as a SQLAlchemy URL. Empty means the SQLite file at
+    # database_path, which is the local-development default.
+    database_url: str = ""
     model: str = "claude-opus-5-5"
     max_upload_bytes: int = 2 * 1024 * 1024
     session_hours: int = 8
@@ -78,6 +94,10 @@ class Settings:
     uploads_per_hour: int = 120  # per user
     allowed_hosts: tuple[str, ...] = ("*",)
     model_timeout_seconds: float = 180.0
+
+    @property
+    def database(self) -> str | Path:
+        return self.database_url or self.database_path
 
 
 def load_settings() -> Settings:
@@ -95,14 +115,13 @@ def load_settings() -> Settings:
     hosts = tuple(h.strip() for h in os.environ.get("ALLOWED_HOSTS", "").split(",") if h.strip())
     if force_https and (not hosts or "*" in hosts):
         raise RuntimeError("Set ALLOWED_HOSTS (comma-separated host names) when FORCE_HTTPS=1.")
-    db = Path(os.environ.get("DATABASE_PATH", "data/app.db"))
-    if not db.is_absolute():
-        db = ROOT / db
+    db = sqlite_path()
     return Settings(
         data_key=data_key,
         session_pepper=pepper,
         anthropic_api_key=os.environ.get("ANTHROPIC_API_KEY") or None,
         force_https=force_https,
         database_path=db,
+        database_url=os.environ.get("DATABASE_URL", "").strip(),
         allowed_hosts=hosts or ("*",),
     )

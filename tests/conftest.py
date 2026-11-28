@@ -1,3 +1,4 @@
+import os
 import re
 import secrets
 import sys
@@ -17,20 +18,51 @@ from app.security import hash_password  # noqa: E402
 PASSWORD = "correct horse battery staple"
 
 
+# Set TEST_DATABASE_URL (for example postgresql://user:pw@localhost/dc_test)
+# to run the whole suite against Postgres. Each test gets an empty schema;
+# the database it names is wiped, so never point it at real data.
+TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL", "").strip()
+
+
+def _reset_postgres(url: str) -> None:
+    from sqlalchemy import create_engine
+    from sqlalchemy.pool import NullPool
+
+    from app.db import normalize_url
+    engine = create_engine(normalize_url(url), poolclass=NullPool)
+    with engine.begin() as conn:
+        conn.exec_driver_sql("DROP SCHEMA IF EXISTS public CASCADE")
+        conn.exec_driver_sql("CREATE SCHEMA public")
+    engine.dispose()
+
+
 @pytest.fixture
-def settings(tmp_path):
+def database_url():
+    if TEST_DATABASE_URL:
+        _reset_postgres(TEST_DATABASE_URL)
+    return TEST_DATABASE_URL
+
+
+@pytest.fixture
+def settings(tmp_path, database_url):
     return Settings(
         data_key=Fernet.generate_key().decode(),
         session_pepper=secrets.token_urlsafe(32),
         anthropic_api_key=None,
         force_https=False,
         database_path=tmp_path / "test.db",
+        database_url=database_url,
     )
 
 
 @pytest.fixture
 def app(settings):
     app = create_app(settings)
+    yield _seed(app)
+    app.state.db.dispose()
+
+
+def _seed(app):
     with app.state.db.connect() as conn:
         a = conn.execute("INSERT INTO orgs (name) VALUES ('Org A')").lastrowid
         b = conn.execute("INSERT INTO orgs (name) VALUES ('Org B')").lastrowid

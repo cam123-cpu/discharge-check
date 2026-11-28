@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from app.config import load_settings  # noqa: E402
-from app.db import Database  # noqa: E402
+from app.db import Database, normalize_url, redact  # noqa: E402
 from app.ingest import parse_upload  # noqa: E402
 from app.security import Cipher, hash_password  # noqa: E402
 
@@ -40,12 +40,16 @@ PATIENTS = [
 
 def main() -> None:
     s = load_settings()
-    db = Database(s.database_path)
+    db = Database(s.database)
     cipher = Cipher(s.data_key)
     with db.connect() as conn:
         if conn.execute("SELECT COUNT(*) FROM orgs").fetchone()[0]:
             print("Demo data already exists. To get new passwords run: python -m scripts.setup --new-passwords")
-            print("To start over, delete", s.database_path, "and run python -m scripts.setup again.")
+            if s.database_url:
+                print("To start over, drop and recreate the database at", redact(normalize_url(s.database_url)),
+                      "(or point DATABASE_URL at an empty one) and run python -m scripts.setup again.")
+            else:
+                print("To start over, delete", s.database_path, "and run python -m scripts.setup again.")
             return
         org_id = conn.execute("INSERT INTO orgs (name) VALUES (?)", ("Demo General Hospital",)).lastrowid
         conn.execute("INSERT INTO orgs (name) VALUES (?)", ("Other Hospital",))
