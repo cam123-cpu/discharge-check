@@ -176,6 +176,33 @@ class Database:
             (org_id, patient_id),
         ).fetchone()
 
+    def seal_existing_plaintext(self, encrypt) -> int:
+        """Re-encrypt identity fields and authors that were stored before field encryption.
+
+        Values that already start with enc:v1: are left alone. Decrypt still
+        accepts a legacy plaintext value, so a row this misses stays readable.
+        """
+        fields = ("label", "unit", "attending", "disposition", "discharge_date")
+        changed = 0
+        with self.connect() as conn:
+            for row in conn.execute("SELECT id, label, unit, attending, disposition, discharge_date FROM patients"):
+                sets, vals = [], []
+                for field in fields:
+                    val = row[field] or ""
+                    if val and not str(val).startswith("enc:v1:"):
+                        sets.append(f"{field} = ?")
+                        vals.append(encrypt(val))
+                if sets:
+                    vals.append(row["id"])
+                    conn.execute(f"UPDATE patients SET {', '.join(sets)} WHERE id = ?", vals)
+                    changed += 1
+            for row in conn.execute("SELECT id, author FROM documents"):
+                author = row["author"] or ""
+                if author and not str(author).startswith("enc:v1:"):
+                    conn.execute("UPDATE documents SET author = ? WHERE id = ?", (encrypt(author), row["id"]))
+                    changed += 1
+        return changed
+
     def audit(self, conn: sqlite3.Connection, org_id, user_id, action: str, target: str = "", ip: str = ""):
         conn.execute(
             "INSERT INTO audit_log (org_id, user_id, action, target, ip) VALUES (?, ?, ?, ?, ?)",

@@ -4,7 +4,7 @@
 <div class="pagehead">
   <div>
     <h1>Work queue</h1>
-    <p class="meta">Charts still inside the 30-day completion window come first. A missing item means the uploaded text does not show it. A person decides what to sign.</p>
+    <p class="meta">Overdue charts come first, then charts still inside the 30-day window. A missing item means the uploaded text does not show it. A person decides whether to sign.</p>
   </div>
   <a class="button" href="/patients/new">Add discharge</a>
 </div>
@@ -22,10 +22,13 @@
     <td class="num">{{ p.doc_count }}</td>
     <td>
       {% if p.check_unreadable %}<span class="st st-unclear">Check unreadable</span>
+      {% elif p.check_stale %}<span class="st st-unclear">Out of date</span>
       {% elif p.last_failed is none %}<span class="muted">Not checked</span>
       {% elif p.last_failed == 0 and p.last_unclear == 0 %}<span class="st st-pass">All shown</span>
+      {% elif p.last_failed == 0 %}<span class="st st-unclear">{{ p.last_unclear }} to review</span>
       {% else %}<span class="st st-fail">{{ p.last_failed }} missing</span>{% if p.last_unclear %} <span class="st st-unclear">{{ p.last_unclear }} to review</span>{% endif %}
       {% endif %}
+      {% if p.miss_titles and not p.check_stale %}<div class="small muted">{{ p.miss_titles | join('; ') }}</div>{% endif %}
     </td>
   </tr>
   {% endfor %}

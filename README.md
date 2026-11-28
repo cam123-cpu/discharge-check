@@ -81,7 +81,7 @@ pip-audit -r requirements.txt
 | Validate input / escape output | Server-side validation on every field; Jinja autoescaping; strict CSP with no inline scripts |
 | Restrict file uploads | Extension allow-list, 2 MB cap, UTF-8 text only, no binaries, filename sanitized. SSN, date-of-birth, medical-record-number, and street-address patterns are refused |
 | Trim API responses | `/api/compliance/summary` returns aggregates only; no patient labels or text |
-| Security headers / HTTPS | CSP, HSTS, X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy, `no-store` on pages. With `FORCE_HTTPS=1`, HTTP is refused unless `PUBLIC_HOST` is set, and the redirect goes only to that host. `X-Forwarded-Proto` is ignored unless `TRUST_PROXY=1` |
+| Security headers / HTTPS | CSP, HSTS, X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy, `no-store` on pages. With `FORCE_HTTPS=1`, HTTP is refused unless `PUBLIC_HOST` is set, and the redirect goes only to that host. `X-Forwarded-Proto` is ignored unless `TRUST_PROXY=1`, and then only from loopback or `TRUSTED_PROXY_IPS` |
 | Request size | Total body capped just above the 2 MB upload limit; form field count and text-field size are capped |
 | Scan dependencies | `pip-audit` (clean at time of writing) |
 | HIPAA-style access log | Every record view, upload, delete and check is logged and visible to compliance |

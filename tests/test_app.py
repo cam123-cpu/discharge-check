@@ -7,10 +7,10 @@ from cryptography.fernet import Fernet
 from fastapi.testclient import TestClient
 
 from app import llm
-from app.analysis import analyze
+from app.analysis import analyze, merge
 from app.config import Settings, load_settings
 from app.main import create_app
-from app.rules import Doc, days_until_deadline
+from app.rules import Doc, Finding, days_until_deadline
 from app.security import csrf_ok, hash_password
 
 from .conftest import PASSWORD, csrf_of, login
@@ -38,9 +38,9 @@ def test_login_and_cookie_flags(client):
 
 def test_wrong_password_and_rate_limit(client):
     for _ in range(5):
-        assert "incorrect" in login(client, "cm@a.test", "wrong").headers["location"]
+        assert "error=bad" in login(client, "cm@a.test", "wrong").headers["location"]
     r = login(client, "cm@a.test")  # right password, but now locked out
-    assert "Too+many" in r.headers["location"]
+    assert "error=locked" in r.headers["location"]
 
 
 def test_honeypot_blocks_bots(client):
@@ -48,12 +48,12 @@ def test_honeypot_blocks_bots(client):
     import re
     pre = re.search(r'name="pre" value="([^"]+)"', page.text).group(1)
     r = client.post("/login", data={"email": "cm@a.test", "password": "correct horse battery staple", "pre": pre, "website": "x"}, follow_redirects=False)
-    assert "incorrect" in r.headers["location"]
+    assert "error=bad" in r.headers["location"]
 
 
 def test_login_requires_pre_token(client):
     r = client.post("/login", data={"email": "cm@a.test", "password": "x", "pre": "forged"}, follow_redirects=False)
-    assert "expired" in r.headers["location"]
+    assert "error=expired" in r.headers["location"]
 
 
 def test_other_org_cannot_see_patient(client, app):
@@ -85,7 +85,7 @@ def test_create_upload_check_flow(client, app):
     text = open("samples/syn-0001-summary.txt", "rb").read()
     r = client.post(f"/patients/{pid}/documents", data={"csrf": token, "kind": "discharge_summary", "confirm": "yes"},
                     files={"file": ("summary.txt", text, "text/plain")}, follow_redirects=False)
-    assert "Added" in r.headers["location"]
+    assert "notice=added" in r.headers["location"]
     r = client.post(f"/patients/{pid}/check", data={"csrf": token}, follow_redirects=True)
     assert "Before signing" in r.text and "shown in the text" in r.text and ">Shown<" in r.text
     # Stored text is encrypted, not plain.
@@ -114,7 +114,7 @@ def test_upload_requires_confirmation(client, app):
         pid = conn.execute("SELECT id FROM patients WHERE label = 'A-1'").fetchone()[0]
     r = client.post(f"/patients/{pid}/documents", data={"csrf": token, "kind": "other"},
                     files={"file": ("a.txt", b"hello", "text/plain")}, follow_redirects=False)
-    assert "Confirm" in r.headers["location"]
+    assert "notice=confirm" in r.headers["location"]
 
 
 # ---------- model review, with a fake client ----------
@@ -143,6 +143,16 @@ def test_model_pass_without_real_quote_is_downgraded():
     assert by["goals_of_care"]["status"] == "unclear"
     assert result["model_brief"]["handoff_notes_for_pcp"][0]["grounded"] is False
     assert result["model_brief"]["active_problems"][0]["grounded"] is True
+
+
+def test_unquoted_model_fail_is_a_doubt_not_a_miss():
+    pattern = [Finding("meds_consistent", "pass", evidence="Both lists match.", source="s.txt")]
+    model = {"meds_consistent": Finding("meds_consistent", "fail", evidence="", note="Looks different.", engine="model")}
+    merged = merge(pattern, model)
+    assert merged[0].status == "unclear"
+    assert merged[0].pattern_status == "pass"
+    assert merged[0].model_status == "fail"
+    assert merged[0].evidence == "Both lists match."
 
 
 def test_model_failure_falls_back_to_patterns():
@@ -311,6 +321,7 @@ def test_too_many_form_fields_are_rejected(client):
 
 def _client(tmp_path, **kwargs):
     base_url = kwargs.pop("base_url", "http://testserver")
+    client_host = kwargs.pop("client_host", None)
     settings = Settings(
         data_key=Fernet.generate_key().decode(),
         session_pepper=secrets.token_urlsafe(32),
@@ -326,7 +337,8 @@ def _client(tmp_path, **kwargs):
             "INSERT INTO users (org_id, email, display_name, role, password_hash) VALUES (?, ?, ?, ?, ?)",
             (org, "cm@a.test", "cm", "compliance", hash_password(PASSWORD)),
         )
-    return TestClient(app, base_url=base_url)
+    extra = {"client": (client_host, 50000)} if client_host else {}
+    return TestClient(app, base_url=base_url, **extra)
 
 
 def test_https_redirect_uses_public_host_only(tmp_path):
@@ -353,7 +365,24 @@ def test_forwarded_proto_is_ignored_unless_the_proxy_is_trusted(tmp_path):
 
 
 def test_trusted_proxy_honors_forwarded_proto(tmp_path):
-    client = _client(tmp_path, force_https=True, public_host="charts.example", trust_proxy=True)
+    client = _client(tmp_path, force_https=True, public_host="charts.example", trust_proxy=True, client_host="127.0.0.1")
+    r = client.get("/login", headers={"x-forwarded-proto": "https"}, follow_redirects=False)
+    assert r.status_code == 200
+
+
+def test_forwarded_proto_from_an_untrusted_peer_is_ignored(tmp_path):
+    client = _client(tmp_path, force_https=True, public_host="charts.example", trust_proxy=True, client_host="203.0.113.8")
+    r = client.get("/login", headers={"x-forwarded-proto": "https", "host": "evil.example"}, follow_redirects=False)
+    assert r.status_code == 308
+    assert r.headers["location"] == "https://charts.example/login"
+    assert "evil" not in r.headers["location"]
+
+
+def test_listed_proxy_may_set_forwarded_proto(tmp_path):
+    client = _client(
+        tmp_path, force_https=True, public_host="charts.example", trust_proxy=True,
+        client_host="10.0.0.8", trusted_proxy_ips=("127.0.0.1", "::1", "10.0.0.8"),
+    )
     r = client.get("/login", headers={"x-forwarded-proto": "https"}, follow_redirects=False)
     assert r.status_code == 200
 
@@ -422,7 +451,7 @@ def test_model_review_is_opt_in_and_held_for_contact_details(monkeypatch, tmp_pa
     token = csrf_of(client, f"/patients/{pid}")
     page = client.post(f"/patients/{pid}/check", data={"csrf": token, "use_model": "yes"}, follow_redirects=True)
     assert called.get("yes") is True
-    assert "pattern-check results only" in page.text
+    assert "could not be reached" in page.text
     called.clear()
     token = csrf_of(client, f"/patients/{pid}")
     client.post(

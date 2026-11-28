@@ -7,7 +7,7 @@ import secrets
 from collections import defaultdict
 from datetime import date
 from pathlib import Path
-from urllib.parse import quote, urlencode
+from urllib.parse import urlencode
 
 import anthropic
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
@@ -81,19 +81,27 @@ def reveal_doc(cipher: Cipher, row) -> dict:
     return data
 
 
-def timeliness_of(result: dict | None) -> str:
+def status_of(result: dict | None, rule_id: str) -> str:
     if not result:
         return ""
     for finding in result.get("findings", []):
-        if finding.get("rule_id") == "timeliness":
+        if finding.get("rule_id") == rule_id:
             return str(finding.get("status", ""))
     return ""
 
 
-def clock_for(discharge_date: str, timeliness: str, today: date) -> dict:
-    """The 30-day completion clock. A signature already accepted by the rules is not 'overdue'."""
+def timeliness_of(result: dict | None) -> str:
+    return status_of(result, "timeliness")
+
+
+def clock_for(discharge_date: str, timeliness: str, today: date, authenticated: str = "") -> dict:
+    """The 30-day completion clock.
+
+    'Signed on time' requires both the date math and a complete signature.
+    A date with no time must not look finished.
+    """
     days = days_until_deadline(discharge_date, today)
-    if timeliness == "pass":
+    if timeliness == "pass" and authenticated == "pass":
         return {"label": "Signed on time", "tone": "pass", "days": days}
     if days is None:
         return {"label": "No discharge date", "tone": "na", "days": None}
@@ -103,14 +111,18 @@ def clock_for(discharge_date: str, timeliness: str, today: date) -> dict:
         return {"label": "Delinquent", "tone": "fail", "days": days}
     if days == 0:
         return {"label": "Due today", "tone": "unclear", "days": 0}
-    return {"label": f"{days} days left", "tone": "unclear" if days <= 7 else "pass", "days": days}
+    # Days remaining are not a Shown result, so they do not use that green.
+    return {"label": f"{days} days left", "tone": "unclear" if days <= 7 else "na", "days": days}
 
 
 def apply_sealed_check(patient: dict, cipher: Cipher) -> None:
     """Counts and the signature clock come from the sealed result, not the cache columns."""
     blob = patient.pop("result_enc", None)
     patient["timeliness"] = ""
+    patient["authenticated"] = ""
+    patient["miss_titles"] = []
     patient["check_unreadable"] = False
+    patient["check_stale"] = False
     if not blob:
         return
     try:
@@ -120,6 +132,19 @@ def apply_sealed_check(patient: dict, cipher: Cipher) -> None:
         patient["last_unclear"] = int(tally["unclear"])
         patient["last_passed"] = int(tally["pass"])
         patient["timeliness"] = timeliness_of(result)
+        patient["authenticated"] = status_of(result, "authenticated")
+        titles = []
+        for finding in result.get("findings", []):
+            if finding.get("status") != "fail":
+                continue
+            rule = RULES_BY_ID.get(finding.get("rule_id"))
+            if rule:
+                titles.append(rule.title)
+        patient["miss_titles"] = titles[:4]
+        stored = result.get("document_ids")
+        current = patient.get("doc_id_set") or set()
+        # Results sealed before document ids were stored stay as they are.
+        patient["check_stale"] = bool(stored) and set(stored) != set(current)
     except (RuntimeError, KeyError, TypeError, ValueError):
         patient["last_failed"] = None
         patient["last_unclear"] = None
@@ -130,9 +155,11 @@ def apply_sealed_check(patient: dict, cipher: Cipher) -> None:
 def queue_rank(patient: dict):
     if patient.get("check_unreadable"):
         return (0, -100_000, 0, patient["label"].lower())
+    if patient.get("check_stale"):
+        return (0, -50_000, 0, patient["label"].lower())
     open_items = (patient["last_failed"] or 0) + (patient["last_unclear"] or 0)
     unchecked = patient["last_failed"] is None
-    signed = patient.get("timeliness") == "pass"
+    signed = patient.get("timeliness") == "pass" and patient.get("authenticated") == "pass"
     days = patient["clock"]["days"]
     overdue = (not signed) and days is not None and days < 0
     needs_work = 0 if (unchecked or open_items or overdue) else 1
@@ -160,10 +187,77 @@ class AuthRequired(Exception):
     pass
 
 
+# Query strings carry a code, never a sentence. A crafted ?notice= cannot
+# put attacker text on the page. Unknown codes render as nothing.
+NOTICES = {
+    "confirm": "Confirm the record is synthetic or de-identified.",
+    "added": "Document added. Run the check to update results.",
+    "removed": "Document removed. Run the check again. The saved result is out of date.",
+    "need-doc": "Upload at least one document first.",
+    "checked": "Check finished. A person decides whether to sign.",
+    "model-held-id": "Model review stayed off because the record looks like it contains an identifier. Pattern results are shown.",
+    "model-held-contact": "Model review stayed off because the record has an email or a phone number. Pattern results are shown.",
+    "model-down": "The model could not be reached. Pattern results are shown.",
+    "rejected": "That file could not be accepted.",
+    "type": "Only .txt, .md and FHIR .json files are accepted.",
+    "empty": "The file is empty.",
+    "oversize": "The file is larger than the upload limit.",
+    "binary": "The file looks binary, not text.",
+    "encoding": "The file must be UTF-8 text.",
+    "toolong": "The file has too much text for one record.",
+    "phi-ssn": "The file contains what looks like a Social Security number. Only synthetic or de-identified records may be uploaded.",
+    "phi-dob": "The file contains what looks like a date of birth. Only synthetic or de-identified records may be uploaded.",
+    "phi-mrn": "The file contains what looks like a medical record number. Only synthetic or de-identified records may be uploaded.",
+    "phi-street": "The file contains what looks like a street address. Only synthetic or de-identified records may be uploaded.",
+    "fhir-type": "JSON files must be a FHIR R4 Bundle or DocumentReference.",
+    "fhir-empty": "No usable clinical content was found in the FHIR file.",
+    "kind": "Choose a valid document type.",
+    "json": "The JSON file could not be parsed.",
+}
+LOGIN_ERRORS = {
+    "bad": "Email or password is incorrect.",
+    "expired": "Your session expired. Try again.",
+    "locked": "Too many attempts. Wait 15 minutes.",
+}
+WARNINGS = {
+    "email": "Contains an email address. Confirm it is synthetic.",
+    "phone": "Contains a phone number outside the fictional 555 range. Confirm it is synthetic.",
+}
+
+
+def page_notice(request: Request) -> str:
+    return NOTICES.get(request.query_params.get("notice", ""), "")
+
+
+def page_warnings(request: Request) -> list[str]:
+    return [WARNINGS[code] for code in request.query_params.getlist("warn") if code in WARNINGS][:3]
+
+
+def warning_codes(warnings: list[str]) -> list[str]:
+    codes = []
+    for text in warnings:
+        if text.startswith("Contains an email"):
+            codes.append("email")
+        elif text.startswith("Contains a phone"):
+            codes.append("phone")
+    return codes
+
+
+def check_notice_code(message: str) -> str:
+    if "identifier" in message:
+        return "model-held-id"
+    if "email" in message or "phone" in message:
+        return "model-held-contact"
+    if message:
+        return "model-down"
+    return "checked"
+
+
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or load_settings()
     db = Database(settings.database_path)
     cipher = Cipher(settings.data_key)
+    db.seal_existing_plaintext(cipher.encrypt_field)
     sessions = Sessions(db, settings)
     limiter = LoginLimiter(db, settings)
     client = anthropic.Anthropic(api_key=settings.anthropic_api_key) if settings.anthropic_api_key else None
@@ -180,6 +274,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         force_https=settings.force_https,
         public_host=settings.public_host,
         trust_proxy=settings.trust_proxy,
+        trusted_proxy_ips=settings.trusted_proxy_ips,
     )
     app.mount("/static", StaticFiles(directory=HERE / "static"), name="static")
     templates = Jinja2Templates(directory=HERE / "templates")
@@ -247,9 +342,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return RedirectResponse("/patients" if sessions.lookup(request.cookies.get(SESSION_COOKIE)) else "/login", status_code=303)
 
     @app.get("/login", response_class=HTMLResponse)
-    def login_page(request: Request, error: str = ""):
+    def login_page(request: Request):
         token = secrets.token_urlsafe(24)
-        resp = render(request, "login.html", {"user": None, "pre": token, "error": error[:120]})
+        error = LOGIN_ERRORS.get(request.query_params.get("error", ""), "")
+        resp = render(request, "login.html", {"user": None, "pre": token, "error": error})
         set_cookie(resp, PRE_COOKIE, token, 900)
         return resp
 
@@ -258,14 +354,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
               pre: str = Form("", max_length=64), website: str = Form("", max_length=200)):
         ip = client_ip(request)
         email = email.strip().lower()
-        bad = RedirectResponse("/login?error=Email+or+password+is+incorrect.", status_code=303)
+        bad = RedirectResponse("/login?error=bad", status_code=303)
         if website:  # honeypot field, invisible to people
             return bad
         if not csrf_ok(request.cookies.get(PRE_COOKIE, ""), pre):
-            return RedirectResponse("/login?error=Your+session+expired.+Try+again.", status_code=303)
+            return RedirectResponse("/login?error=expired", status_code=303)
         keys = (f"ip:{ip}", f"email:{email}")
         if limiter.blocked(*keys):
-            return RedirectResponse("/login?error=Too+many+attempts.+Wait+15+minutes.", status_code=303)
+            return RedirectResponse("/login?error=locked", status_code=303)
         user = None
         if _EMAIL_RE.match(email):
             with db.connect() as conn:
@@ -302,11 +398,21 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         today = date.today()
         with db.connect() as conn:
             rows = db.patients(conn, user["org_id"])
+            id_rows = conn.execute(
+                "SELECT patient_id, id FROM documents WHERE org_id = ?",
+                (user["org_id"],),
+            ).fetchall()
+        doc_ids: dict[int, set[int]] = defaultdict(set)
+        for item in id_rows:
+            doc_ids[item["patient_id"]].add(item["id"])
         queue = []
         for row in rows:
             patient = reveal_patient(cipher, row)
+            patient["doc_id_set"] = doc_ids.get(patient["id"], set())
             apply_sealed_check(patient, cipher)
-            patient["clock"] = clock_for(patient.get("discharge_date") or "", patient.get("timeliness") or "", today)
+            patient["clock"] = clock_for(
+                patient.get("discharge_date") or "", patient.get("timeliness") or "", today, patient.get("authenticated") or "",
+            )
             queue.append(patient)
         queue.sort(key=queue_rank)
         return render(request, "patients.html", {"user": user, "patients": queue, "nav": "patients"})
@@ -352,10 +458,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     def load_docs(conn, user, patient_id: int) -> list[Doc]:
         rows = db.documents(conn, user["org_id"], patient_id)
-        return [Doc(index=i, kind=r["kind"], filename=r["filename"], text=cipher.decrypt(r["body_enc"]), author=r["author"]) for i, r in enumerate(rows)]
+        return [Doc(index=i, kind=r["kind"], filename=r["filename"], text=cipher.decrypt(r["body_enc"]), author=r["author"], doc_id=r["id"]) for i, r in enumerate(rows)]
 
     @app.get("/patients/{patient_id}", response_class=HTMLResponse)
-    def patient_detail(request: Request, patient_id: int, user=Depends(current_user), notice: str = ""):
+    def patient_detail(request: Request, patient_id: int, user=Depends(current_user)):
         with db.connect() as conn:
             p = reveal_patient(cipher, load_patient(conn, user, patient_id))
             docs = [reveal_doc(cipher, row) for row in db.documents(conn, user["org_id"], patient_id)]
@@ -374,24 +480,31 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 rule = RULES_BY_ID.get(f["rule_id"])
                 if rule:
                     groups[rule.group].append({"rule": rule, **f})
+        stored_ids = (result or {}).get("document_ids") or []
+        current_ids = {d["id"] for d in docs}
+        stale = bool(stored_ids) and set(stored_ids) != current_ids
         return render(request, "patient.html", {
             "user": user, "p": p, "docs": docs, "analysis": a, "result": result, "groups": dict(groups),
-            "notice": notice[:200], "model_on": client is not None, "nav": "patients",
-            "warnings": [w for w in request.query_params.getlist("warn")][:3],
+            "notice": page_notice(request), "model_on": client is not None, "nav": "patients",
+            "warnings": page_warnings(request),
             "unreadable": unreadable,
-            "clock": clock_for(p.get("discharge_date") or "", timeliness_of(result), date.today()),
+            "stale": stale,
+            "clock": clock_for(
+                p.get("discharge_date") or "", timeliness_of(result), date.today(), status_of(result, "authenticated"),
+            ),
         })
 
     @app.post("/patients/{patient_id}/documents")
     async def upload_document(request: Request, patient_id: int, user=Depends(check_csrf),
                               kind: str = Form(..., max_length=40), confirm: str = Form(""), file: UploadFile = File(...)):
         if confirm != "yes":
-            return RedirectResponse(f"/patients/{patient_id}?notice=Confirm+the+record+is+synthetic+or+de-identified.", status_code=303)
+            return RedirectResponse(f"/patients/{patient_id}?notice=confirm", status_code=303)
         raw = await file.read(settings.max_upload_bytes + 1)
         try:
             parsed = parse_upload(raw, file.filename or "upload.txt", kind, settings.max_upload_bytes)
         except IngestError as exc:
-            return RedirectResponse(f"/patients/{patient_id}?notice={quote(str(exc))}", status_code=303)
+            code = exc.code if exc.code in NOTICES else "rejected"
+            return RedirectResponse(f"/patients/{patient_id}?notice={code}", status_code=303)
         with db.connect() as conn:
             load_patient(conn, user, patient_id)
             conn.execute(
@@ -399,7 +512,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 (user["org_id"], patient_id, parsed.kind, parsed.filename, cipher.encrypt_field(parsed.author), cipher.encrypt(parsed.text), user["user_id"]),
             )
             db.audit(conn, user["org_id"], user["user_id"], "document_upload", f"patient:{patient_id}", client_ip(request))
-        q = urlencode([("notice", f"Added {parsed.filename}. Run the check to update results.")] + [("warn", w) for w in parsed.warnings])
+        q = urlencode([("notice", "added")] + [("warn", code) for code in warning_codes(parsed.warnings)])
         return RedirectResponse(f"/patients/{patient_id}?{q}", status_code=303)
 
     @app.get("/patients/{patient_id}/documents/{doc_id}", response_class=HTMLResponse)
@@ -428,7 +541,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             if n == 0:
                 raise HTTPException(status_code=404)
             db.audit(conn, user["org_id"], user["user_id"], "document_delete", f"document:{doc_id}", client_ip(request))
-        return RedirectResponse(f"/patients/{patient_id}?notice=Document+removed.", status_code=303)
+        return RedirectResponse(f"/patients/{patient_id}?notice=removed", status_code=303)
 
     @app.post("/patients/{patient_id}/check")
     def run_check(request: Request, patient_id: int, user=Depends(check_csrf), use_model: str = Form("")):
@@ -436,7 +549,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             p = reveal_patient(cipher, load_patient(conn, user, patient_id))
             docs = load_docs(conn, user, patient_id)
         if not docs:
-            return RedirectResponse(f"/patients/{patient_id}?notice=Upload+at+least+one+document+first.", status_code=303)
+            return RedirectResponse(f"/patients/{patient_id}?notice=need-doc", status_code=303)
         want_model = use_model == "yes" and client is not None
         held = model_block_reason(docs) if want_model else ""
         result = analysis.analyze(
@@ -448,8 +561,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         with db.connect() as conn:
             analysis.store(db, conn, cipher, user["org_id"], patient_id, user["user_id"], result)
             db.audit(conn, user["org_id"], user["user_id"], "check_run", f"patient:{patient_id}", client_ip(request))
-        note = result["message"] or "Check complete. A person still decides whether to sign."
-        return RedirectResponse(f"/patients/{patient_id}?notice={quote(note)}", status_code=303)
+        return RedirectResponse(f"/patients/{patient_id}?notice={check_notice_code(result['message'])}", status_code=303)
 
     # ---------- compliance ----------
 
@@ -482,6 +594,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             attending = cipher.decrypt_field(row["attending"] or "") or "Not recorded"
             discharge = cipher.decrypt_field(row["discharge_date"] or "")
             timeliness = timeliness_of(result)
+            authenticated = status_of(result, "authenticated")
+            signed = timeliness == "pass" and authenticated == "pass"
             for finding in findings:
                 rule_id, status = finding.get("rule_id"), finding.get("status")
                 if status in by_rule.get(rule_id, {}):
@@ -490,12 +604,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                     bucket[key]["checked"].add(row["patient_id"])
                     if status in ("fail", "unclear"):
                         bucket[key][status] += 1
-                if status == "fail" and rule_id in RULES_BY_ID:
+                if status in ("fail", "unclear") and rule_id in RULES_BY_ID:
                     item = open_items.setdefault(row["patient_id"], {
-                        "patient_id": row["patient_id"], "label": label, "attending": attending, "fails": [],
-                        "clock": clock_for(discharge, timeliness, today),
+                        "patient_id": row["patient_id"], "label": label, "attending": attending,
+                        "fails": [], "reviews": [], "signed": signed,
+                        "clock": clock_for(discharge, timeliness, today, authenticated),
                     })
-                    item["fails"].append(RULES_BY_ID[rule_id].title)
+                    bucket_name = "fails" if status == "fail" else "reviews"
+                    item[bucket_name].append(RULES_BY_ID[rule_id].title)
         rules_out = []
         for r in RULES:
             c = by_rule[r.id]
@@ -509,7 +625,20 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             return sorted(rows, key=lambda x: x["name"].lower())
 
         patients_checked = len(latest) - unreadable
-        open_rows = sorted(open_items.values(), key=lambda x: (x["clock"]["days"] is None, x["clock"]["days"] if x["clock"]["days"] is not None else 0, -len(x["fails"])))
+
+        def open_rank(item: dict):
+            # Same clock order as the work queue. A negative day count on a
+            # signed chart must not jump ahead of a chart that is still due.
+            days = item["clock"]["days"]
+            if days is None:
+                clock = 9_000
+            elif item.get("signed"):
+                clock = 5_000
+            else:
+                clock = days
+            return (clock, -(len(item["fails"]) + len(item["reviews"])), item["label"].lower())
+
+        open_rows = sorted(open_items.values(), key=open_rank)
         return {"patients_checked": patients_checked, "unreadable": unreadable, "rules": rules_out,
                 "by_attending": flat(by_attending), "by_unit": flat(by_unit), "open": open_rows}
 

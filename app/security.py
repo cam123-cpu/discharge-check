@@ -181,14 +181,19 @@ CSP = (
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
-    def __init__(self, app, force_https: bool, public_host: str = "", trust_proxy: bool = False):
+    def __init__(self, app, force_https: bool, public_host: str = "", trust_proxy: bool = False,
+                 trusted_proxy_ips: tuple[str, ...] = ("127.0.0.1", "::1")):
         super().__init__(app)
         self.force_https = force_https
         self.public_host = public_host
         self.trust_proxy = trust_proxy
+        self.trusted_proxy_ips = frozenset(trusted_proxy_ips)
 
     def _scheme(self, request: Request) -> str:
-        if self.trust_proxy:
+        # A client that can reach the app directly must not be able to skip
+        # the HTTPS redirect by sending X-Forwarded-Proto.
+        host = request.client.host if request.client else ""
+        if self.trust_proxy and host in self.trusted_proxy_ips:
             proto = request.headers.get("x-forwarded-proto", "").split(",")[0].strip().lower()
             if proto in ("https", "http"):
                 return proto

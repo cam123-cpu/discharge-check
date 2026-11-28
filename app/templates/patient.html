@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block title %}{{ p.label }} · Discharge Check{% endblock %}
+{% macro word(s) -%}{{ {'pass': 'Shown', 'fail': 'Missing', 'unclear': 'Review', 'not_applicable': 'Not applicable'}.get(s, s) }}{%- endmacro %}
 {% macro status(s) -%}
-<span class="st st-{{ s }}">{{ {'pass': 'Shown', 'fail': 'Missing', 'unclear': 'Review', 'not_applicable': 'Not applicable'}[s] }}</span>
+<span class="st st-{{ s }}">{{ word(s) }}</span>
 {%- endmacro %}
 {% macro quoted(items) -%}
 <ul class="brief-list">
@@ -27,6 +28,7 @@
 </div>
 
 {% if notice %}<p class="notice" role="status">{{ notice }}</p>{% endif %}
+{% if stale %}<p class="alert" role="alert">The record changed after this check. Run the check again. Do not treat the counts below as current.</p>{% endif %}
 {% if unreadable %}<p class="alert" role="alert">The saved check could not be read. Run the check again.</p>{% endif %}
 {% for w in warnings %}<p class="alert" role="alert">{{ w }}</p>{% endfor %}
 
@@ -37,7 +39,7 @@
   {% if result %}
   <p class="summary-line">
     <strong>{{ result.tally.fail }}</strong> missing, <strong>{{ result.tally.unclear }}</strong> to review, <strong>{{ result.tally['pass'] }}</strong> shown in the text
-    <span class="muted">· checked {{ analysis.created_at }} UTC by {{ 'pattern rules; the model could add a doubt but not clear a miss' if result.engine == 'model' else 'pattern rules' }}</span>
+    <span class="muted">· checked {{ analysis.created_at }} UTC by {{ 'pattern rules; the model could add a doubt but not clear a miss' if result.engine == 'model' else 'pattern rules' }} · rules {{ result.rules_version }}</span>
   </p>
   {% if not model_on %}<p class="muted small">Pattern rules only. Model review is off until an Anthropic API key is set, and it stays off unless you ask for it on a check.</p>{% endif %}
   {% if result.medication_reconciliation and result.medication_reconciliation.status != 'not_applicable' %}
@@ -76,8 +78,8 @@
       {% if f.evidence %}<blockquote>{{ f.evidence }}{% if f.source %}<cite>{{ f.source }}</cite>{% endif %}</blockquote>{% endif %}
       {% if f.note %}<p class="note">{{ f.note }}</p>{% endif %}
       {% if f.status in ('fail', 'unclear') %}<p class="fix"><span>To fix:</span> {{ f.rule.fix }}</p>{% endif %}
-      {% if f.pattern_status and f.model_status and f.pattern_status != f.model_status %}<p class="small muted">Pattern rules said {{ f.pattern_status.replace('_', ' ') }}. Model review said {{ f.model_status.replace('_', ' ') }}. The checklist keeps the more cautious one.</p>
-      {% elif f.pattern_status %}<p class="small muted">Pattern rules said {{ f.pattern_status.replace('_', ' ') }}. The model review differs, so this stays cautious.</p>{% endif %}
+      {% if f.pattern_status and f.model_status and f.pattern_status != f.model_status %}<p class="small muted">Pattern rules said {{ word(f.pattern_status) }}. Model review said {{ word(f.model_status) }}. The checklist keeps the more cautious one.</p>
+      {% elif f.pattern_status %}<p class="small muted">Pattern rules said {{ word(f.pattern_status) }}. The model review differs, so this stays cautious.</p>{% endif %}
     </li>
     {% endfor %}
   </ol>
@@ -94,6 +96,7 @@
       {% set b = result.model_brief %}
       <p class="lead">{{ b.one_liner }}</p>
       <p>{{ b.hospital_course }}</p>
+      <p class="small muted">The two opening sentences are the model's words. They are not each tied to a quote in the record.</p>
       {% if b.active_problems %}<h3>Active problems</h3>{{ quoted(b.active_problems) }}{% endif %}
       {% if b.medication_changes %}<h3>Medication changes</h3>{{ quoted(b.medication_changes) }}{% endif %}
       {% if b.follow_up %}<h3>Follow-up</h3>{{ quoted(b.follow_up) }}{% endif %}

@@ -46,6 +46,8 @@ class Settings:
     login_window_minutes: int = 15
     public_host: str = ""
     trust_proxy: bool = False
+    # X-Forwarded-Proto is honored only from these peers when trust_proxy is on.
+    trusted_proxy_ips: tuple[str, ...] = ("127.0.0.1", "::1")
 
 
 def _valid_public_host(host: str) -> bool:
@@ -75,6 +77,14 @@ def load_settings() -> Settings:
     trust_proxy = os.environ.get("TRUST_PROXY", "0") == "1"
     if trust_proxy and not public_host:
         raise RuntimeError("TRUST_PROXY=1 requires PUBLIC_HOST, so an HTTPS redirect cannot follow the Host header.")
+    extras = tuple(part.strip() for part in os.environ.get("TRUSTED_PROXY_IPS", "").split(",") if part.strip())
+    for ip in extras:
+        if len(ip) > 64 or any(ch in ip for ch in " /\\\n\r"):
+            raise RuntimeError("TRUSTED_PROXY_IPS must be a comma-separated list of IP addresses.")
+    peers: list[str] = []
+    for ip in ("127.0.0.1", "::1", *extras):
+        if ip not in peers:
+            peers.append(ip)
     return Settings(
         data_key=data_key,
         session_pepper=pepper,
@@ -83,4 +93,5 @@ def load_settings() -> Settings:
         database_path=db,
         public_host=public_host,
         trust_proxy=trust_proxy,
+        trusted_proxy_ips=tuple(peers),
     )

@@ -29,13 +29,25 @@ def merge(pattern: list[Finding], model: dict[str, Finding]) -> list[Finding]:
             out.append(f)
             continue
         if m.status == f.status:
-            # Agreement. Keep a model quote when the quote check already accepted it.
-            out.append(m if m.evidence else f)
+            # Agreement. The pattern line stays under the citation.
+            out.append(f)
             continue
         if _SEVERITY[m.status] < _SEVERITY[f.status]:
-            m.pattern_status = f.status
-            m.model_status = m.status
-            out.append(m)
+            # A harsher model call with no quote is a doubt, not a miss the
+            # queue can count. A quoted harsher call may still lower the status.
+            if m.status == "fail" and not (m.evidence or "").strip():
+                doubt = Finding(
+                    f.rule_id, "unclear", f.evidence, f.source,
+                    note=m.note or "Model review added a doubt and did not quote the record.",
+                    engine="model",
+                )
+                doubt.pattern_status = f.status
+                doubt.model_status = m.status
+                out.append(doubt)
+            else:
+                m.pattern_status = f.status
+                m.model_status = m.status
+                out.append(m)
         else:
             f.pattern_status = f.status
             f.model_status = m.status
@@ -65,6 +77,7 @@ def analyze(docs: list[Doc], *, disposition_hint: str, discharge_hint: str, clie
         "medication_reconciliation": medication_reconciliation(docs),
         "findings": [f.to_dict() for f in findings],
         "tally": tally(findings),
+        "document_ids": [d.doc_id for d in docs if d.doc_id],
     }
 
 
