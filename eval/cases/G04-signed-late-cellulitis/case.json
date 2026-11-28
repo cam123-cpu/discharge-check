@@ -1,0 +1,51 @@
+{
+  "id": "G04-signed-late-cellulitis",
+  "category": "gap",
+  "title": "Lower-leg cellulitis, home; summary signed 33 days after discharge (single gap)",
+  "disposition": "Home",
+  "discharge_date": "2026-10-02",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    },
+    {
+      "file": "nursing.txt",
+      "kind": "nursing_instructions"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "fail",
+    "meds_consistent": "pass"
+  },
+  "rationale": {
+    "timeliness": "Signed 2026-11-04, 33 days after the 2026-10-02 discharge, past the 30-day limit.",
+    "authenticated": "The signature line has a date and a time; it is late, but it is authenticated.",
+    "info_transmitted": "The summary was sent to the PCP (on the day it was signed); lateness is a timeliness issue, not a transmission gap.",
+    "pac_list": "Not referred to home health, SNF, IRF or LTCH, so the three post-acute rules do not apply."
+  },
+  "tags": [
+    "signature",
+    "late-signature",
+    "single-gap"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "L08-content-in-wrong-document",
+  "category": "linguistic",
+  "title": "Gallstone pancreatitis, home; diagnosis only in CM note, med list only in nursing, pending result only in a progress note",
+  "disposition": "Home",
+  "discharge_date": "2026-11-13",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"},
+    {"file": "casemgmt.txt", "kind": "case_management"},
+    {"file": "nursing.txt", "kind": "nursing_instructions"},
+    {"file": "progress.txt", "kind": "progress_note"}
+  ],
+  "expected": {
+    "final_diagnosis": "fail",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "fail",
+    "med_changes": "pass",
+    "pending_results": "fail",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "fail"
+  },
+  "also_acceptable": {
+    "final_diagnosis": ["unclear"],
+    "discharge_meds": ["unclear"],
+    "meds_consistent": ["unclear"]
+  },
+  "rationale": {
+    "final_diagnosis": "The summary's 'Principal Diagnosis' section only says 'Refer to case management note'; the diagnosis appears only in the CM note, which this rule does not accept.",
+    "discharge_meds": "'Discharge Medications: As per nursing discharge instructions' is a cross-reference, not a list; the list exists only in the nursing document, which this rule does not accept.",
+    "pending_results": "The pending CBD brushing cytology and its owner appear only in a progress note; the discharge summary never addresses pending results.",
+    "meds_consistent": "The summary has no medication list, so every nursing medication (including acetaminophen and lisinopril, which the summary never mentions) is absent from the summary.",
+    "med_changes": "The summary's Medication Changes section states what was started and stopped, independent of the missing full list.",
+    "pac_list": "Home without services, so the post-acute rules do not apply."
+  },
+  "tags": ["wrong-doc", "cross-reference", "multi-doc"]
+}

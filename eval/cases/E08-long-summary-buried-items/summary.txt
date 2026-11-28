@@ -1,0 +1,171 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-03
+Discharge Date: 2026-11-13
+Attending: Dr. Philippa Strand-Okoye, Hospital Medicine
+Consultants: Urology (Dr. Benedikt Larkspur), Cardiology (Dr. Amara Nwachukwu-Reyes), Infectious Diseases (Dr. Sung-min Halvorsen), Geriatrics (Dr. Clement Adeyemi-Ward), Physical Medicine and Rehabilitation (Dr. Tamsin Holloway)
+
+Chief Complaint:
+Fever, right flank pain and confusion for two days.
+
+History of Present Illness:
+The patient is a 74-year-old woman with type 2 diabetes mellitus on oral agents, hypertension, stage 3a chronic kidney disease (baseline creatinine 1.1 to 1.2), osteoarthritis of both knees, and a remote history of nephrolithiasis (spontaneous passage of a left-sided stone in 2019). She lives with her husband in a two-story townhouse and was fully independent before this illness, driving, cooking and caring for her granddaughter two afternoons a week. Two days before admission she developed aching right flank pain that she attributed to gardening. The following day she had chills and a temperature of 101.8 F at home, reduced appetite and two episodes of nonbloody emesis. On the morning of admission her husband found her drowsy and confused, asking repeatedly what day it was, and called emergency medical services. Paramedics found her febrile to 102.6 F, heart rate 134 and irregular, blood pressure 86/50, respiratory rate 24 and fingerstick glucose 288. She received 1 liter of normal saline en route.
+
+In the emergency department she was lethargic but arousable, oriented to person only. Temperature was 102.9 F, heart rate 128 to 140 in atrial fibrillation (no prior history), blood pressure 82/48 with mean arterial pressure 59 after the first liter. Lactate was 4.1 mmol/L. White blood cell count was 19.8 with 14% bands. Creatinine was 2.6. Urinalysis showed large leukocyte esterase, positive nitrite, more than 100 white cells per high-power field and many bacteria. A noncontrast CT of the abdomen and pelvis showed a 7 mm obstructing stone at the right ureterovesical junction with moderate right hydroureteronephrosis and perinephric stranding. She received a further 2 liters of crystalloid (30 mL/kg total), blood and urine cultures were drawn, and she was started on IV piperacillin-tazobactam. Because she remained hypotensive after fluids, norepinephrine was started through a peripheral line and she was admitted to the medical intensive care unit. Urology was consulted from the emergency department for source control.
+
+Past Medical History:
+Type 2 diabetes mellitus, diagnosed 2009, most recent HbA1c 7.6% in August 2026; no known retinopathy; mild peripheral neuropathy of both feet. Hypertension for more than 20 years. Chronic kidney disease stage 3a, attributed to diabetic and hypertensive nephropathy. Osteoarthritis of both knees, managed with acetaminophen and occasional naproxen. Nephrolithiasis, one prior episode in 2019 (calcium oxalate). Hyperlipidemia. Osteopenia on DEXA in 2024. Cataract surgery, both eyes, 2022. Cholecystectomy 1998.
+
+Home medications prior to admission:
+- Metformin 1000 mg twice daily
+- Glipizide 5 mg daily
+- Lisinopril 20 mg daily
+- Hydrochlorothiazide 25 mg daily
+- Atorvastatin 20 mg daily
+- Naproxen 220 mg twice daily as needed for knee pain (taking most days for the prior month)
+- Calcium carbonate with vitamin D 600 mg/400 units twice daily
+
+Allergies: Codeine (nausea and vomiting).
+
+Social History:
+Retired elementary school librarian. Married for 51 years; her husband is 77 and in good health. One daughter, Rebekah, lives 15 minutes away and is her healthcare proxy. Never smoker. Drinks one glass of wine on weekends. No illicit drug use. Walks in the neighborhood three times a week.
+
+Family History:
+Mother had type 2 diabetes and died of a stroke at 81. Father had coronary artery disease. No family history of kidney stones.
+
+Review of Systems:
+As per history of present illness, limited on admission by encephalopathy and supplemented by her husband. Positive for fever, chills, right flank pain, nausea, vomiting, decreased oral intake and confusion. Negative for chest pain, cough, dysuria before the illness, hematuria noticed by the patient, diarrhea, rash or focal weakness.
+
+Physical Examination on Admission:
+Ill-appearing, lethargic, oriented to self only. Temperature 102.9 F, heart rate 132 irregularly irregular, blood pressure 82/48, respiratory rate 24, SpO2 94% on room air. Dry mucous membranes. No meningismus. Lungs clear. Heart irregular and tachycardic without murmur. Abdomen soft with right costovertebral angle tenderness and mild right lower quadrant tenderness, no peritoneal signs. No edema. Skin warm, no rash. Neurologic examination nonfocal, moving all extremities, inattentive on months-of-the-year backward.
+
+Pertinent Admission Data:
+Sodium 133, potassium 5.2, chloride 99, bicarbonate 17, BUN 44, creatinine 2.6, glucose 301, lactate 4.1, procalcitonin 18.2. White blood cells 19.8, hemoglobin 12.4, platelets 141. INR 1.3. Troponin I 0.06 ng/mL, flat on repeat. TSH 1.9. ECG: atrial fibrillation with rapid ventricular response at 136 beats per minute, no acute ST changes. Chest x-ray: no infiltrate. CT abdomen and pelvis as above.
+
+Hospital Course by Problem:
+
+1. Septic shock from obstructive right pyelonephritis due to a ureterovesical junction stone.
+Urology took her to the operating room within four hours of arrival on 2026-11-03 for cystoscopy and right ureteral stent placement. Purulent urine was drained from the right collecting system and sent for culture. Norepinephrine requirement peaked at 0.12 mcg/kg/min the first night and was weaned off by the morning of 2026-11-05. Lactate cleared to 1.4 by 24 hours. Blood cultures (2 of 2 sets) and the renal pelvis urine culture grew Escherichia coli, susceptible to ceftriaxone, cefpodoxime, ciprofloxacin and trimethoprim-sulfamethoxazole, resistant to ampicillin, and negative for ESBL production. Infectious Diseases was consulted given bacteremia and advised narrowing to IV ceftriaxone 2 g daily on 2026-11-05, with a total treatment course of 14 days from the first negative blood culture (2026-11-04), transitioning to an oral agent once afebrile for 48 hours and tolerating diet. Repeat blood cultures from 2026-11-04 showed no growth. She defervesced on 2026-11-06. She was changed to oral cefpodoxime 200 mg twice daily on 2026-11-10, to complete therapy through 2026-11-17. Transthoracic echocardiogram showed no vegetation, so ID did not feel transesophageal echo was needed for a gram-negative organism with a clear urinary source.
+
+2. New-onset atrial fibrillation with rapid ventricular response.
+Atrial fibrillation began in the setting of sepsis. Rate control was difficult initially because of hypotension; she was managed with fluid resuscitation and IV amiodarone infusion for 36 hours on cardiology's advice, then low-dose metoprolol once off vasopressors. She converted spontaneously to sinus rhythm on 2026-11-06 but had two further paroxysms of atrial fibrillation lasting 2 and 5 hours on 2026-11-08 and 2026-11-09. Echocardiogram on 2026-11-05 showed normal left ventricular size and function (EF 60%), mild left atrial enlargement and no significant valve disease. CHA2DS2-VASc score is 4 (age 65 to 74, female, hypertension, diabetes) and HAS-BLED 2. After discussion of risks and benefits, cardiology recommended long-term anticoagulation with apixaban. Dose was chosen as 5 mg twice daily because she meets only one dose-reduction criterion (her weight is 58 kg; age under 80; creatinine at discharge 1.3). Amiodarone was not continued. She has remained in sinus rhythm at 64 to 78 beats per minute on metoprolol tartrate 25 mg twice daily since 2026-11-09. Cardiology will see her in clinic and arrange an ambulatory monitor.
+
+3. Acute kidney injury on chronic kidney disease stage 3a.
+Creatinine peaked at 3.1 on 2026-11-04 from a baseline of 1.1 to 1.2, attributed to septic acute tubular injury, obstruction and prerenal physiology, with contributions from naproxen, lisinopril and hydrochlorothiazide. Urine output recovered after stent placement and fluid resuscitation. Lisinopril and hydrochlorothiazide were held. Naproxen was stopped and she was counseled to avoid all NSAIDs. Creatinine improved steadily: 2.4 on 2026-11-06, 1.8 on 2026-11-08, 1.5 on 2026-11-10 and 1.3 on 2026-11-12. Metformin was held throughout and will remain held until her PCP confirms her creatinine is stable. Potassium normalized without intervention.
+
+4. Acute metabolic encephalopathy (delirium).
+Hyperactive and hypoactive delirium fluctuated through hospital day 4, worst at night. Geriatrics was consulted and recommended nonpharmacologic measures (glasses and hearing aids in place, family presence, lights on by day and off at night, early mobilization), avoidance of benzodiazepines and anticholinergics, and treatment of the underlying infection. A single dose of haloperidol 0.5 mg was given on the night of 2026-11-04 for pulling at lines; none since. Confusion Assessment Method has been negative since 2026-11-08. On 2026-11-12 her Montreal Cognitive Assessment was 25 of 30, which geriatrics considered near her likely baseline, with mild residual inattention. Geriatrics recommended repeat cognitive screening in 3 months.
+
+5. Type 2 diabetes mellitus with stress hyperglycemia.
+Glucose was 250 to 320 during sepsis and was managed with an insulin infusion in the ICU, then basal-bolus insulin. Requirements fell as the infection resolved. Given AKI, metformin held, and the risk of hypoglycemia with glipizide in reduced kidney function, she was discharged on low-dose basal insulin. Diabetes education taught her and her husband insulin pen technique and glucose monitoring, and both returned the demonstration on 2026-11-11 and 2026-11-12. Glipizide is stopped.
+
+6. Hypertension.
+Blood pressure was low during sepsis; antihypertensives were held. Blood pressure since 2026-11-10 has run 118 to 138 systolic on metoprolol alone. Lisinopril and hydrochlorothiazide remain held at discharge; PCP to consider restarting lisinopril once kidney function is stable.
+
+7. Deconditioning after critical illness.
+PT and OT began on 2026-11-06. She progressed from needing moderate assistance to stand to walking with a rolling walker. PM&R evaluated her on 2026-11-11 and felt she did not need inpatient rehabilitation because she was improving quickly and has strong family support, and recommended home physical therapy and occupational therapy with a skilled nursing component for medication management and insulin supervision.
+
+8. Thrombocytopenia, mild, from sepsis, resolved. Platelets nadired at 98 on 2026-11-05 and recovered to 212 by discharge. No bleeding.
+
+Discharge Diagnoses:
+1. Septic shock due to obstructive right pyelonephritis with Escherichia coli bacteremia, resolved
+2. Right ureterovesical junction stone, 7 mm, status post right ureteral stent 2026-11-03 (definitive stone treatment pending)
+3. New-onset paroxysmal atrial fibrillation, now in sinus rhythm, on anticoagulation
+4. Acute kidney injury on chronic kidney disease stage 3a, improving (creatinine 1.3)
+5. Acute metabolic encephalopathy (delirium), resolved
+6. Type 2 diabetes mellitus with hyperglycemia, now on basal insulin
+7. Hypertension
+8. Deconditioning after critical illness
+
+Condition at Discharge: Stable and improved. Afebrile since 2026-11-06. Mental status alert and oriented to person, place, date and situation; Confusion Assessment Method negative. Heart rate 70 in sinus rhythm, blood pressure 128/72, SpO2 97% on room air.
+
+Functional Status: Ambulates 150 feet with a rolling walker and standby assistance. Climbs 12 stairs with a rail and contact guard assist. Independent with feeding and grooming; needs standby assistance for showering and lower-body dressing.
+
+Discharge Disposition: Home with home health services (skilled nursing, physical therapy and occupational therapy) through Larchmont Home Health Partners, living with her husband.
+
+Goals of Care: Full code, confirmed with patient on 2026-11-12. Her stated goals are to walk without a walker, return to caring for her granddaughter, and avoid another hospital stay. Healthcare proxy is her daughter, Rebekah.
+
+Pending Results: Stone analysis is not applicable yet (stone remains in place). Final report of the repeat blood cultures from 2026-11-04 is pending (no growth at 5 days on the preliminary report); Dr. Strand-Okoye will follow it and notify the PCP. No other tests are pending.
+
+Follow-up:
+- PCP Dr. Leopold Faraday-Ime (555-0193) on 2026-11-18 for creatinine, potassium and glucose review, and decision on restarting lisinopril
+- Urology, Dr. Benedikt Larkspur, in 2 weeks (2026-11-25) to schedule ureteroscopy and stone removal with stent exchange or removal; the stent must not be left in place longer than 3 months
+- Cardiology, Dr. Amara Nwachukwu-Reyes, in 4 weeks with a 14-day ambulatory ECG monitor to be mailed to the home
+- Geriatrics clinic, Dr. Adeyemi-Ward, in 3 months for repeat cognitive screening
+- Basic metabolic panel and CBC drawn by the home health nurse on 2026-11-16
+
+Primary Care Provider: Dr. Leopold Faraday-Ime, Willowmere Internal Medicine, 555-0193.
+
+Discharge planning evaluation (case management, 2026-11-10 and 2026-11-12): the patient's likely post-hospital needs are skilled nursing for medication and insulin teaching reinforcement, anticoagulation monitoring and stent education, and home PT and OT for gait and stair safety. Her husband is able to provide supervision and transportation and the daughter visits daily. Insurance is traditional Medicare with a supplement; home health benefit is available and no barriers were identified.
+
+Post-acute provider selection: the case manager gave the patient and her daughter a list of Medicare-certified home health agencies serving her address and reviewed the Care Compare quality star ratings and patient survey ratings for each agency with them. They were informed of their freedom to choose any agency on the list. The patient chose Larchmont Home Health Partners (4.5 stars), which had cared for her husband after his knee replacement. Start of care is scheduled for 2026-11-14.
+
+The discharge plan, including home health services, the anticoagulation decision and the stent follow-up, was discussed with the patient, her husband and her daughter on 2026-11-12, and all three agree with the plan.
+
+This discharge summary was sent electronically to PCP Dr. Leopold Faraday-Ime and faxed to Larchmont Home Health Partners on 2026-11-13, together with the medication list and therapy orders.
+
+Detailed Laboratory Trend:
+Date        WBC   Hgb   Plt   Na   K    HCO3  BUN  Cr   Glucose  Lactate
+2026-11-03  19.8  12.4  141   133  5.2  17    44   2.6  301      4.1
+2026-11-04  22.1  11.1  112   135  4.8  19    52   3.1  264      1.4
+2026-11-05  16.4  10.6  98    136  4.4  21    49   2.9  238      --
+2026-11-06  12.9  10.4  117   137  4.1  23    41   2.4  201      --
+2026-11-08  9.6   10.5  156   138  4.0  24    30   1.8  176      --
+2026-11-10  8.1   10.8  189   139  4.2  25    24   1.5  162      --
+2026-11-12  7.4   11.0  212   139  4.3  25    21   1.3  148      --
+
+Microbiology:
+Blood cultures 2026-11-03, 2 of 2 sets: Escherichia coli, susceptible to ceftriaxone, cefpodoxime, ciprofloxacin, trimethoprim-sulfamethoxazole, gentamicin; resistant to ampicillin. ESBL screen negative.
+Right renal pelvis urine culture 2026-11-03: Escherichia coli more than 100,000 colonies per mL, same susceptibility pattern.
+Blood cultures 2026-11-04, 2 sets: no growth at 5 days, preliminary.
+MRSA nares PCR negative.
+
+Imaging and Procedures:
+CT abdomen and pelvis without contrast, 2026-11-03: 7 mm calculus at the right ureterovesical junction with moderate right hydroureteronephrosis and perinephric fat stranding. Two nonobstructing 2 to 3 mm left lower pole stones. No abscess. Cholecystectomy clips. Mild sigmoid diverticulosis without diverticulitis.
+Cystoscopy and right ureteral stent placement (6 French by 24 cm double-J), 2026-11-03, Dr. Larkspur: purulent efflux from right ureteral orifice after stent passage; urine sent for culture. No complications.
+Transthoracic echocardiogram, 2026-11-05: EF 60%, normal wall motion, mild left atrial enlargement, trace mitral regurgitation, no vegetations, normal right ventricle.
+Renal ultrasound, 2026-11-09: right stent in good position with resolution of hydronephrosis; normal left kidney.
+Chest x-ray, 2026-11-03: no acute cardiopulmonary process.
+
+Consultant Recommendations Summary:
+Urology recommends that the stent remain until elective ureteroscopy with laser lithotripsy, planned for 2 to 4 weeks after the infection is fully treated. Stent-related urinary frequency, urgency and mild blood in the urine are expected; she may use acetaminophen and should report fever, flank pain that does not settle, or inability to urinate. Tamsulosin was not prescribed because the stone will be removed electively.
+Cardiology recommends apixaban 5 mg twice daily indefinitely unless bleeding risk changes, metoprolol tartrate 25 mg twice daily for rate control, and a 14-day ambulatory monitor to quantify atrial fibrillation burden. She should hold apixaban for 48 hours before ureteroscopy as directed by urology and cardiology together; no bridging is required.
+Infectious Diseases recommends completing cefpodoxime through 2026-11-17 for a total of 14 days of effective therapy from the first negative blood culture, with no test-of-cure cultures needed if she remains well.
+Geriatrics recommends continuing delirium precautions at home for the first week (consistent routine, glasses and hearing aids, daylight exposure, avoidance of sleeping pills and diphenhydramine), and repeat cognitive testing in 3 months.
+PM&R recommends home PT and OT two to three times weekly for 4 weeks with a focus on gait, stairs and bathroom safety, with progression from rolling walker to cane as tolerated.
+
+Discharge Medications:
+- Cefpodoxime 200 mg by mouth twice daily through 2026-11-17
+- Apixaban 5 mg by mouth twice daily
+- Metoprolol tartrate 25 mg by mouth twice daily
+- Insulin glargine 10 units subcutaneously at bedtime
+- Atorvastatin 20 mg by mouth daily
+- Acetaminophen 650 mg by mouth every 6 hours as needed for pain, maximum 3 g per day
+- Calcium carbonate with vitamin D 600 mg/400 units by mouth twice daily
+
+Medication Changes:
+- New: cefpodoxime (complete course through 2026-11-17)
+- New: apixaban 5 mg twice daily (stroke prevention for atrial fibrillation)
+- New: metoprolol tartrate 25 mg twice daily (rate control)
+- New: insulin glargine 10 units at bedtime (replaces metformin and glipizide)
+- Held: metformin 1000 mg twice daily until PCP confirms stable kidney function
+- Held: lisinopril 20 mg daily and hydrochlorothiazide 25 mg daily (acute kidney injury; PCP to decide on restarting)
+- Stopped: glipizide 5 mg daily (hypoglycemia risk with reduced kidney function)
+- Stopped: naproxen (kidney injury; also bleeding risk with apixaban). Avoid all NSAIDs.
+- Unchanged: atorvastatin, calcium with vitamin D
+
+Patient and Family Education Completed:
+The patient and her husband received teaching on insulin pen use, fingerstick glucose monitoring twice daily with a log for the PCP visit, and hypoglycemia recognition and treatment with 15 grams of fast sugar. Anticoagulation teaching covered the purpose of apixaban, signs of bleeding, the need to avoid NSAIDs and aspirin unless prescribed, and the importance of not missing doses. Stent teaching covered expected symptoms and the requirement for planned removal. Fall prevention teaching covered use of the walker at all times for now, night lights, removal of loose rugs, and a shower chair, which the family already owns. Delirium precautions were explained to the husband and daughter.
+
+Return Precautions:
+Return to the emergency department or call the PCP for temperature above 100.4 F, shaking chills, flank pain that does not improve, inability to urinate, heavy blood in the urine or clots, black or bloody stools, vomiting blood, a racing or irregular heartbeat with dizziness or fainting, chest pain, shortness of breath, new confusion or excessive sleepiness, blood glucose below 70 that does not correct or above 350, or a fall with head strike while on apixaban.
+
+Diet: Carbohydrate-consistent diabetic diet. Encourage fluids, at least 2 liters daily unless otherwise directed, to support kidney recovery and reduce stone risk.
+
+Activity: Walk several times a day with the rolling walker. No driving until cleared by the PCP, given recent delirium and new insulin. No lifting more than 10 pounds for 1 week.
+
+Lines and Devices at Discharge: Peripheral IV removed 2026-11-13. Right ureteral stent in place (placed 2026-11-03, must be removed or exchanged by 2027-02-03). No urinary catheter.
+
+Time Spent: More than 40 minutes were spent on discharge-day management, including examination, medication reconciliation, coordination with urology, cardiology and case management, and family discussion.
+
+Electronically signed by Philippa Strand-Okoye, MD on 2026-11-13 18:27

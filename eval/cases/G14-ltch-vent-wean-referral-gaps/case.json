@@ -1,0 +1,78 @@
+{
+  "id": "G14-ltch-vent-wean-referral-gaps",
+  "category": "gap",
+  "title": "Septic shock with prolonged ventilation, to LTCH; no final diagnosis or condition, med list deferred to MAR, goals and family discussion not done, no list, choice or quality data",
+  "disposition": "Long-term acute care hospital (LTCH)",
+  "discharge_date": "2026-11-21",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    },
+    {
+      "file": "casemgmt.txt",
+      "kind": "case_management"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "fail",
+    "hospital_course": "pass",
+    "discharge_condition": "fail",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "unclear",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "unclear",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "unclear",
+    "pac_list": "fail",
+    "pac_choice": "fail",
+    "pac_quality_data": "fail",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "not_applicable"
+  },
+  "also_acceptable": {
+    "final_diagnosis": [
+      "unclear"
+    ],
+    "discharge_condition": [
+      "unclear"
+    ],
+    "discharge_meds": [
+      "fail"
+    ],
+    "goals_of_care": [
+      "fail"
+    ],
+    "dp_discussed": [
+      "fail"
+    ]
+  },
+  "rationale": {
+    "final_diagnosis": "There is no discharge or final diagnosis section; MRSA pneumonia and septic shock can only be inferred from the narrative.",
+    "discharge_condition": "No statement of condition at discharge; the course gives ventilator settings but no overall clinical or mental status summary under a condition heading.",
+    "discharge_meds": "The summary defers the medication list to a separate transfer MAR that was not provided; only changes are listed.",
+    "goals_of_care": "The code status line says goals were not addressed and are to be determined.",
+    "dp_discussed": "The note says the plan has not yet been discussed with the daughter (healthcare proxy) and the patient could not participate.",
+    "pac_list": "No list of available Medicare-participating LTCHs was given to the patient or proxy.",
+    "pac_choice": "No freedom-of-choice discussion; the referral was made on the pulmonary team's recommendation without any documented patient or proxy choice.",
+    "pac_quality_data": "No quality or resource-use data was shared.",
+    "pending_results": "The pending sputum culture is listed with a named owner (ICU team calls the LTCH attending).",
+    "functional_status": "Bedbound with total assistance is a functional status, even though it is poor.",
+    "meds_consistent": "No nursing discharge instructions were provided, so there is nothing to compare."
+  },
+  "tags": [
+    "post-acute",
+    "ltch",
+    "missing-section",
+    "goals-of-care",
+    "dp-discussed",
+    "multi-gap"
+  ]
+}

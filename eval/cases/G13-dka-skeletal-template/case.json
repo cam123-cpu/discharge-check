@@ -1,0 +1,56 @@
+{
+  "id": "G13-dka-skeletal-template",
+  "category": "gap",
+  "title": "DKA, home; template summary with empty diagnosis, PCP and goals sections and no course, condition, disposition, function or planning evaluation",
+  "disposition": "Home",
+  "discharge_date": "2026-11-24",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "fail",
+    "hospital_course": "fail",
+    "discharge_condition": "fail",
+    "disposition": "fail",
+    "followup": "pass",
+    "pcp_named": "fail",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "fail",
+    "functional_status": "fail",
+    "info_transmitted": "pass",
+    "dp_evaluation": "fail",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "not_applicable"
+  },
+  "rationale": {
+    "final_diagnosis": "The Discharge Diagnosis header is present but empty; DKA appears only in the case title, not the record.",
+    "hospital_course": "There is no hospital course section and no narrative of what was treated or the outcome.",
+    "discharge_condition": "Condition at discharge is not stated anywhere.",
+    "disposition": "The disposition hint (Home) comes from the registration system; no document states where she was discharged to.",
+    "pcp_named": "The Primary Care Provider header is empty and the only follow-up is with a clinic, not a named clinician.",
+    "goals_of_care": "The Goals of Care header is empty; there is no code status or stated treatment preference.",
+    "functional_status": "No description of mobility or daily-activity function.",
+    "dp_evaluation": "No discharge planning evaluation of post-hospital needs is documented.",
+    "followup": "Follow-up names a clinic (who) and a date and time (when), which satisfies the rule even though no individual clinician is named.",
+    "dp_discussed": "The insulin and sick-day plan, the substance of this discharge plan, was reviewed with the patient and her mother.",
+    "pac_list": "Not referred to home health, SNF, IRF or LTCH, so the three post-acute rules do not apply.",
+    "meds_consistent": "No nursing discharge instructions were provided, so there is nothing to compare."
+  },
+  "tags": [
+    "empty-section",
+    "missing-section",
+    "unnamed-pcp",
+    "multi-gap"
+  ]
+}

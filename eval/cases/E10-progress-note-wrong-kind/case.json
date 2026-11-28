@@ -1,0 +1,54 @@
+{
+  "id": "E10-progress-note-wrong-kind",
+  "category": "edge",
+  "title": "Discharge content only in a day-of-discharge progress_note (wrong kind, no discharge summary) plus nursing instructions; bradycardia, home, 50 days after discharge",
+  "disposition": "Home",
+  "discharge_date": "2026-10-08",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "progress.txt", "kind": "progress_note"},
+    {"file": "nursing.txt", "kind": "nursing_instructions"}
+  ],
+  "expected": {
+    "final_diagnosis": "fail",
+    "hospital_course": "fail",
+    "discharge_condition": "fail",
+    "disposition": "fail",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "fail",
+    "med_changes": "pass",
+    "pending_results": "fail",
+    "goals_of_care": "fail",
+    "functional_status": "pass",
+    "info_transmitted": "fail",
+    "dp_evaluation": "fail",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "fail",
+    "timeliness": "fail",
+    "meds_consistent": "fail"
+  },
+  "also_acceptable": {
+    "meds_consistent": ["unclear"]
+  },
+  "rationale": {
+    "final_diagnosis": "EDGE (wrong kind): the diagnosis appears only in a progress note, which this summary-only rule does not accept; the note itself says the discharge summary is still to be dictated.",
+    "hospital_course": "EDGE (wrong kind): course is only in the progress note.",
+    "discharge_condition": "EDGE (wrong kind): condition is only in the progress note.",
+    "disposition": "EDGE (wrong kind): 'Discharged home today' is only in the progress note; the rule accepts the discharge summary or case management note, and nursing instructions do not state a disposition.",
+    "discharge_meds": "EDGE (wrong kind): medication list is only in the progress note and nursing instructions.",
+    "med_changes": "Nursing instructions state stopped metoprolol and diltiazem and new amlodipine.",
+    "pending_results": "EDGE (wrong kind): 'Pending Results: None' is only in the progress note.",
+    "goals_of_care": "EDGE (wrong kind): code status is only in the progress note.",
+    "info_transmitted": "EDGE (wrong kind): only the progress note says a copy of the note was sent to the PCP; no accepted document shows the discharge summary was sent.",
+    "dp_evaluation": "No discharge planning evaluation in any accepted document.",
+    "authenticated": "EDGE (wrong kind): the signed document is a progress note; no discharge summary exists to be authenticated.",
+    "timeliness": "No discharge summary exists 50 days after the 2026-10-08 discharge.",
+    "meds_consistent": "Nursing instructions exist but there is no discharge summary medication list to match against (unclear also defensible).",
+    "pac_list": "Discharged home without services."
+  },
+  "tags": ["wrong-kind", "progress-note", "missing-summary", "delinquent"]
+}

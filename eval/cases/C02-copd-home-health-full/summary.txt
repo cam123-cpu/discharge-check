@@ -1,0 +1,58 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Patient: Desmond Fairweather (synthetic)
+Unit: 4 North Pulmonary
+Admission Date: 2026-11-12
+Discharge Date: 2026-11-17
+Attending: Dr. Harriet Osei
+
+Chief Complaint: Worsening shortness of breath and increased sputum for three days.
+
+Discharge Diagnosis:
+1. Acute exacerbation of chronic obstructive pulmonary disease (principal)
+2. Chronic hypoxemic respiratory failure on home oxygen 2 L/min
+3. Atrial fibrillation, rate controlled
+4. Deconditioning
+
+Brief Hospital Course:
+74-year-old man with severe COPD (FEV1 38% predicted) on 2 L home oxygen presented with increased dyspnea and purulent sputum. Initial venous blood gas showed pH 7.33 and pCO2 58; he required BiPAP for 14 hours and was then weaned back to 2 L nasal cannula. He was treated with prednisone 40 mg daily for 5 days, scheduled nebulized ipratropium-albuterol, and doxycycline for 5 days. Respiratory viral panel was negative. By discharge he is back to his baseline oxygen of 2 L/min with saturations of 90 to 93% and can walk 120 feet with a rolling walker. Physical therapy recommends home health PT and nursing given new deconditioning and a recent prior admission.
+
+Condition at Discharge: Improved and stable. Mental status alert and oriented. Breathing at baseline on 2 L/min oxygen.
+
+Discharge Disposition: Home with home health services (skilled nursing and physical therapy) through Harborlight Home Health
+
+Discharge Medications:
+- Prednisone 40 mg by mouth daily for 1 more day (last dose 2026-11-18)
+- Doxycycline 100 mg by mouth twice daily for 1 more day (last dose 2026-11-18)
+- Tiotropium-olodaterol 2.5-2.5 mcg two inhalations once daily
+- Albuterol 90 mcg inhaler 2 puffs every 4 hours as needed for shortness of breath
+- Apixaban 5 mg by mouth twice daily
+- Diltiazem ER 180 mg by mouth daily
+- Oxygen 2 L/min by nasal cannula continuously
+
+Medication Changes:
+- New: prednisone 40 mg daily, short course ending 2026-11-18
+- New: doxycycline 100 mg twice daily, short course ending 2026-11-18
+- Changed: tiotropium 18 mcg replaced by tiotropium-olodaterol 2.5-2.5 mcg once daily to add a long-acting beta agonist
+- No changes to apixaban, diltiazem or oxygen
+
+Allergies: No known drug allergies
+
+Pending Results: None pending at discharge.
+
+Goals of Care: Code status DNR, full treatment otherwise including BiPAP; intubation acceptable only for a short trial (documented on POLST, copy sent with patient). His goal is to stay in his own home with his wife and avoid readmission.
+
+Functional Status: Ambulates 120 feet with a rolling walker and standby assistance; needs help with bathing; independent with eating and grooming.
+
+PCP: Dr. Simone Achebe, Lakeview Internal Medicine, 555-0133
+
+Followup Instructions:
+- PCP Dr. Simone Achebe within 7 days, appointment 2026-11-23
+- Pulmonology clinic, Dr. Harriet Osei, in 4 weeks on 2026-12-15
+- Harborlight Home Health first nursing visit within 48 hours of discharge (by 2026-11-19)
+
+Discharge planning evaluation documented by case management (see case management note dated 2026-11-16). Plan discussed with the patient and his wife, who agree with home health.
+
+Discharge summary and medication list sent electronically to PCP Dr. Simone Achebe and faxed to Harborlight Home Health agency on 2026-11-17.
+
+Electronically signed by Harriet Osei, MD on 2026-11-17 17:05

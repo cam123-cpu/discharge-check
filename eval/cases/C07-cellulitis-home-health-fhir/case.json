@@ -1,0 +1,54 @@
+{
+  "id": "C07-cellulitis-home-health-fhir",
+  "category": "control",
+  "title": "Diabetic foot cellulitis, home with home health, FHIR R4 Bundle summary + case management note complete",
+  "disposition": "Home with home health services",
+  "discharge_date": "2026-11-22",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "bundle.json",
+      "kind": "discharge_summary"
+    },
+    {
+      "file": "casemgmt.txt",
+      "kind": "case_management"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "pass",
+    "pac_choice": "pass",
+    "pac_quality_data": "pass",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "not_applicable"
+  },
+  "rationale": {
+    "pac_list": "Case management note documents that a list of Medicare-certified providers of the referred level of care was given to the patient and family.",
+    "pac_choice": "Case management note documents freedom of choice and that the patient's selected provider was used.",
+    "pac_quality_data": "Case management note documents that Care Compare quality ratings were reviewed with the patient and family.",
+    "meds_consistent": "No nursing instructions were provided, so the cross-document medication comparison does not apply.",
+    "final_diagnosis": "Condition resources flatten into a Discharge Diagnosis section inside the discharge summary bundle.",
+    "followup": "Appointment resources give named clinicians with dates (PCP 2026-11-27, podiatry 2026-11-30) and the home health start of care date.",
+    "goals_of_care": "Narrative states full code and the patient's goals; a Goal resource repeats them.",
+    "authenticated": "The embedded narrative carries an electronic signature with date and time."
+  },
+  "tags": [
+    "fhir",
+    "home-health"
+  ]
+}

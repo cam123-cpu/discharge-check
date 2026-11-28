@@ -1,0 +1,53 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-13
+Discharge Date: 2026-11-19
+Attending: Dr. Augustin Lemaire-Boateng
+
+Chief Complaint: Fall at home and new confusion.
+
+Discharge Diagnosis:
+1. Escherichia coli urinary tract infection with acute metabolic encephalopathy, resolved
+2. Fall without fracture
+3. Deconditioning
+4. Parkinson disease
+
+Brief Hospital Course:
+81-year-old woman with Parkinson disease brought in after a fall at home with new confusion. CT head and hip films negative for fracture. Urine culture grew pan-sensitive E. coli; treated with IV ceftriaxone then oral cefpodoxime. Confusion cleared by day 3. Physical therapy initially cleared her for home with home health PT and nursing visits.
+
+Condition at Discharge: Improved. Mental status at baseline, alert and oriented x3.
+
+Discharge Disposition: Home with home health (Brightwater Home Health, RN and PT visits).
+
+Discharge Medications:
+- Cefpodoxime 200 mg by mouth twice daily for 2 more days
+- Carbidopa-levodopa 25-100 mg by mouth three times daily
+- Vitamin D3 2000 units by mouth daily
+- Polyethylene glycol 17 g by mouth daily
+
+Medication Changes:
+- New: cefpodoxime 200 mg twice daily to complete 7 days of antibiotics
+- New: vitamin D3 2000 units daily
+- Stopped: oxybutynin 5 mg daily (anticholinergic, fall and confusion risk)
+
+Pending Results: None pending at discharge.
+
+Goals of Care: Full code. Wants to return home to her husband as soon as she is strong enough.
+
+Functional Status: Ambulates 30 feet with rolling walker and contact guard assist; needs assistance with toileting and bathing.
+
+PCP: Dr. Henrietta Mbeki (555-0195)
+
+Followup Instructions:
+- PCP Dr. Henrietta Mbeki within 2 weeks of discharge
+- Neurology, Dr. Castellanos, in 4 weeks
+
+Discharge planning evaluation: see case management note of 2026-11-17.
+Discharge summary faxed to Brightwater Home Health agency on 2026-11-18.
+
+ADDENDUM 2026-11-19 09:40:
+On the morning of planned discharge she failed the PT stair assessment and had a near-fall with transfers. PT now recommends short-term skilled nursing facility rehab. Disposition changed to skilled nursing facility: Lakeview Rehabilitation and Nursing. Bed accepted for today.
+Discussed the change with the patient and her husband, who agree with the plan.
+SNF physician to see her within 48 hours of arrival; PCP and neurology follow-up as above after SNF discharge.
+
+Electronically signed by Augustin Lemaire-Boateng, MD on 2026-11-19 11:30

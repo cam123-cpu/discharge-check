@@ -1,0 +1,56 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+PATIENT: Saoirse Delacroix-Mbeki (synthetic)
+UNIT: 9 North Endocrine / Medicine
+ADMISSION DATE: 11/01/2026
+DISCHARGE DATE: 11/04/2026
+ATTENDING: Dr. Anneke Vasquez-Lund
+
+CHIEF COMPLAINT: Nausea, vomiting and abdominal pain for one day.
+
+DISCHARGE DIAGNOSES:
+1. Diabetic ketoacidosis, moderate, precipitated by missed insulin doses during a viral gastroenteritis (principal)
+2. Type 1 diabetes mellitus
+3. Viral gastroenteritis, resolved
+
+HOSPITAL COURSE:
+24-year-old woman with type 1 diabetes since age 11, on multiple daily injections, presented with glucose 486, bicarbonate 11, anion gap 25 and beta-hydroxybutyrate 6.2 after skipping basal insulin for two days while vomiting. She was admitted to the step-down unit on the DKA protocol with IV insulin infusion, fluids and potassium replacement. Anion gap closed after 14 hours and she was transitioned to subcutaneous glargine and lispro with a 2-hour overlap. Vomiting resolved on day 2 and she is eating normally. Glucose has ranged 110 to 190 on her home regimen for 36 hours. The diabetes educator reviewed sick-day rules and ketone testing with her. DKA resolved; she recovered fully.
+
+CONDITION AT DISCHARGE: Good. Mental status alert and oriented, clear. Vital signs normal. Tolerating a regular diet.
+
+DISCHARGE DISPOSITION: Home, self-care. No home services needed.
+
+DISCHARGE MEDICATIONS:
+- Insulin glargine 22 units subcutaneously every evening
+- Insulin lispro 1 unit per 10 g carbohydrate with meals plus correction 1 unit per 40 mg/dL above 150, subcutaneously
+- Glucagon 1 mg nasal powder as needed for severe hypoglycemia
+- Ondansetron 4 mg orally disintegrating tablet every 8 hours as needed for nausea
+- Blood ketone test strips, use when glucose is above 250 or when ill
+
+MEDICATION CHANGES:
+- Changed: insulin glargine increased from 20 units to 22 units every evening
+- New: ondansetron 4 mg as needed for nausea; blood ketone test strips
+- Insulin lispro ratio and glucagon unchanged
+
+ALLERGIES: No known drug allergies
+
+PENDING RESULTS: None pending at discharge.
+
+GOALS OF CARE: Full code. Her goal is to avoid further DKA admissions and finish her nursing degree this semester; she prefers to manage her insulin herself and is interested in an insulin pump.
+
+FUNCTIONAL STATUS: Fully independent with ADLs and ambulating without assistance.
+
+PCP: Dr. Matthias Oduya, Greenfield Student Health, 555-0109
+
+FOLLOWUP INSTRUCTIONS:
+- Endocrinology, Dr. Anneke Vasquez-Lund, in 2 weeks on 11/18/2026 (pump evaluation)
+- PCP Dr. Matthias Oduya within 7 days, appointment 11/10/2026
+- Diabetes education class on 11/12/2026
+
+DISCHARGE PLANNING EVALUATION: Screened on admission by the unit case manager. Lives with two roommates, independent, insured through her university plan with insulin covered. No post-hospital services needed; no barriers to obtaining insulin or supplies.
+
+The discharge plan, sick-day rules and when to return were discussed with the patient, who verbalized understanding and agrees with the plan.
+
+Discharge summary sent electronically to PCP Dr. Matthias Oduya on 11/04/2026.
+
+Electronically signed by Anneke Vasquez-Lund, MD on 11/05/2026 09:14

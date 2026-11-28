@@ -1,0 +1,33 @@
+DISCHARGE SUMMARY - COVER SHEET (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-17
+Discharge Date: 2026-11-20
+Attending: Dr. Konstantin Petrov
+PCP: Dr. Adaeze Nwosu (555-0138)
+
+Condition at Discharge: Stable, chest pain free for 48 hours. Alert and oriented x3.
+
+Discharge Disposition: Home
+
+Medication Changes:
+- New: ticagrelor 90 mg twice daily
+- New: metoprolol succinate 25 mg daily
+- Increased: atorvastatin from 40 mg to 80 mg nightly
+- Continue aspirin 81 mg daily
+
+Pending Results: None pending at discharge.
+
+Code Status: Full code. Goal is to return to work as a bus mechanic after cardiac rehab.
+
+Functional Status: Independent with ADLs; walked 400 feet in the hallway without symptoms.
+
+Followup Instructions:
+- Cardiology, Dr. Petrov, in 2 weeks (2026-12-04)
+- PCP Dr. Nwosu within 7 days
+- Cardiac rehabilitation intake in 3 weeks
+
+Discharge planning evaluation: lives with his wife and adult son; independent; no post-hospital services needed. Outpatient cardiac rehab referral placed.
+Plan discussed with the patient and his wife, who agree with the plan.
+Summary sent electronically to PCP Dr. Adaeze Nwosu on 2026-11-20.
+
+Electronically signed by Konstantin Petrov, MD on 2026-11-20 18:15

@@ -1,0 +1,58 @@
+{
+  "id": "E03-ama-terse-summary",
+  "category": "edge",
+  "title": "Very terse summary (11 lines, abbreviations) for a patient who left against medical advice (AMA, pac_* not applicable); no nursing instructions",
+  "disposition": "Left against medical advice (AMA)",
+  "discharge_date": "2026-11-04",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "unclear",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "unclear",
+    "pcp_named": "fail",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "fail",
+    "goals_of_care": "fail",
+    "functional_status": "pass",
+    "info_transmitted": "fail",
+    "dp_evaluation": "fail",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "not_applicable"
+  },
+  "also_acceptable": {
+    "hospital_course": ["fail"],
+    "followup": ["fail"],
+    "goals_of_care": ["unclear"]
+  },
+  "rationale": {
+    "final_diagnosis": "EDGE (terse): 'Dx: acute alcoholic pancreatitis' states the final diagnosis even without a formal section header.",
+    "hospital_course": "EDGE (terse): one abbreviated line lists treatments and that he left AMA on hospital day 3, but gives little on how he responded beyond a lipase trend; incomplete rather than absent.",
+    "discharge_condition": "EDGE (terse): 'Condition: stable, A&O x3, ... ambulatory' gives clinical and mental status at discharge.",
+    "disposition": "Left against medical advice is a stated disposition.",
+    "followup": "'PCP prn' names no clinician and no timeframe.",
+    "pcp_named": "No PCP or follow-up clinician is named.",
+    "discharge_meds": "Thiamine and folic acid are listed with dose, route and frequency as the discharge medications.",
+    "med_changes": "Both medications are labeled new.",
+    "functional_status": "'ambulatory' at discharge describes mobility, minimally.",
+    "info_transmitted": "Nothing says the summary was sent anywhere.",
+    "dp_evaluation": "No discharge planning evaluation of post-hospital needs is documented; the AMA departure preempted it.",
+    "dp_discussed": "Risks of leaving, return precautions and the plan were discussed with the patient, who agreed (written as 'w/ pt').",
+    "goals_of_care": "No code status or goals of care are documented; the only expressed preference is that he declined a detox referral, so unclear is also defensible.",
+    "pac_list": "EDGE: AMA departure is not a post-acute referral, so the pac rules do not apply.",
+    "pac_choice": "EDGE: AMA, not a post-acute referral.",
+    "pac_quality_data": "EDGE: AMA, not a post-acute referral.",
+    "meds_consistent": "No nursing_instructions document (he left before instructions were given)."
+  },
+  "tags": ["ama", "terse", "abbreviations", "no-nursing-instructions", "not-applicable"]
+}

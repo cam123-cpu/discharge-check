@@ -1,0 +1,63 @@
+{
+  "id": "G10-snf-hip-fracture-no-list-no-quality",
+  "category": "gap",
+  "title": "Hip fracture to SNF; choice documented but no provider list, no quality data, medication changes not explained",
+  "disposition": "Skilled nursing facility (SNF)",
+  "discharge_date": "2026-11-24",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    },
+    {
+      "file": "nursing.txt",
+      "kind": "nursing_instructions"
+    },
+    {
+      "file": "casemgmt.txt",
+      "kind": "case_management"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "fail",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "fail",
+    "pac_choice": "pass",
+    "pac_quality_data": "fail",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "pass"
+  },
+  "also_acceptable": {
+    "med_changes": [
+      "unclear"
+    ]
+  },
+  "rationale": {
+    "pac_list": "Freedom of choice is documented, but nothing shows the patient was given a list of available Medicare-participating SNFs.",
+    "pac_choice": "The note documents freedom to choose and that the referral went to the facility the patient and daughter selected; the missing list is scored under pac_list.",
+    "pac_quality_data": "No quality or resource-use data (for example Care Compare ratings) is documented.",
+    "med_changes": "Enoxaparin, oxycodone, senna and cholecalciferol are new, but there is no medication changes section and no statement of what was started, stopped or changed versus home medications; only the hospital course mentions that vitamin D supplementation was begun (hence unclear is also acceptable).",
+    "dp_evaluation": "The case management note documents a discharge planning assessment with post-hospital needs."
+  },
+  "tags": [
+    "post-acute",
+    "snf",
+    "pac-list",
+    "quality-data",
+    "multi-gap"
+  ]
+}

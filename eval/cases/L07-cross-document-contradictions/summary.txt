@@ -1,0 +1,47 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-11
+Discharge Date: 2026-11-16
+Attending: Dr. Paulina Grzybowska
+
+Chief Complaint: Left lower abdominal pain and fever for two days.
+
+Discharge Diagnosis:
+1. Acute uncomplicated sigmoid diverticulitis (CT: no abscess or perforation)
+2. Chronic obstructive pulmonary disease, stable
+3. Atrial fibrillation on anticoagulation
+
+Brief Hospital Course:
+73-year-old man admitted with CT-confirmed sigmoid diverticulitis, temperature 38.6 and WBC 15.8. Treated with bowel rest and IV ceftriaxone plus metronidazole. Pain and fever resolved by day 3; diet advanced to low-residue and tolerated. Antibiotics changed to oral amoxicillin-clavulanate on day 4. Blood cultures drawn on 11/15 for a single temperature of 38.1 remain in process at the time of discharge. Apixaban was held for one day and resumed.
+
+Condition at Discharge: Improved. Alert and oriented x3, mental status at baseline. Tolerating diet, pain controlled on acetaminophen.
+
+Discharge Disposition: Home.
+
+Discharge Medications:
+- Amoxicillin-clavulanate 875-125 mg by mouth twice daily for 6 more days
+- Apixaban 5 mg by mouth twice daily
+- Tiotropium 18 mcg inhaled once daily
+- Acetaminophen 650 mg by mouth every 6 hours as needed
+
+Medication Changes:
+- New: amoxicillin-clavulanate to complete a 10-day antibiotic course
+- New: acetaminophen as needed; avoid NSAIDs while on apixaban
+
+Pending Results: None pending.
+
+Code Status: DNR/DNI, confirmed with the patient on admission 11/11.
+
+Functional Status: Independent with ADLs; ambulates without a device.
+
+PCP: Dr. Oluwaseun Fairbanks (555-0146)
+
+Followup Instructions:
+- PCP Dr. Oluwaseun Fairbanks in 1 week, 2026-11-23
+- Colorectal surgery clinic in 6 weeks to discuss colonoscopy timing
+
+Discharge planning evaluation: lives with his wife, independent at baseline; no post-hospital services needed.
+Plan discussed with the patient and his wife, who agree with the plan.
+Discharge summary sent electronically to PCP Dr. Fairbanks on 2026-11-16.
+
+Electronically signed by Paulina Grzybowska, MD on 2026-11-16 12:31

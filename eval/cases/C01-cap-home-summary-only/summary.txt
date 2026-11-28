@@ -1,0 +1,56 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Patient: Rosalind Achterberg (synthetic)
+Unit: 5 West General Medicine
+Admission Date: 2026-11-08
+Discharge Date: 2026-11-11
+Attending: Dr. Tobias Wren
+
+Chief Complaint: Fever, productive cough and right-sided chest pain for four days.
+
+Discharge Diagnosis:
+1. Community-acquired pneumonia, right lower lobe (principal)
+2. Type 2 diabetes mellitus, controlled
+3. Hyperlipidemia
+
+Brief Hospital Course:
+58-year-old woman admitted with fever to 39.1 C, right lower lobe consolidation on chest radiograph, and oxygen saturation of 90% on room air. She was treated with IV ceftriaxone and oral azithromycin, transitioned to oral amoxicillin-clavulanate on hospital day 3 once afebrile for 48 hours. Oxygen was weaned to room air by day 2 and saturation at discharge is 96% on room air at rest and with walking. Blood cultures showed no growth at 48 hours. Metformin was held on admission for IV contrast and resumed on day 3 with normal renal function. Pneumonia improved and she is discharged in good condition.
+
+Condition at Discharge: Good. Afebrile for 60 hours. Mental status alert and oriented to person, place and time. Ambulating independently on the unit.
+
+Discharge Disposition: Home (self-care, no services needed)
+
+Discharge Medications:
+- Amoxicillin-clavulanate 875-125 mg by mouth twice daily for 4 more days (through 2026-11-15)
+- Metformin 1000 mg by mouth twice daily
+- Atorvastatin 20 mg by mouth nightly
+- Benzonatate 100 mg by mouth three times daily as needed for cough
+
+Medication Changes:
+- New: amoxicillin-clavulanate 875-125 mg twice daily to complete a 7-day antibiotic course
+- New: benzonatate 100 mg three times daily as needed for cough
+- Metformin was held during admission and is resumed at the home dose of 1000 mg twice daily
+- No other changes to home medications
+
+Allergies: Penicillin listed as childhood rash; tolerated amoxicillin-clavulanate this admission without reaction.
+
+Pending Results: Final blood culture report (no growth at 48 hours) is pending; Dr. Wren will review the final result and call the patient if anything grows.
+
+Goals of Care: Full code, confirmed with the patient. Her stated goal is to recover at home and return to work as a school librarian within two weeks.
+
+Functional Status: Independent with all ADLs and ambulating without an assistive device. No home oxygen requirement.
+
+PCP: Dr. Mariana Velasquez, Northgate Family Medicine, 555-0117
+
+Followup Instructions:
+- PCP Dr. Mariana Velasquez within 7 days, appointment booked 2026-11-17 at 10:30
+- Repeat chest radiograph in 6 weeks, ordered by Dr. Velasquez's office
+- Return to the emergency department for fever above 38.5 C, worsening breathing or chest pain
+
+Discharge Planning Evaluation: Completed by the unit case manager on 2026-11-09. Patient lives with her husband, was fully independent before admission and drives. No post-hospital services needed; husband available to help for the first week.
+
+The discharge plan, antibiotic schedule and warning signs were discussed with the patient and her husband at the bedside; the patient verbalized understanding and agrees with the plan.
+
+Discharge summary sent electronically to PCP Dr. Mariana Velasquez on 2026-11-11.
+
+Electronically signed by Tobias Wren, MD on 2026-11-11 15:20

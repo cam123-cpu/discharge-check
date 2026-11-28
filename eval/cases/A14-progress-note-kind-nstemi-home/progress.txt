@@ -1,0 +1,22 @@
+CARDIOLOGY PROGRESS NOTE, HOSPITAL DAY 3 (SYNTHETIC RECORD)
+
+Date: 2026-11-19
+
+Reviewer note: this progress note is the discharge summary of record; the summary uploaded is only a cover sheet. Use this note for the final diagnosis, hospital course and discharge medication list.
+
+Final Diagnoses:
+1. Non-ST-elevation myocardial infarction, type 1
+2. Single-vessel coronary artery disease, status post drug-eluting stent to the proximal left anterior descending artery
+3. Hyperlipidemia
+
+Hospital Course:
+58-year-old man presented with 2 hours of substernal pressure; troponin I peaked at 4.2. Heparin infusion started. Catheterization on 2026-11-18 showed a 90% proximal LAD stenosis treated with one drug-eluting stent; LVEF 50% on echocardiogram. No arrhythmia on telemetry. Plan discharge tomorrow if he remains symptom free.
+
+Discharge Medications:
+- Aspirin 81 mg by mouth daily
+- Ticagrelor 90 mg by mouth twice daily
+- Metoprolol succinate 25 mg by mouth daily
+- Atorvastatin 80 mg by mouth nightly
+- Nitroglycerin 0.4 mg sublingual as needed for chest pain
+
+Electronically signed by Konstantin Petrov, MD on 2026-11-19 09:40

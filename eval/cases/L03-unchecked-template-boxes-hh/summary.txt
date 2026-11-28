@@ -1,0 +1,48 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-10
+Discharge Date: 2026-11-14
+Attending: Dr. Harriet Oyelaran
+
+Chief Complaint: Painful red swelling of the left lower leg for three days.
+
+Discharge Diagnosis:
+1. Cellulitis of the left lower leg with small superficial ulcer
+2. Deconditioning after acute illness
+3. Type 2 diabetes mellitus, A1c 7.4%
+4. Chronic venous insufficiency
+
+Brief Hospital Course:
+81-year-old woman admitted with nonpurulent cellulitis of the left shin around a 2 cm venous ulcer. Started on IV cefazolin with steady regression of erythema beyond the marked borders by day 2; transitioned to oral cephalexin on day 3. Venous duplex negative for DVT. Wound care nursing recommended daily dressing changes. PT found her weaker than baseline and recommended home PT and skilled nursing visits for wound care.
+
+Condition at Discharge: Improved and stable. Mental status alert and oriented x3. Afebrile for 48 hours.
+
+Discharge Disposition: Home with home health (skilled nursing visits for wound care and home PT).
+
+Discharge Medications:
+- Cephalexin 500 mg by mouth four times daily for 5 more days
+- Metformin 1000 mg by mouth twice daily
+- Lisinopril 10 mg by mouth daily
+- Atorvastatin 20 mg by mouth nightly
+- Acetaminophen 650 mg by mouth every 6 hours as needed
+
+Medication Changes:
+- New: cephalexin 500 mg four times daily through 11/19
+- New: acetaminophen as needed for leg pain
+- No other changes to home medications
+
+Pending Results: None pending at discharge.
+
+Goals of Care: Full code. She wants to remain in her own home with her husband.
+
+Functional Status: Ambulates 60 feet with a rolling walker and standby assist; needs assistance with bathing and lower-body dressing.
+
+PCP: Dr. Leonard Fitzgerald (555-0129)
+
+Followup Instructions:
+- PCP Dr. Leonard Fitzgerald within 7 days, appointment 2026-11-20
+- Wound clinic in 2 weeks, 2026-11-28
+
+Discharge summary sent electronically to PCP Dr. Leonard Fitzgerald on 2026-11-14.
+
+Electronically signed by Harriet Oyelaran, MD on 2026-11-14 15:55

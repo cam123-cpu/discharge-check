@@ -1,0 +1,46 @@
+{
+  "id": "E05-irf-in-cm-only-signed-day31",
+  "category": "edge",
+  "title": "IRF referral stated only in the case management note with a blank disposition hint; summary signed 31 days after discharge (boundary, fail); stroke; no quality data shared",
+  "disposition": "",
+  "discharge_date": "2026-10-12",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"},
+    {"file": "casemgmt.txt", "kind": "case_management"},
+    {"file": "nursing.txt", "kind": "nursing_instructions"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "pass",
+    "pac_choice": "pass",
+    "pac_quality_data": "fail",
+    "authenticated": "pass",
+    "timeliness": "fail",
+    "meds_consistent": "pass"
+  },
+  "rationale": {
+    "disposition": "EDGE: the disposition hint is blank and the summary has no disposition section; the case management note states discharge to an inpatient rehabilitation facility (IRF), which this rule accepts.",
+    "pac_list": "EDGE: the IRF referral appears only in the case management note, but it is still a post-acute referral, so the pac rules apply; the Medicare-participating IRF list is documented.",
+    "pac_choice": "Patient and wife were told they could choose any listed facility and chose Cedar Ridge.",
+    "pac_quality_data": "PLANTED GAP: no quality or resource-use data (for example Care Compare ratings) was shared; the choice was based on distance only.",
+    "timeliness": "EDGE (boundary): discharged 2026-10-12 and signed 2026-11-12, 31 days later, one day past the 30-day limit.",
+    "info_transmitted": "Sent electronically to the PCP and the rehabilitation facility on 2026-11-12 (late, but sent).",
+    "goals_of_care": "Code status and the stated goal of returning home and driving are documented.",
+    "meds_consistent": "Both lists contain the same five medications; aspirin is mentioned in nursing only as a medication not to take, matching its stopped status in the summary."
+  },
+  "tags": ["irf", "blank-hint", "disposition-in-cm-only", "timeliness-boundary", "post-acute"]
+}

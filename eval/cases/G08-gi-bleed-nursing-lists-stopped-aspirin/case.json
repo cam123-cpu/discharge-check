@@ -1,0 +1,49 @@
+{
+  "id": "G08-gi-bleed-nursing-lists-stopped-aspirin",
+  "category": "gap",
+  "title": "Upper GI bleed, home; nursing instructions still list aspirin that the summary stopped (single gap)",
+  "disposition": "Home",
+  "discharge_date": "2026-11-19",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    },
+    {
+      "file": "nursing.txt",
+      "kind": "nursing_instructions"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "fail"
+  },
+  "rationale": {
+    "meds_consistent": "The nursing list adds aspirin 81 mg daily, which the summary stopped and does not list; the patient would get two contradictory lists after a bleed.",
+    "pac_list": "Not referred to home health, SNF, IRF or LTCH, so the three post-acute rules do not apply."
+  },
+  "tags": [
+    "meds-mismatch",
+    "extra-drug",
+    "single-gap"
+  ]
+}

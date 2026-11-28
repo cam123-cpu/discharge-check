@@ -1,0 +1,42 @@
+{
+  "id": "L12-handoff-split-across-docs",
+  "category": "linguistic",
+  "title": "AKI on CKD, home; follow-up date, functional status, medication changes and pending result present but split across documents and in plain language",
+  "disposition": "Home",
+  "discharge_date": "2026-11-24",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"},
+    {"file": "nursing.txt", "kind": "nursing_instructions"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "pass"
+  },
+  "rationale": {
+    "followup": "The summary names Dr. Priya Raman (nephrology) and a lab before the visit but no date; the nursing instructions give the confirmed appointment with Dr. Raman on Tuesday, December 1 at 10:30 AM. Both are accepted documents, so who and when are documented.",
+    "functional_status": "The nursing section 'Getting around at home' describes rollator use, standby help for showering and stair ability; the summary adds 'Up and walking on the unit'.",
+    "med_changes": "The 'What's different from before' list says lisinopril is off, furosemide went from 40 to 20 mg, bicarbonate was added and amlodipine went up, each with a reason.",
+    "pending_results": "'Outstanding at discharge' lists the urine protein-to-creatinine ratio and says Dr. Raman's office will follow it up.",
+    "pac_list": "Home without services, so the post-acute rules do not apply."
+  },
+  "tags": ["paraphrase", "multi-doc", "plain-language", "nonstandard-header"]
+}

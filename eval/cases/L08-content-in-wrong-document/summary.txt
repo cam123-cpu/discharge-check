@@ -1,0 +1,40 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+General Medicine
+
+Admission Date: 2026-11-08
+Discharge Date: 2026-11-13
+Attending: Dr. Wendell Okonkwo-Hart
+
+Chief Complaint: Severe epigastric pain radiating to the back, with vomiting.
+
+Principal Diagnosis: Refer to case management note.
+
+Brief Hospital Course:
+64-year-old man admitted with epigastric pain, lipase 3,400 and a dilated common bile duct with stones on ultrasound. Managed with aggressive IV fluids, IV hydromorphone and bowel rest. ERCP on day 2 with sphincterotomy and stone extraction. Pain resolved and lipase normalized; diet advanced to low-fat and tolerated by day 4. General surgery consulted and recommends interval laparoscopic cholecystectomy within 6 weeks.
+
+Condition at Discharge: Stable. Alert and oriented x3, mental status normal. Tolerating a low-fat diet; pain 1/10.
+
+Discharge Disposition: Home with his partner.
+
+Discharge Medications: As per nursing discharge instructions.
+
+Medication Changes:
+- New: pantoprazole 40 mg daily for 4 weeks after sphincterotomy
+- New: ondansetron 4 mg as needed for nausea
+- Stopped: ibuprofen 400 mg as needed (avoid until surgery)
+
+Goals of Care: Full code. Wants to have the gallbladder surgery soon and return to work.
+
+Functional Status: Independent with ADLs and ambulation.
+
+PCP: Dr. Sigrid Thorvaldsen (555-0182)
+
+Followup Instructions:
+- General surgery, Dr. Ambrose Hollis, in 2 weeks (2026-11-27) to schedule cholecystectomy
+- PCP Dr. Sigrid Thorvaldsen within 2 weeks
+
+Discharge planning evaluation: independent, lives with partner, no post-hospital needs.
+Plan discussed with the patient and his partner, who agree with the plan.
+Discharge summary sent electronically to PCP Dr. Thorvaldsen on 2026-11-13.
+
+Electronically signed by Wendell Okonkwo-Hart, MD on 2026-11-13 10:12

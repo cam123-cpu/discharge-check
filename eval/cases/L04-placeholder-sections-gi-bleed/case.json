@@ -1,0 +1,48 @@
+{
+  "id": "L04-placeholder-sections-gi-bleed",
+  "category": "linguistic",
+  "title": "GI bleed, home; condition, pending results and goals of care sections hold only cross-references ('See progress note', 'See above', 'Per CM')",
+  "disposition": "Home",
+  "discharge_date": "2026-11-19",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"},
+    {"file": "casemgmt.txt", "kind": "case_management"},
+    {"file": "nursing.txt", "kind": "nursing_instructions"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "fail",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "unclear",
+    "goals_of_care": "fail",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "pass"
+  },
+  "also_acceptable": {
+    "discharge_condition": ["unclear"],
+    "pending_results": ["fail"],
+    "goals_of_care": ["unclear"]
+  },
+  "rationale": {
+    "discharge_condition": "'Discharge Condition: See progress note' points to a document that was not provided and the summary itself never states the condition at discharge.",
+    "pending_results": "'See above' refers back to the hospital course, which mentions gastric biopsies for H. pylori but never says whether they are pending or who will follow them up.",
+    "goals_of_care": "'Goals of Care: Per CM' defers to the case management note, which contains no code status, advance directive or stated goals.",
+    "followup": "The summary defers follow-up to the nursing instructions, which do list Dr. Ellison on 2026-11-25 and GI in 8 weeks; nursing instructions are an accepted document for this rule.",
+    "pac_list": "Home without services, so the post-acute rules do not apply."
+  },
+  "tags": ["placeholder", "see-above", "cross-reference", "boilerplate"]
+}

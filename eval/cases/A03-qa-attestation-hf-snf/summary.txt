@@ -1,0 +1,46 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-06
+Discharge Date: 2026-11-13
+Attending: Dr. Teodor Lindqvist
+Primary Care Physician: Dr. Abigail Nakamura (555-0128)
+
+Discharge Diagnosis:
+1. Acute on chronic heart failure with preserved ejection fraction
+2. Persistent atrial fibrillation with rapid ventricular response, rate controlled
+3. Type 2 diabetes mellitus
+
+Brief Hospital Course:
+88-year-old woman admitted with orthopnea, 4+ leg edema and atrial fibrillation at 130s. Diuresed with IV furosemide, net negative 7.1 L, weight 71.4 kg to 64.9 kg. Rate controlled with metoprolol titration. Apixaban continued. Course complicated by hypokalemia (2.9) that was repleted. Deconditioned; PT recommends SNF rehab before return home.
+
+Condition at Discharge: Stable, euvolemic on exam. Alert, oriented to person and place, at baseline per daughter.
+
+Discharge Disposition: Skilled nursing facility, Cedar Ridge Skilled Nursing
+
+Discharge Medications:
+- Furosemide 40 mg by mouth twice daily
+- Metoprolol succinate 100 mg by mouth daily
+- Apixaban 2.5 mg by mouth twice daily
+- Potassium chloride 20 mEq by mouth daily
+- Insulin glargine 8 units subcutaneously at bedtime
+
+Medication Changes:
+- Increased: furosemide from 20 mg daily to 40 mg twice daily
+- Increased: metoprolol succinate from 50 mg to 100 mg daily
+- New: potassium chloride 20 mEq daily
+- Stopped: glipizide 5 mg daily (hypoglycemia risk at her age)
+
+Pending Results: None pending at discharge.
+
+Goals of Care: DNR/DNI confirmed with patient and daughter (healthcare proxy). Goal is to regain enough strength to return to her apartment.
+
+Functional Status: Requires moderate assistance with transfers; ambulates 20 feet with walker and one assist.
+
+Follow-up Instructions:
+- SNF physician within 72 hours of arrival
+- Cardiology, Dr. Lindqvist, in 2 weeks (2026-11-27)
+- PCP Dr. Nakamura within 7 days of returning home
+
+Transfer packet including this summary faxed to Cedar Ridge Skilled Nursing on 2026-11-13.
+
+QA attestation: all CMS discharge elements verified complete by compliance on 11/14/2026 08:05. Signature on file. Provider list given per protocol.

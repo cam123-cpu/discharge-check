@@ -1,0 +1,46 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-17
+Discharge Date: 2026-11-22
+Attending: Dr. Henrietta Vos
+Primary Care Provider: Dr. Samuel Achebe (555-0151)
+
+Discharge Diagnosis:
+1. Left intertrochanteric femur fracture after mechanical fall, status post intramedullary nailing 2026-11-18
+2. Acute blood loss anemia
+3. Osteoporosis
+
+Brief Hospital Course:
+87-year-old woman who tripped on a rug at home. Underwent cephalomedullary nailing of the left hip on hospital day 2 without complication. Hemoglobin fell to 7.6 and she received one unit of packed red cells with appropriate rise to 8.9. Pain controlled with scheduled acetaminophen and low-dose oxycodone. Brief post-operative delirium on night 1 resolved with sleep hygiene and family presence. Weight bearing as tolerated.
+
+Condition at Discharge: Stable. Alert, oriented x3, pain 3/10.
+
+Discharge Disposition: SNF, Pinegate Skilled Nursing
+
+Discharge Medications:
+- Enoxaparin 40 mg subcutaneously daily for 28 days
+- Acetaminophen 1000 mg by mouth every 8 hours
+- Oxycodone 2.5 mg by mouth every 6 hours as needed for severe pain
+- Senna 8.6 mg by mouth twice daily
+- Vitamin D3 2000 units by mouth daily
+- Alendronate 70 mg by mouth weekly on Sundays
+
+Medication Changes:
+- New: enoxaparin for VTE prophylaxis after hip surgery
+- New: oxycodone as needed, short course
+- New: alendronate weekly and vitamin D3 for osteoporosis
+- Stopped: zolpidem 5 mg nightly (fall and delirium risk)
+
+Pending Results: None pending at discharge.
+
+Goals of Care: Full code. Goal is to walk again and return home with her granddaughter's help.
+
+Functional Status: Transfers with moderate assist; ambulates 15 feet with front-wheeled walker.
+
+Followup Instructions:
+- Orthopedics, Dr. Vos, wound check and x-ray on 2026-12-02
+- PCP Dr. Achebe within 2 weeks of leaving the SNF for osteoporosis follow-up
+
+Summary faxed to Pinegate Skilled Nursing and copied to PCP Dr. Achebe on 2026-11-22.
+
+Electronically signed by Henrietta Vos, MD on 2026-11-22 13:37

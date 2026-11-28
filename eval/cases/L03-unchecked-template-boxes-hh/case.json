@@ -1,0 +1,50 @@
+{
+  "id": "L03-unchecked-template-boxes-hh",
+  "category": "linguistic",
+  "title": "Cellulitis, home with home health; plan discussion and provider-choice items appear only as unchecked template boxes",
+  "disposition": "Home with home health services",
+  "discharge_date": "2026-11-14",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"},
+    {"file": "casemgmt.txt", "kind": "case_management"},
+    {"file": "nursing.txt", "kind": "nursing_instructions"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "fail",
+    "pac_list": "fail",
+    "pac_choice": "fail",
+    "pac_quality_data": "fail",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "pass"
+  },
+  "also_acceptable": {
+    "dp_discussed": ["unclear"],
+    "pac_list": ["unclear"],
+    "pac_choice": ["unclear"],
+    "pac_quality_data": ["unclear"]
+  },
+  "rationale": {
+    "dp_evaluation": "The assessment box is checked and is followed by real content (living situation, prior function, anticipated needs).",
+    "dp_discussed": "The only mentions of discussing the plan are unchecked template boxes in the CM note and the nursing education checklist; an unchecked box documents nothing.",
+    "pac_list": "'List of Medicare-certified home health agencies ... provided' is an unchecked box; nothing shows a list was given.",
+    "pac_choice": "The freedom-of-choice box is unchecked and 'Agency selected by patient' is blank; a referral to one agency does not show the patient chose it.",
+    "pac_quality_data": "The Care Compare quality-data box is unchecked.",
+    "info_transmitted": "The summary was sent electronically to the PCP and a home health referral was faxed to the agency."
+  },
+  "tags": ["boilerplate", "template", "checkbox", "home-health"]
+}

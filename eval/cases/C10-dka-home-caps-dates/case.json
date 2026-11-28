@@ -1,0 +1,50 @@
+{
+  "id": "C10-dka-home-caps-dates",
+  "category": "control",
+  "title": "DKA in type 1 diabetes, home without services, uppercase headers and MM/DD/YYYY dates (summary + nursing)",
+  "disposition": "Home",
+  "discharge_date": "2026-11-04",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    },
+    {
+      "file": "nursing.txt",
+      "kind": "nursing_instructions"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "pass"
+  },
+  "rationale": {
+    "pac_list": "Discharged home without home health, SNF, IRF or LTCH services, so the three post-acute choice rules do not apply.",
+    "timeliness": "Signed 11/05/2026, one day after discharge on 11/04/2026.",
+    "meds_consistent": "Both lists contain the same five items (glargine, lispro, glucagon, ondansetron, ketone test strips)."
+  },
+  "tags": [
+    "format-variation",
+    "us-dates",
+    "home"
+  ]
+}

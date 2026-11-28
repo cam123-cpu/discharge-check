@@ -1,0 +1,47 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+Pulmonary Medicine Service
+
+Admission Date: 2026-11-16
+Discharge Date: 2026-11-20
+Attending: Dr. Tomasz Wielicki
+
+Reason for Admission: Worsening dyspnea and productive cough for four days.
+
+Impression at Discharge:
+1. Acute exacerbation of COPD (GOLD 3), viral trigger (rhinovirus PCR positive)
+2. Chronic hypoxemic respiratory failure on 2 L home oxygen, at baseline
+3. Tobacco use disorder, in early remission
+
+Brief Hospital Course:
+66-year-old woman with severe COPD admitted with increased work of breathing and purulent sputum. Treated with scheduled nebulized albuterol-ipratropium, prednisone 40 mg daily and a 5-day course of azithromycin. She required up to 4 L nasal cannula on day 1 and was weaned back to her home 2 L by day 3 without BiPAP. Ambulatory saturation was 91% on 2 L before discharge. She completed smoking cessation counseling and accepted a nicotine patch.
+
+Condition at Discharge: Improved. Alert and oriented x3, mental status at baseline. Breathing comfortably on home oxygen; walking the hallway with standby supervision only.
+
+Discharge Disposition: Home with her husband. Home oxygen already in place through her existing equipment vendor.
+
+Meds at d/c:
+- Prednisone 40 mg by mouth daily, 1 more day (completes 5-day course on 11/21)
+- Azithromycin 250 mg by mouth daily, 1 more day
+- Tiotropium-olodaterol 2.5-2.5 mcg, 2 inhalations once daily
+- Albuterol HFA 90 mcg, 2 puffs every 4 hours as needed
+- Nicotine patch 14 mg/24 h, apply daily
+
+Medication Changes:
+- New: prednisone and azithromycin short courses, both end 11/21
+- New: nicotine patch 14 mg daily
+- Changed: tiotropium 18 mcg inhaler replaced by tiotropium-olodaterol combination inhaler
+
+Pending Results: None pending at discharge.
+
+Code Status: Full code. She wants to stay out of the hospital and get back to walking her dog every day.
+
+Functional Status: Independent with ADLs; ambulates household distances on 2 L oxygen without a device.
+
+Plan / where she goes next:
+Pt to see her PMD, Dr. Nadia Ostrowski (555-0137), in 1 wk for recheck of breathing and BP after the steroid burst. Pulm clinic with Dr. Wielicki in 4-6 wks with PFTs.
+
+Discharge planning evaluation: case management screened on admission; lives with husband in a single-level home, already has home oxygen, no new post-hospital services needed.
+The discharge plan was discussed with the patient and her husband, who verbalized understanding.
+Discharge summary sent electronically to Dr. Nadia Ostrowski's office on 2026-11-20.
+
+Electronically signed by Tomasz Wielicki, MD on 2026-11-20 15:10

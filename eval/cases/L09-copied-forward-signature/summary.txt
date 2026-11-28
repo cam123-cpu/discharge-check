@@ -1,0 +1,51 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-08
+Discharge Date: 2026-11-12
+Attending: Dr. Celeste Marchetti
+
+Chief Complaint: Wheezing and chest tightness not relieved by her rescue inhaler.
+
+Discharge Diagnosis:
+1. Acute severe asthma exacerbation, triggered by upper respiratory infection
+2. Moderate persistent asthma, previously on rescue inhaler only
+3. Obesity, BMI 34
+
+Brief Hospital Course:
+59-year-old woman admitted with peak flow 38% of predicted and oxygen saturation 90% on room air. Treated with continuous then scheduled nebulized albuterol, ipratropium, IV methylprednisolone transitioned to oral prednisone, and one dose of IV magnesium. No ICU transfer. Peak flow improved to 72% of predicted by day 4 and she was on room air for 48 hours. Started on a daily inhaled corticosteroid-formoterol inhaler; inhaler technique taught by respiratory therapy.
+
+Condition at Discharge: Improved. Alert and oriented x3, mental status normal. Speaking full sentences, saturation 96% on room air.
+
+Discharge Disposition: Home.
+
+Discharge Medications:
+- Budesonide-formoterol 160-4.5 mcg, 2 puffs twice daily
+- Albuterol HFA 90 mcg, 2 puffs every 4 hours as needed
+- Prednisone 40 mg by mouth daily for 3 more days
+
+Medication Changes:
+- New: budesonide-formoterol 160-4.5 mcg twice daily as controller
+- New: prednisone 40 mg daily to complete a 7-day course
+
+Pending Results: None pending at discharge.
+
+Goals of Care: Full code. Wants to avoid another hospital stay and keep working at the library.
+
+Functional Status: Independent with ADLs and ambulation.
+
+PCP: None. Patient does not currently have a primary care provider.
+
+Followup Instructions:
+- Eastside Community Health Center walk-in asthma clinic within 1 week
+- Referral placed to establish primary care at the same center
+
+Discharge planning evaluation: lives alone, independent, uninsured; financial counselor met with her about coverage. No post-hospital services needed.
+Plan discussed with the patient, who agrees with the plan and demonstrated inhaler technique.
+cc: None
+
+---- Copied forward from History and Physical (2026-11-08) ----
+History of Present Illness: 59-year-old woman with asthma since childhood, using albuterol 6-8 times daily for 3 days after a cold. No prior intubation.
+Electronically signed by Rafael Okonjo, MD on 2026-11-08 07:52
+---- End of copied text ----
+
+Attending signature: ________________ (pending)

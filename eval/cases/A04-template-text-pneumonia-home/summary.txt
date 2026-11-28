@@ -1,0 +1,47 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-18
+Discharge Date: 2026-11-21
+Attending: Dr. Oluwaseun Adeyemi
+Primary care physician: Dr. Ruth Calloway, Northfield Family Medicine (555-0117)
+
+Discharge Diagnosis:
+1. Community-acquired pneumonia, left lower lobe
+2. Asthma, mild persistent
+
+Brief Hospital Course:
+47-year-old woman with asthma admitted with fever, productive cough and hypoxemia to 88%. Chest x-ray showed left lower lobe consolidation. Treated with ceftriaxone and azithromycin, transitioned to oral amoxicillin-clavulanate on day 3. Blood cultures drawn 2026-11-18 show no growth to date with the final read due 2026-11-23; a Legionella urine antigen was also sent. Oxygen weaned off on day 2. Asthma controlled with scheduled albuterol, no steroids needed.
+
+Condition at Discharge: Improved. Afebrile 36 hours, SpO2 96% on room air. Alert and oriented.
+
+Discharge Disposition: Home
+
+Discharge Medications:
+- Amoxicillin-clavulanate 875-125 mg by mouth twice daily for 4 more days
+- Fluticasone-salmeterol 250-50 mcg 1 inhalation twice daily
+- Albuterol 90 mcg 2 puffs every 4-6 hours as needed
+
+Medication Changes:
+- New: amoxicillin-clavulanate to complete 7 days of antibiotics
+- No changes to her inhalers
+
+Goals of Care: Full code. Wants to be back at work as a school librarian by December.
+
+Functional Status: Independent with ADLs and ambulation.
+
+Followup Instructions:
+- PCP Dr. Ruth Calloway within 7 days (appointment 2026-11-26)
+- Repeat chest x-ray in 6 weeks
+
+Discharge planning evaluation: lives with her partner, independent at baseline, no post-hospital needs identified.
+Patient declined to go over discharge plans on rounds this morning; team to revisit with her before she leaves.
+
+HIM note: summary not yet transmitted; Northfield Family Medicine fax line out of service, number needed.
+
+Template Text - Do Not Use:
+[Default phrases inserted by the discharge template. Delete before signing.]
+Pending Results: None pending at discharge.
+Discharge summary sent electronically to PCP Dr. Ruth Calloway on 2026-11-21.
+The discharge plan was discussed with the patient, who verbalized understanding.
+
+Electronically signed by Oluwaseun Adeyemi, MD on 2026-11-21 19:02

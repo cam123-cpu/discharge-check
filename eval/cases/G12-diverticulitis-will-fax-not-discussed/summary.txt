@@ -1,0 +1,41 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-22
+Discharge Date: 2026-11-25
+Attending: Dr. Konstantin Bergqvist, General Surgery
+
+Final Diagnosis: Acute uncomplicated sigmoid diverticulitis (Hinchey Ia). Secondary: hypertension, gout.
+
+Hospital Course:
+58-year-old man presented with 3 days of left lower quadrant pain, low-grade fever and leukocytosis (WBC 15.8). CT abdomen/pelvis showed sigmoid diverticulitis with pericolic fat stranding and no abscess or free air. Managed nonoperatively with bowel rest, IV fluids and IV ceftriaxone plus metronidazole. Pain and tenderness improved by day 2, WBC normalized to 8.9, and he tolerated a low-residue diet on day 3. Transitioned to oral amoxicillin-clavulanate to complete 7 days. First episode; no surgical indication at this time.
+
+Condition at Discharge: Good. Afebrile, abdomen soft with mild LLQ tenderness, tolerating diet. Mental status alert and oriented.
+
+Discharge Disposition: Home, self-care.
+
+Discharge Medications:
+- Amoxicillin-clavulanate 875-125 mg by mouth twice daily for 4 more days
+- Acetaminophen 1000 mg by mouth every 8 hours as needed for pain
+- Hydrochlorothiazide 25 mg by mouth daily
+- Allopurinol 300 mg by mouth daily
+
+Medication Changes:
+- New: amoxicillin-clavulanate, short course
+- New: acetaminophen as needed (avoid NSAIDs while colon heals)
+- Home hydrochlorothiazide and allopurinol unchanged
+
+Pending Results: None pending at discharge.
+
+Goals of Care: Full code. Patient would prefer to avoid surgery if possible.
+
+Functional Status: Independent with ADLs; ambulating independently.
+
+Follow-up:
+- General surgery clinic, Dr. Konstantin Bergqvist, in 2 weeks (2026-12-09)
+- PCP Dr. Philippa Mbeki (555-0184) within 1 week; colonoscopy referral in 6-8 weeks if not done in the last year
+
+Discharge planning evaluation: independent at baseline, lives with spouse; no post-hospital needs.
+
+Will fax discharge summary to PCP Dr. Philippa Mbeki's office.
+
+Electronically signed by Konstantin Bergqvist, MD on 2026-11-25 16:10

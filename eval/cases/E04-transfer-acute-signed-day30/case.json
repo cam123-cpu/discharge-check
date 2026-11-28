@@ -1,0 +1,44 @@
+{
+  "id": "E04-transfer-acute-signed-day30",
+  "category": "edge",
+  "title": "Transfer to another acute care hospital (pac_* not applicable); summary signed exactly 30 days after discharge (boundary, pass); NSTEMI for CABG",
+  "disposition": "Transfer to another acute care hospital",
+  "discharge_date": "2026-10-20",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"},
+    {"file": "nursing.txt", "kind": "nursing_instructions"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "pass"
+  },
+  "rationale": {
+    "timeliness": "EDGE (boundary): discharged 2026-10-20 and signed 2026-11-19, exactly 30 days later, which is within the 30-day limit.",
+    "pac_list": "EDGE: transfer to another acute care hospital is not a post-acute referral, so the pac rules do not apply.",
+    "pac_choice": "EDGE: acute-to-acute transfer, not post-acute.",
+    "pac_quality_data": "EDGE: acute-to-acute transfer, not post-acute.",
+    "followup": "For a transfer, the accepting surgeon evaluating on arrival 2026-10-20 plus dated cardiology and PCP follow-up give who and when.",
+    "info_transmitted": "The final signed summary was routed electronically to the accepting physician and PCP, and transfer documents went with the patient.",
+    "meds_consistent": "The nursing transfer report lists the same six medications as the summary; stopped ticagrelor and held metformin appear in neither list."
+  },
+  "tags": ["transfer", "timeliness-boundary", "signature", "not-applicable"]
+}

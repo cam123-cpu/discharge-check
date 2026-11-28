@@ -1,0 +1,43 @@
+{
+  "id": "E09-fhir-pending-stopped-med",
+  "category": "edge",
+  "title": "FHIR Bundle summary with preliminary and partial DiagnosticReports (pending results) and a stopped MedicationRequest (ibuprofen); pneumonia, home",
+  "disposition": "Home",
+  "discharge_date": "2026-11-22",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "bundle.json", "kind": "discharge_summary"},
+    {"file": "nursing.txt", "kind": "nursing_instructions"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "pass"
+  },
+  "rationale": {
+    "pending_results": "EDGE (FHIR): the preliminary blood culture and partial Legionella antigen DiagnosticReports flatten into a Pending Results list, and the narrative names Dr. Mensah's office as owner of follow-up; the final viral panel is correctly not listed as pending.",
+    "med_changes": "EDGE (FHIR): the stopped ibuprofen MedicationRequest appears under Medications Stopped with its reason, and the active requests carry 'new' or 'unchanged' notes.",
+    "discharge_meds": "The four active MedicationRequests form the discharge medication list with doses; the stopped ibuprofen is correctly excluded from it.",
+    "final_diagnosis": "Encounter-diagnosis Conditions (pneumonia, AKI) are the discharge diagnoses; asthma is a problem-list item.",
+    "meds_consistent": "Nursing lists the same four active medications and tells the patient to stop ibuprofen, matching the stopped request; 'Albuterol inhaler' versus 'Albuterol HFA' is the same drug.",
+    "pac_list": "Discharged home without services."
+  },
+  "tags": ["fhir", "pending-results", "stopped-medication"]
+}

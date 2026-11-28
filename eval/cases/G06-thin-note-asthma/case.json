@@ -1,0 +1,62 @@
+{
+  "id": "G06-thin-note-asthma",
+  "category": "gap",
+  "title": "Asthma exacerbation; thin summary: one-line course, no disposition, follow-up with no clinician, no PCP, not sent, no planning evaluation",
+  "disposition": "Home",
+  "discharge_date": "2026-11-23",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "unclear",
+    "discharge_condition": "pass",
+    "disposition": "fail",
+    "followup": "unclear",
+    "pcp_named": "fail",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "fail",
+    "dp_evaluation": "fail",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "not_applicable"
+  },
+  "also_acceptable": {
+    "hospital_course": [
+      "fail"
+    ],
+    "followup": [
+      "fail"
+    ]
+  },
+  "rationale": {
+    "hospital_course": "The course section exists but is four words long; it does not say what was treated, how, or the outcome beyond 'Improved'.",
+    "disposition": "The disposition hint (Home) comes from the registration system; no document states where the patient was discharged to.",
+    "followup": "A test and a timeframe are given, but no clinician or clinic the patient should see.",
+    "pcp_named": "No primary care provider or follow-up clinician is named anywhere.",
+    "info_transmitted": "There is no evidence the summary was sent to any outpatient provider.",
+    "dp_evaluation": "No discharge planning evaluation of post-hospital needs is documented; there is no case management note.",
+    "dp_discussed": "The discharge plan was reviewed with the patient and she verbalized understanding.",
+    "pac_list": "Not referred to home health, SNF, IRF or LTCH, so the three post-acute rules do not apply.",
+    "meds_consistent": "No nursing discharge instructions were provided, so there is nothing to compare."
+  },
+  "tags": [
+    "thin-note",
+    "followup",
+    "no-clinician",
+    "unnamed-pcp",
+    "multi-gap"
+  ]
+}

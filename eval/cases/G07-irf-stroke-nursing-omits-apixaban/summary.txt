@@ -1,0 +1,46 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-17
+Discharge Date: 2026-11-24
+Attending: Dr. Henrietta Moss, Vascular Neurology
+
+Discharge Diagnoses:
+1. Acute ischemic stroke, left MCA territory (cardioembolic)
+2. Paroxysmal atrial fibrillation, newly diagnosed
+3. Hypertension
+4. Hyperlipidemia
+
+Hospital Course:
+74-year-old right-handed man presented 2 hours after onset of right arm weakness and expressive aphasia (NIHSS 9). CT angiography showed a left M2 occlusion; he received IV tenecteplase and underwent thrombectomy with TICI 2b reperfusion. MRI showed a moderate left frontal infarct without hemorrhagic transformation. Telemetry captured paroxysmal atrial fibrillation; after a repeat CT on day 5 showed no hemorrhage, apixaban was started. Swallow evaluation passed for a mechanical soft diet. At discharge NIHSS 3 with mild right hand weakness and word-finding difficulty.
+
+Condition at Discharge: Stable and improving. Mental status alert, oriented x3, mild expressive aphasia.
+
+Discharge Disposition: Inpatient rehab facility (IRF), Summit Ridge Rehabilitation Institute.
+
+Discharge Medications:
+- Apixaban 5 mg by mouth twice daily
+- Atorvastatin 80 mg by mouth nightly
+- Amlodipine 5 mg by mouth daily
+- Metoprolol tartrate 25 mg by mouth twice daily
+- Docusate 100 mg by mouth twice daily
+
+Medication Changes:
+- New: apixaban 5 mg twice daily for secondary stroke prevention in atrial fibrillation
+- Changed: atorvastatin increased from 20 mg to 80 mg nightly
+- New: metoprolol tartrate 25 mg twice daily for rate control
+- Stopped: aspirin 81 mg (now on anticoagulation)
+
+Pending Results: Lipoprotein(a) pending; Dr. Moss's stroke clinic will follow and forward to the rehab physician.
+
+Goals of Care: Full code. Patient's goal is to regain enough hand function to drive and to return home with his wife.
+
+Functional Status: Ambulating 100 feet with a hemi-walker and contact-guard assistance; needs moderate assistance with upper-body dressing; PT/OT/SLP recommend intensive inpatient rehab.
+
+Follow-up:
+- Stroke clinic, Dr. Henrietta Moss, in 6 weeks (2027-01-05)
+- PCP Dr. Gareth Oyelaran (555-0127) within 2 weeks of rehab discharge
+- Cardiology, Dr. Lucia Ferrante, in 4 weeks for atrial fibrillation
+
+Summary faxed to Summit Ridge Rehabilitation Institute admissions and sent electronically to PCP Dr. Gareth Oyelaran on 2026-11-24.
+
+Electronically signed by Henrietta Moss, MD on 2026-11-24 11:48

@@ -1,0 +1,49 @@
+DISCHARGE / TRANSFER SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-10-17
+Discharge Date: 2026-10-20
+Attending: Dr. Tobias Lindqvist, Cardiology
+
+Discharge Diagnosis:
+1. Non-ST-elevation myocardial infarction
+2. Severe three-vessel coronary artery disease with left main involvement
+3. Type 2 diabetes mellitus, HbA1c 8.9%
+4. Hypertension
+
+Brief Hospital Course:
+57-year-old woman presented with two hours of exertional chest pressure. Troponin I peaked at 4.2 ng/mL; ECG showed lateral ST depression without elevation. She was started on aspirin, ticagrelor load, IV heparin and high-intensity statin. Ticagrelor was stopped after coronary angiography on 2026-10-19 showed 70% distal left main stenosis with severe proximal LAD and circumflex disease; the heart team recommended coronary artery bypass grafting. Echocardiogram showed EF 50% with lateral hypokinesis. Chest pain resolved on heparin and nitrates. Our hospital does not perform cardiac surgery, so she was transferred for CABG.
+
+Condition at Discharge: Hemodynamically stable, chest pain free on heparin infusion. Alert and oriented, mental status normal.
+
+Discharge Disposition: Transferred to another acute care hospital, Northgate Valley Heart Institute (fictional), cardiothoracic surgery service, by critical care ambulance.
+
+Discharge Medications:
+- Aspirin 81 mg by mouth daily
+- Heparin infusion per weight-based ACS protocol, currently 1,000 units per hour
+- Atorvastatin 80 mg by mouth nightly
+- Metoprolol tartrate 25 mg by mouth twice daily
+- Insulin lispro sliding scale with meals
+- Nitroglycerin 0.4 mg sublingual every 5 minutes as needed for chest pain, up to 3 doses
+
+Medication Changes:
+- New: aspirin, heparin infusion, atorvastatin 80 mg, metoprolol tartrate, nitroglycerin
+- Stopped: ticagrelor (given as a loading dose on 2026-10-17, held for surgery)
+- Held: metformin 1000 mg twice daily (contrast exposure, upcoming surgery); insulin sliding scale in place
+
+Pending Results: Lipoprotein(a) sent 2026-10-18 is pending; result will route to Dr. Lindqvist, who will forward it to the receiving team.
+
+Goals of Care: Full code. Patient wants surgery and hopes to return to work as a school bus dispatcher.
+
+Functional Status: Independent with ADLs before admission. Currently ambulating in the room independently; activity limited to the room per ACS protocol.
+
+Follow-up:
+- Accepting physician Dr. Priya Venkataraman, cardiothoracic surgery, to evaluate on arrival 2026-10-20 for CABG
+- Cardiology clinic, Dr. Lindqvist, 4 weeks after surgical discharge for secondary prevention
+- PCP Dr. Ezra Whitcombe (555-0129) within 2 weeks of returning home
+
+Discharge planning evaluation: needs a higher level of care (cardiac surgery) not available at this hospital; transfer accepted physician-to-physician on 2026-10-19 and bed confirmed 2026-10-20.
+The transfer plan was discussed with the patient and her wife, who agree with the plan.
+Transfer note, catheterization report and medication administration record sent with the patient on 2026-10-20.
+Final signed discharge summary routed electronically to accepting physician Dr. Priya Venkataraman and PCP Dr. Ezra Whitcombe on 2026-11-19.
+
+Electronically signed by Tobias Lindqvist, MD on 2026-11-19 14:30

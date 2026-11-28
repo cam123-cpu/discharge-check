@@ -1,0 +1,48 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-08
+Discharge Date: 2026-11-15
+Attending: Dr. Kwame Osei-Bonsu, Hospital Medicine
+
+Discharge Diagnosis:
+1. Acute metabolic encephalopathy (delirium) due to complicated urinary tract infection, resolved
+2. Klebsiella pneumoniae urinary tract infection
+3. Hospital-associated deconditioning
+4. Alzheimer dementia, mild
+5. Chronic atrial fibrillation on anticoagulation
+
+Hospital Course:
+88-year-old woman from home, where she lived with her husband, was brought in after two days of confusion, poor intake and a fall without injury. Urinalysis was positive and urine culture grew Klebsiella pneumoniae sensitive to cephalosporins. She received IV ceftriaxone for 3 days and was changed to oral cefpodoxime to complete 7 days. Delirium cleared by day 4 with antibiotics, hydration, sleep hygiene and stopping her evening diphenhydramine. CT head was negative for bleed. She was weak after a week in bed; PT found she needs moderate assistance to walk and recommended short-term rehabilitation in a skilled nursing facility before going home. Her husband, 90, cannot provide that level of help.
+
+Condition at Discharge: Stable. Mental status at her baseline: alert, oriented to person and place, pleasant. Afebrile, eating 75% of meals.
+
+Discharge Disposition: Skilled nursing facility (SNF) for short-term rehabilitation, Willow Bend Care Center. Plan is to return home with her husband afterward.
+
+Discharge Medications:
+- Cefpodoxime 200 mg by mouth every 12 hours through 2026-11-17
+- Apixaban 2.5 mg by mouth twice daily
+- Donepezil 5 mg by mouth at bedtime
+- Metoprolol succinate 25 mg by mouth daily
+- Acetaminophen 650 mg by mouth every 6 hours as needed for pain
+- Melatonin 3 mg by mouth at bedtime
+
+Medication Changes:
+- New: cefpodoxime (complete 7-day course), melatonin for sleep
+- Stopped: diphenhydramine 25 mg at bedtime (anticholinergic, likely contributed to delirium)
+
+Pending Results: None pending at discharge.
+
+Goals of Care: DNR, okay to intubate for reversible causes (MOLST on file). Patient and husband want her to regain her walking and return home.
+
+Functional Status: Ambulates 50 feet with a rolling walker and moderate assist of one. Needs assistance with bathing, dressing and toileting.
+
+Follow-up:
+- SNF attending to see patient within 72 hours of admission
+- PCP Dr. Margit Hallorann (555-0108) within 1 week of returning home
+- Geriatrics clinic, Dr. Osei-Bonsu, in 6 weeks for cognition
+
+Discharge planning evaluation completed by case management (see note).
+Plan discussed with the patient and her husband and daughter, who agree with the plan.
+Discharge summary faxed to Willow Bend Care Center and to PCP Dr. Margit Hallorann on 2026-11-15.
+
+Electronically signed by Kwame Osei-Bonsu, MD on 2026-11-15 15:22

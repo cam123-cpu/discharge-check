@@ -1,0 +1,62 @@
+{
+  "id": "G11-home-health-chf-no-choice",
+  "category": "gap",
+  "title": "Heart failure, home with home health; list and star ratings given but referral sent to affiliated agency with no choice documented; pending labs have no owner",
+  "disposition": "Home with home health services",
+  "discharge_date": "2026-11-23",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    },
+    {
+      "file": "nursing.txt",
+      "kind": "nursing_instructions"
+    },
+    {
+      "file": "casemgmt.txt",
+      "kind": "case_management"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "unclear",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "pass",
+    "pac_choice": "fail",
+    "pac_quality_data": "pass",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "pass"
+  },
+  "also_acceptable": {
+    "pending_results": [
+      "fail"
+    ]
+  },
+  "rationale": {
+    "pac_choice": "A list was given, but nothing says the patient was told he could choose or which agency he chose; the referral went to the hospital-affiliated agency.",
+    "pending_results": "TSH and A1c are listed as pending, but no one is named to follow them up.",
+    "pac_list": "A list of Medicare-certified home health agencies was provided.",
+    "pac_quality_data": "Care Compare star ratings were printed on the list given to the patient."
+  },
+  "tags": [
+    "post-acute",
+    "home-health",
+    "pac-choice",
+    "pending-results",
+    "multi-gap"
+  ]
+}

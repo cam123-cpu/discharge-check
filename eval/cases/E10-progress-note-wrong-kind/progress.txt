@@ -1,0 +1,32 @@
+HOSPITALIST PROGRESS NOTE - DAY OF DISCHARGE (SYNTHETIC RECORD)
+
+Date of service: 2026-10-08
+Author: Dr. Yusuf Brennan-Achebe, Hospital Medicine
+
+Subjective: No chest pain or palpitations overnight. Ate breakfast. Eager to go home.
+
+Objective: HR 72 regular, BP 128/76, SpO2 98% RA. Alert and oriented. No edema. Potassium 4.1, magnesium 2.0.
+
+Discharge Diagnosis:
+1. Symptomatic sinus bradycardia due to metoprolol and diltiazem combination, resolved
+2. Hypertension
+3. Gastroesophageal reflux disease
+
+Hospital Course:
+52-year-old man admitted 2026-10-06 after a syncopal episode at work with heart rate 38. He had been started on diltiazem by an urgent care clinic for "palpitations" while already taking metoprolol. Both were held; heart rate recovered to the 60s-70s within 24 hours without pacing. Telemetry for 48 hours showed no pauses or AV block. Echo normal. TSH normal. Amlodipine started for blood pressure.
+
+Condition at Discharge: Stable, alert and oriented, asymptomatic.
+
+Disposition: Discharged home today.
+
+Discharge Medications:
+- Amlodipine 5 mg by mouth daily
+- Omeprazole 20 mg by mouth daily
+
+Pending Results: None.
+
+Code status: Full code.
+
+Plan: Avoid combining beta-blockers with non-dihydropyridine calcium channel blockers. Discharge summary to be dictated. Copy of this note sent to PCP Dr. Marguerite Olawale.
+
+Electronically signed by Yusuf Brennan-Achebe, MD on 2026-10-08 11:20

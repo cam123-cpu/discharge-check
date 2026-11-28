@@ -1,0 +1,33 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-21
+Discharge Date: 2026-11-24
+Attending: Dr. Wilhelmina Ostrander
+
+Discharge Diagnosis:
+
+Primary Care Provider:
+
+Goals of Care:
+
+Discharge Medications:
+- Insulin glargine 22 units subcutaneously at bedtime
+- Insulin lispro 6 units subcutaneously with meals plus correction scale
+- Glucagon 1 mg intranasal as needed for severe hypoglycemia
+- Ondansetron 4 mg by mouth every 8 hours as needed for nausea
+
+Medication Changes:
+- Changed: insulin glargine increased from 16 to 22 units at bedtime
+- New: glucagon nasal powder 1 mg for emergencies (none at home previously)
+- New: ondansetron 4 mg as needed, short supply
+
+Pending Results: None pending.
+
+Follow-up:
+- Diabetes Clinic (Endocrinology, Suite 3B, 555-0177) on 2026-12-03 at 10:30
+- Diabetes educator visit at the same clinic on 2026-12-03 for pump evaluation and sick-day rules
+
+Insulin plan and sick-day rules reviewed with the patient and her mother, who verbalized understanding.
+Summary routed electronically to the Diabetes Clinic (Endocrinology) on 2026-11-24.
+
+Electronically signed by Wilhelmina Ostrander, MD on 2026-11-24 19:44

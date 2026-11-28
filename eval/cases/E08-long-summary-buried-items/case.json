@@ -1,0 +1,45 @@
+{
+  "id": "E08-long-summary-buried-items",
+  "category": "edge",
+  "title": "Very long summary (3,100+ words) with disposition, follow-up, pending results and post-acute choice buried mid-document; urosepsis, home with home health; nursing list omits apixaban",
+  "disposition": "Home with home health services",
+  "discharge_date": "2026-11-13",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"},
+    {"file": "nursing.txt", "kind": "nursing_instructions"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "pass",
+    "pac_choice": "pass",
+    "pac_quality_data": "pass",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "fail"
+  },
+  "rationale": {
+    "disposition": "EDGE (long document): the disposition section sits about halfway through a 3,100-word summary, after the problem-based course.",
+    "pending_results": "EDGE (long document): buried mid-document; the final repeat blood culture report is pending and Dr. Strand-Okoye will follow it.",
+    "pac_list": "EDGE (long document): the Medicare-certified home health agency list is documented in a mid-document paragraph.",
+    "pac_choice": "Freedom to choose was explained and the patient chose Larchmont Home Health Partners.",
+    "pac_quality_data": "Care Compare star ratings and patient survey ratings were reviewed with the patient and daughter.",
+    "discharge_meds": "The discharge medication list appears near the end, after the lab tables and consultant recommendations; the earlier home-medications list is the pre-admission list, not the discharge list.",
+    "meds_consistent": "PLANTED GAP: apixaban 5 mg twice daily is on the summary's discharge list but missing from the nursing medication list.",
+    "followup": "Each follow-up has a named clinician and a date or interval."
+  },
+  "tags": ["long-document", "buried-content", "home-health", "post-acute", "med-mismatch"]
+}

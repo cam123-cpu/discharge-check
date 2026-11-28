@@ -1,0 +1,45 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Patient: Margarethe Oyelowo (synthetic), 81 F
+Hospital stay: 2026-11-09 to 2026-11-16, 2 South Geriatrics / Acute Care for Elders unit
+Discharge Date: 2026-11-16
+Attending: Dr. Benedikt Sorensen
+
+Why she was here and what happened
+Mrs. Oyelowo's daughter found her confused and febrile at home. In the ED she was hypotensive (82/50) with a lactate of 3.4 and a urinalysis full of white cells. She responded to 2 L of fluid and IV ceftriaxone without needing pressors. Urine and blood cultures both grew E. coli sensitive to ceftriaxone and cephalexin. Renal ultrasound showed no obstruction. Her acute kidney injury (creatinine 2.1 from a baseline of 1.0) recovered to 1.1 with fluids. The delirium cleared over four days with treatment of the infection and good sleep and mobility routines. She was switched to oral cephalexin on day 5. Our therapists found her too weak to manage at home yet: she went from walking unaided before this illness to needing a walker and a helper. Overall she has recovered from the sepsis and the kidney injury and is ready for a short rehab stay.
+
+Final diagnoses
+1. Sepsis from E. coli pyelonephritis with bacteremia, resolved (principal)
+2. Acute kidney injury, resolved
+3. Delirium due to infection, resolved
+4. Hospital-associated deconditioning
+5. Hypertension and hypothyroidism, chronic
+
+Her state today: stable and back to herself. Vital signs normal, afebrile 4 days. Alert, oriented and conversing normally; her daughter says she is at her usual mental baseline. She walks about 60 feet with a rolling walker and contact guard, and needs a hand with bathing, dressing and getting on and off the toilet.
+
+Where she is going: Fairhaven Gardens, a skilled nursing facility (SNF), for short-term rehabilitation.
+
+She leaves on these medicines:
+1. Cephalexin 500 mg by mouth every 6 hours through 2026-11-22 (completes 14 days of therapy)
+2. Levothyroxine 50 mcg by mouth daily
+3. Amlodipine 5 mg by mouth daily
+4. Acetaminophen 650 mg by mouth every 6 hours as needed for pain or fever
+5. Melatonin 3 mg by mouth at bedtime
+
+Changes from what she took at home: cephalexin and melatonin are new. Hydrochlorothiazide 25 mg is stopped, because it contributed to her kidney injury and her blood pressure is controlled without it. Her amlodipine dose was cut from 10 mg to 5 mg for lower blood pressures during recovery. Levothyroxine is the same.
+
+Results not yet back: none. All cultures are final.
+
+What matters to her: she wants to get strong enough to go home to her own house and her garden. She confirmed with me that she wants full resuscitation (full code), and her daughter, who is her healthcare proxy, agrees.
+
+Her primary care doctor is Dr. Cornelius Aldana at Willowmere Family Health (555-0137).
+
+Follow-up:
+- Fairhaven's attending physician will see her within 72 hours of arrival and repeat a basic metabolic panel on 2026-11-19.
+- Dr. Aldana within 1 week after she leaves the nursing facility, to recheck blood pressure off hydrochlorothiazide.
+
+Case management worked through her post-hospital needs with the team on 2026-11-13: daily therapy and nursing supervision for 1 to 2 weeks, which her daughter cannot provide at home; details are in their note. Dr. Sorensen and the case manager explained the plan to Mrs. Oyelowo and her daughter on 2026-11-14 and both agreed to it.
+
+A copy of this summary and her medication list was faxed to Fairhaven Gardens on 2026-11-16, ahead of her arrival, and sent to Dr. Aldana's office through the EHR the same day.
+
+Electronically signed by Benedikt Sorensen, MD, 2026-11-16 at 12:55

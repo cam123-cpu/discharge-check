@@ -1,0 +1,38 @@
+HOSPITAL MEDICINE DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Patient: Lucian Marchetti (synthetic), 52 M
+Admitted 2026-11-19, discharged 2026-11-23, 8 West Medicine
+Attending: Dr. Hiroshi Calloway
+
+Mr. Marchetti came in after two days of black stools and an episode of lightheadedness at work. He had been taking ibuprofen 800 mg three times a day for a month for a shoulder strain. Hemoglobin on arrival was 7.6 (baseline 14 in 2025) with a BUN of 48. He got two units of red cells and an IV PPI infusion, and Dr. Ines Nakamura (GI) scoped him the next morning: a 1.5 cm clean-based duodenal bulb ulcer with no visible vessel, plus mild gastritis; biopsies were taken. He had no further bleeding. Hemoglobin held at 9.3 to 9.6 for the last 48 hours, he tolerated a regular diet from day 2, and his stools have turned brown. In short, the bleed has stopped and he recovered well.
+
+Diagnoses at discharge, in order of importance:
+1. Acute upper GI bleed from an NSAID-associated duodenal ulcer (principal)
+2. Acute blood loss anemia, transfused 2 units
+3. Hypertension
+
+How he is at discharge: good condition. Blood pressure 128/76, heart rate 74, no orthostatic change. Fully awake, alert and oriented, clear thinking. Walking the unit on his own without any aid and independent with all self-care.
+
+He goes home to his apartment. He doesn't need home services.
+
+Medications he'll go home on:
+- Pantoprazole 40 mg by mouth twice daily for 8 weeks, then once daily
+- Amlodipine 5 mg by mouth daily
+- Ferrous sulfate 325 mg by mouth every other day
+- Acetaminophen 650 mg by mouth every 6 hours as needed for shoulder pain (no more than 3 g a day)
+
+What changed: we started pantoprazole, ferrous sulfate and acetaminophen. Ibuprofen is stopped for good because it caused the ulcer, and he should avoid naproxen, aspirin and other NSAIDs. His losartan 50 mg was held for low blood pressure on arrival and we are not restarting it yet; Dr. Hartwell will decide at the first visit. Amlodipine is unchanged.
+
+Still outstanding: the duodenal and gastric biopsies (including H. pylori staining) are not back. Dr. Nakamura's GI office will follow them up and start treatment if H. pylori is found, and will call him with the result.
+
+On resuscitation and his wishes: we talked about code status and he wants to be full code. His priority is getting back to his job as a bus dispatcher and not ending up back in hospital.
+
+His primary care physician is Dr. Theodora Hartwell at Elmstead Medical Group (555-0152). He will see Dr. Hartwell on 2026-11-30 for a blood count and blood pressure check, and Dr. Nakamura in GI clinic in 8 weeks (2027-01-18) to discuss repeat endoscopy.
+
+Our case manager saw him on day 1 to work out what he would need after leaving: he lives alone, was independent and driving, his sister lives two streets away, and he has insurance coverage for his prescriptions. Nothing beyond outpatient follow-up was needed and there are no barriers to getting his medications.
+
+I went over all of this with him and his sister before he left, including the warning signs of rebleeding; he was able to explain the plan back to me and agrees with it.
+
+This summary went to Dr. Hartwell through the shared EHR inbox on 2026-11-23 and a copy was sent to Dr. Nakamura.
+
+E-signed by Hiroshi Calloway, MD 11/23/2026 18:27

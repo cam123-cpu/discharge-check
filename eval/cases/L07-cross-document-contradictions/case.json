@@ -1,0 +1,43 @@
+{
+  "id": "L07-cross-document-contradictions",
+  "category": "linguistic",
+  "title": "Diverticulitis, home; summary DNR vs CM full code, 'None pending' contradicted by its own hospital course, and nursing antibiotics differ",
+  "disposition": "Home",
+  "discharge_date": "2026-11-16",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"},
+    {"file": "casemgmt.txt", "kind": "case_management"},
+    {"file": "nursing.txt", "kind": "nursing_instructions"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "unclear",
+    "goals_of_care": "unclear",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "fail"
+  },
+  "rationale": {
+    "goals_of_care": "The summary says DNR/DNI (confirmed 11/11) but the later CM note records the patient now wants full code and asked for the order to be updated; the record contradicts itself on code status.",
+    "pending_results": "'None pending' contradicts the hospital course, which says blood cultures from 11/15 'remain in process at the time of discharge', and no one is named to follow them.",
+    "meds_consistent": "The summary lists amoxicillin-clavulanate; the nursing instructions list ciprofloxacin and metronidazole instead.",
+    "med_changes": "The summary's change list is complete for its own medication list; the nursing mismatch is scored under meds_consistent.",
+    "pac_list": "Home without services, so the post-acute rules do not apply."
+  },
+  "tags": ["contradiction", "code-status", "medication-mismatch"]
+}

@@ -1,0 +1,52 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-12
+Discharge Date: 2026-11-18
+Attending: Dr. Isabela Okonkwo-Hart, Hospital Medicine
+Service: Medicine / Palliative Care co-management
+
+Discharge Diagnoses:
+1. Acute cholangitis due to occluded biliary stent, resolved
+2. Metastatic pancreatic adenocarcinoma (liver metastases), progressing despite second-line chemotherapy
+3. Cancer-related anorexia and weight loss
+4. Type 2 diabetes mellitus
+
+Hospital Course:
+84-year-old man with metastatic pancreatic cancer and a metal biliary stent presented with fever, rigors and jaundice. Blood cultures grew Escherichia coli. ERCP on 2026-11-13 showed tumor ingrowth; a second plastic stent was placed through the metal stent and bilirubin fell from 9.8 to 3.1. He completed six days of IV ceftriaxone with defervescence. Restaging CT showed new liver lesions and peritoneal disease. Oncology (Dr. Rafael Szymanski) advised that further chemotherapy was unlikely to help. After two family meetings with palliative care the patient chose to stop disease-directed treatment and go home with hospice. Pain is controlled on low-dose oral morphine.
+
+Condition at Discharge: Fair and stable for discharge. Afebrile 48 hours. Mental status alert and oriented to person and place, occasionally drowsy after morphine. Mild jaundice.
+
+Discharge Disposition: Home with hospice care (Evening Star Hospice), living with his daughter.
+
+Discharge Medications:
+- Morphine oral solution 5 mg by mouth every 2 hours as needed for pain or breathlessness
+- Lorazepam 0.5 mg by mouth every 6 hours as needed for anxiety or nausea
+- Ondansetron 4 mg orally disintegrating tablet every 8 hours as needed for nausea
+- Senna 8.6 mg two tablets by mouth at bedtime
+- Pancrelipase 24,000 units lipase by mouth with each meal
+- Amoxicillin-clavulanate 875-125 mg by mouth twice daily through 2026-11-21 to complete antibiotic course
+
+Medication Changes:
+- New: morphine oral solution, lorazepam, ondansetron, senna, amoxicillin-clavulanate
+- Stopped: metformin 500 mg twice daily (poor oral intake, comfort focus)
+- Stopped: atorvastatin 20 mg daily (no longer of benefit)
+- Unchanged: pancrelipase
+
+Pending Results: None pending at discharge. Final blood culture susceptibilities resulted 2026-11-15.
+
+Goals of Care: DNR/DNI. Portable POLST completed and signed by patient on 2026-11-16 (comfort measures only, no rehospitalization unless comfort cannot be achieved at home). Patient's stated goal is to be at home with his daughter and grandchildren and to remain free of pain.
+
+Functional Status: Transfers bed to chair with assistance of one person. Walks 15 feet with a walker; wheelchair for longer distances. Needs help with bathing and dressing.
+
+Follow-up:
+- Evening Star Hospice admission nurse visit at home on 2026-11-18 at 6 pm
+- Hospice medical director Dr. Noor Feldmann to see patient within 48 hours of admission
+- PCP Dr. Gideon Asante (555-0163) to remain attending of record for hospice; phone review in 1 week
+
+PCP: Dr. Gideon Asante, Riverbend Family Medicine, 555-0163
+
+Discharge planning evaluation completed by case management; see case management note. Hospital bed and bedside commode delivered to the home on 2026-11-17.
+The discharge plan and hospice philosophy were discussed with the patient and his daughter (healthcare proxy), who agree with the plan.
+Discharge summary faxed to Evening Star Hospice and to PCP Dr. Gideon Asante on 2026-11-19.
+
+Electronically signed by Isabela Okonkwo-Hart, MD on 2026-11-19 08:05

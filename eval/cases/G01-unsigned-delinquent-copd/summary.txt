@@ -1,0 +1,44 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Patient: Rosalind Achebe-Marsh    MRN: SYN-G01
+Admission Date: 2026-10-08
+Discharge Date: 2026-10-12
+Attending: Dr. Tobias Wren, Hospital Medicine
+
+Discharge Diagnoses:
+1. Acute exacerbation of chronic obstructive pulmonary disease (GOLD 3)
+2. Acute on chronic hypoxemic respiratory failure, resolved
+3. Former tobacco use, 40 pack-years
+
+Hospital Course:
+68-year-old woman with severe COPD admitted with three days of increased dyspnea, purulent sputum and wheeze after a viral upper respiratory illness. On arrival SpO2 86% on room air; venous blood gas without hypercapnia. She received scheduled ipratropium-albuterol nebulizers, IV methylprednisolone for 48 hours and a course of oral antibiotics for purulent sputum. Chest X-ray showed hyperinflation without consolidation. Oxygen was weaned off by hospital day 3, and on the day of discharge she maintained SpO2 92% on room air at rest and 90% walking the hallway.
+
+Condition at Discharge: Good. Afebrile, mental status alert and oriented x3, speaking in full sentences, no accessory muscle use.
+
+Discharge Disposition: Home with her husband. No home services required.
+
+Discharge Medications:
+- Prednisone 40 mg by mouth daily for 3 more days (through 2026-10-15)
+- Doxycycline 100 mg by mouth twice daily for 2 more days
+- Tiotropium 2.5 mcg two inhalations once daily
+- Fluticasone-salmeterol 250-50 mcg one inhalation twice daily
+- Albuterol HFA 2 puffs every 4 to 6 hours as needed for wheeze
+- Amlodipine 5 mg by mouth daily
+
+Allergies: Sulfa (hives)
+
+Pending Results: None pending at discharge.
+
+Code Status: Full code. Goals of care discussed: patient wishes to remain at home and avoid intubation only if she would be unlikely to recover; she plans to complete a POLST with her PCP.
+
+Functional Status: Independent with ADLs and household ambulation without device. Walks one block before resting.
+
+Follow-up Instructions:
+- PCP Dr. Imogen Faraday (555-0118) on 2026-10-19 for recheck
+- Pulmonology, Dr. Caleb Osei, in 4 weeks; pulmonary rehab referral to be discussed at that visit
+
+Discharge planning evaluation: assessed on admission by case management; lives with husband in a single-level home, no post-hospital services needed.
+Plan discussed with the patient and her husband at bedside; both verbalized understanding.
+Copy routed electronically to PCP Dr. Imogen Faraday on 2026-10-12.
+
+Dictated by Tobias Wren, MD. Document status: preliminary.

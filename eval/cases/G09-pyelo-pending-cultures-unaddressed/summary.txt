@@ -1,0 +1,37 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-20
+Discharge Date: 2026-11-22
+Attending: Dr. Celeste Nakamura-Byrne
+
+Discharge Diagnosis: Acute pyelonephritis, right, without obstruction. Mild acute kidney injury, resolved.
+
+Hospital Course:
+33-year-old woman presented with right flank pain, fever to 39.2 C, nausea and dysuria. Urinalysis with pyuria and white cell casts; creatinine 1.3 (baseline 0.8). Renal ultrasound showed no hydronephrosis or stone. Urine and blood cultures were drawn before IV ceftriaxone was started. Urine culture grew Klebsiella pneumoniae, susceptibilities to follow; blood cultures show no growth at 48 hours. Fever resolved within 36 hours, she tolerated oral intake, and creatinine returned to 0.8 with IV fluids. Converted to oral ciprofloxacin to complete 7 days total.
+
+Condition at Discharge: Good. Afebrile 24 hours, alert and oriented, pain controlled with acetaminophen.
+
+Disposition: Discharged home.
+
+Discharge Medications:
+- Ciprofloxacin 500 mg by mouth twice daily for 5 more days
+- Acetaminophen 650 mg by mouth every 6 hours as needed
+- Ondansetron 4 mg by mouth every 8 hours as needed for nausea
+
+Medication Changes:
+- New: ciprofloxacin, acetaminophen as needed, ondansetron as needed
+- No home medications (she takes none regularly)
+
+Code Status: Full code. Goal is to return to her nursing studies on Monday.
+
+Functional Status: Independent, ambulating without assistance.
+
+Follow-up:
+- PCP Dr. Tomas Iwu (555-0136) within 1 week, scheduled 2026-11-27
+- Return to the ED for fever above 38.5 C, vomiting, or inability to take the antibiotic
+
+Discharge planning evaluation: independent, lives with roommate; no post-hospital needs.
+Plan discussed with the patient, who verbalized understanding.
+Summary sent electronically to PCP Dr. Tomas Iwu on 2026-11-22.
+
+Electronically signed by Celeste Nakamura-Byrne, MD on 2026-11-22 17:30

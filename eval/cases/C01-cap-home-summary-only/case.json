@@ -1,0 +1,46 @@
+{
+  "id": "C01-cap-home-summary-only",
+  "category": "control",
+  "title": "Community-acquired pneumonia, discharged home without services, complete summary only",
+  "disposition": "Home",
+  "discharge_date": "2026-11-11",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "not_applicable"
+  },
+  "rationale": {
+    "pac_list": "Discharged home without home health, SNF, IRF or LTCH services, so the three post-acute choice rules do not apply.",
+    "meds_consistent": "No nursing instructions were provided, so the cross-document medication comparison does not apply.",
+    "pending_results": "Final blood culture is listed as pending and Dr. Wren is named to follow it up.",
+    "dp_evaluation": "The summary itself records the case manager's evaluation (lives with husband, independent, no post-hospital services needed)."
+  },
+  "tags": [
+    "summary-only",
+    "home"
+  ]
+}

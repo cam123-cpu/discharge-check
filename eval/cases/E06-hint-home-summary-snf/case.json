@@ -1,0 +1,43 @@
+{
+  "id": "E06-hint-home-summary-snf",
+  "category": "edge",
+  "title": "Disposition hint says Home but the summary and case management note say SNF (truth: SNF, pac rules apply); UTI with delirium in an 88-year-old",
+  "disposition": "Home",
+  "discharge_date": "2026-11-15",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"},
+    {"file": "casemgmt.txt", "kind": "case_management"},
+    {"file": "nursing.txt", "kind": "nursing_instructions"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "pass",
+    "pac_choice": "pass",
+    "pac_quality_data": "pass",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "pass"
+  },
+  "rationale": {
+    "disposition": "EDGE (deliberate mismatch): the registration hint says Home, a stale admission value that the case manager explicitly calls out; both the summary and the case management note state discharge to a skilled nursing facility, so the truth is SNF.",
+    "pac_list": "EDGE: because the true disposition is SNF, the pac rules apply despite the Home hint; the Medicare-participating SNF list is documented.",
+    "pac_choice": "Freedom to choose was explained and the family chose Willow Bend.",
+    "pac_quality_data": "Care Compare star ratings and staffing measures were reviewed with the family.",
+    "followup": "SNF attending within 72 hours, PCP within 1 week of returning home, and geriatrics in 6 weeks give who and when."
+  },
+  "tags": ["snf", "hint-mismatch", "post-acute", "dementia"]
+}

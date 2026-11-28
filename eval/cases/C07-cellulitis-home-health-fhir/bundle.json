@@ -1,0 +1,237 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "c07",
+        "name": [
+          {
+            "family": "Quillfeather",
+            "given": [
+              "Barnaby"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "status": "finished",
+        "period": {
+          "start": "2026-11-18",
+          "end": "2026-11-22"
+        },
+        "reasonCode": [
+          {
+            "text": "Left lower leg cellulitis with diabetic foot ulcer"
+          }
+        ],
+        "hospitalization": {
+          "dischargeDisposition": {
+            "text": "Home with home health services (Sunrise Valley Home Health)"
+          }
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "category": [
+          {
+            "text": "encounter-diagnosis"
+          }
+        ],
+        "code": {
+          "text": "Cellulitis of left lower leg due to methicillin-sensitive Staphylococcus aureus (principal)"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "category": [
+          {
+            "text": "encounter-diagnosis"
+          }
+        ],
+        "code": {
+          "text": "Diabetic foot ulcer, left first metatarsal head, without osteomyelitis"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "category": [
+          {
+            "text": "encounter-diagnosis"
+          }
+        ],
+        "code": {
+          "text": "Type 2 diabetes mellitus with hyperglycemia and peripheral neuropathy"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Cephalexin 500 mg"
+        },
+        "dosageInstruction": [
+          {
+            "text": "by mouth four times daily for 6 days (through 2026-11-28)"
+          }
+        ],
+        "note": [
+          {
+            "text": "new"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Insulin glargine 100 units/mL"
+        },
+        "dosageInstruction": [
+          {
+            "text": "14 units subcutaneously nightly"
+          }
+        ],
+        "note": [
+          {
+            "text": "new"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Metformin 1000 mg"
+        },
+        "dosageInstruction": [
+          {
+            "text": "by mouth twice daily"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Gabapentin 300 mg"
+        },
+        "dosageInstruction": [
+          {
+            "text": "by mouth nightly"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Lisinopril 10 mg"
+        },
+        "dosageInstruction": [
+          {
+            "text": "by mouth daily"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "stopped",
+        "medicationCodeableConcept": {
+          "text": "Glipizide 10 mg"
+        },
+        "note": [
+          {
+            "text": "stopped, replaced by insulin glargine"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "AllergyIntolerance",
+        "code": {
+          "text": "No known drug allergies"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Appointment",
+        "status": "booked",
+        "description": "PCP visit with Dr. Florentyna Kowalczyk",
+        "start": "2026-11-27T14:00:00Z"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Appointment",
+        "status": "booked",
+        "description": "Podiatry wound clinic, Dr. Anselm Dufresne",
+        "start": "2026-11-30T09:30:00Z"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "status": "active",
+        "code": {
+          "text": "Sunrise Valley Home Health nursing start of care visit"
+        },
+        "occurrencePeriod": {
+          "start": "2026-11-24"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Goal",
+        "lifecycleStatus": "active",
+        "description": {
+          "text": "Heal left foot ulcer and avoid amputation; continue part-time work"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DocumentReference",
+        "status": "current",
+        "author": [
+          {
+            "display": "Dr. Soraya Lindgren"
+          }
+        ],
+        "content": [
+          {
+            "attachment": {
+              "contentType": "text/plain",
+              "data": "RElTQ0hBUkdFIFNVTU1BUlkgKFNZTlRIRVRJQyBSRUNPUkQpCgpQYXRpZW50OiBCYXJuYWJ5IFF1aWxsZmVhdGhlciAoc3ludGhldGljKQpVbml0OiAzIEVhc3QgTWVkaWNpbmUKQWRtaXNzaW9uIERhdGU6IDIwMjYtMTEtMTgKRGlzY2hhcmdlIERhdGU6IDIwMjYtMTEtMjIKQXR0ZW5kaW5nOiBEci4gU29yYXlhIExpbmRncmVuCgpCcmllZiBIb3NwaXRhbCBDb3Vyc2U6CjY5LXllYXItb2xkIG1hbiB3aXRoIHR5cGUgMiBkaWFiZXRlcyBhbmQgcGVyaXBoZXJhbCBuZXVyb3BhdGh5IGFkbWl0dGVkIHdpdGggbGVmdCBsb3dlciBsZWcgY2VsbHVsaXRpcyBzcHJlYWRpbmcgZnJvbSBhIHBsYW50YXIgdWxjZXIgYXQgdGhlIGZpcnN0IG1ldGF0YXJzYWwgaGVhZC4gQWRtaXNzaW9uIFdCQyAxNC4yLCBsYWN0YXRlIG5vcm1hbC4gRm9vdCByYWRpb2dyYXBoIGFuZCBNUkkgc2hvd2VkIG5vIG9zdGVvbXllbGl0aXMgb3IgYWJzY2Vzcy4gSGUgd2FzIHRyZWF0ZWQgd2l0aCBJViBjZWZhem9saW4gZm9yIDMgZGF5cyB3aXRoIG1hcmtlZCByZWR1Y3Rpb24gaW4gZXJ5dGhlbWEgYW5kIHdhcyBzd2l0Y2hlZCB0byBvcmFsIGNlcGhhbGV4aW4gb24gZGF5IDQuIFdvdW5kIGN1bHR1cmUgZ3JldyBtZXRoaWNpbGxpbi1zZW5zaXRpdmUgU3RhcGh5bG9jb2NjdXMgYXVyZXVzLiBQb2RpYXRyeSBkZWJyaWRlZCB0aGUgdWxjZXIgb24gMjAyNi0xMS0yMCBhbmQgcGxhY2VkIGhpbSBpbiBhbiBvZmZsb2FkaW5nIHN1cmdpY2FsIHNob2UuIEdsdWNvc2Ugd2FzIHBvb3JseSBjb250cm9sbGVkIChBMWMgOS42JSk7IGJhc2FsIGluc3VsaW4gd2FzIHN0YXJ0ZWQgYW5kIGRpYWJldGVzIHRlYWNoaW5nIGNvbXBsZXRlZC4gRXJ5dGhlbWEgaGFzIHJlY2VkZWQgd2VsbCBpbnNpZGUgdGhlIG1hcmtlZCBib3JkZXJzIGFuZCBoZSBpcyBhZmVicmlsZSB3aXRoIFdCQyA4LjEgYXQgZGlzY2hhcmdlLgoKQ29uZGl0aW9uIGF0IERpc2NoYXJnZTogSW1wcm92ZWQsIHN0YWJsZS4gTWVudGFsIHN0YXR1cyBhbGVydCBhbmQgb3JpZW50ZWQuIEFmZWJyaWxlOyBsZWZ0IGxlZyBlcnl0aGVtYSBtYXJrZWRseSBpbXByb3ZlZC4KCkZ1bmN0aW9uYWwgU3RhdHVzOiBBbWJ1bGF0ZXMgaW5kZXBlbmRlbnRseSB3aXRoIGEgY2FuZSBhbmQgb2ZmbG9hZGluZyBzaG9lLCBoZWVsIHdlaWdodCBiZWFyaW5nIG9uIHRoZSBsZWZ0IGZvb3QuIEluZGVwZW5kZW50IHdpdGggQURMczsgbmVlZHMgaGVscCB3aXRoIGRyZXNzaW5nIGNoYW5nZXMgb24gdGhlIHNvbGUgb2YgaGlzIGZvb3QuCgpEaXNjaGFyZ2UgRGlzcG9zaXRpb246IEhvbWUgd2l0aCBob21lIGhlYWx0aCBudXJzaW5nIGZvciB3b3VuZCBjYXJlIGFuZCBkaWFiZXRlcyB0ZWFjaGluZyAoU3VucmlzZSBWYWxsZXkgSG9tZSBIZWFsdGgpLgoKTWVkaWNhdGlvbiBDaGFuZ2VzOgotIE5ldzogY2VwaGFsZXhpbiA1MDAgbWcgZm91ciB0aW1lcyBkYWlseSBmb3IgNiBtb3JlIGRheXMgdG8gY29tcGxldGUgMTAgZGF5cyBvZiBhbnRpYmlvdGljcwotIE5ldzogaW5zdWxpbiBnbGFyZ2luZSAxNCB1bml0cyBuaWdodGx5IGZvciB1bmNvbnRyb2xsZWQgZGlhYmV0ZXMKLSBVbmNoYW5nZWQ6IG1ldGZvcm1pbiAxMDAwIG1nIHR3aWNlIGRhaWx5LCBnYWJhcGVudGluIDMwMCBtZyBuaWdodGx5LCBsaXNpbm9wcmlsIDEwIG1nIGRhaWx5Ci0gU3RvcHBlZDogZ2xpcGl6aWRlIDEwIG1nIGRhaWx5LCByZXBsYWNlZCBieSBiYXNhbCBpbnN1bGluIHRvIHJlZHVjZSBoeXBvZ2x5Y2VtaWEgcmlzawoKUGVuZGluZyBSZXN1bHRzOiBOb25lIHBlbmRpbmcgYXQgZGlzY2hhcmdlOyB3b3VuZCBjdWx0dXJlIGZpbmFsaXplZCAyMDI2LTExLTIxLgoKQ29kZSBzdGF0dXM6IEZ1bGwgY29kZS4gUGF0aWVudCdzIGdvYWwgaXMgdG8gaGVhbCB0aGUgdWxjZXIsIGF2b2lkIGFtcHV0YXRpb24sIGFuZCBrZWVwIHdvcmtpbmcgcGFydCB0aW1lIGF0IGhpcyBoYXJkd2FyZSBzdG9yZS4KClBDUDogRHIuIEZsb3JlbnR5bmEgS293YWxjenlrLCBCcm9va3NpZGUgSW50ZXJuYWwgTWVkaWNpbmUsIDU1NS0wMTI0CgpEaXNjaGFyZ2UgcGxhbm5pbmcgZXZhbHVhdGlvbiBjb21wbGV0ZWQgYnkgY2FzZSBtYW5hZ2VtZW50IG9uIDIwMjYtMTEtMjE6IHBvc3QtaG9zcGl0YWwgbmVlZHMgYXJlIHNraWxsZWQgbnVyc2luZyBmb3Igd291bmQgY2FyZSB0d2ljZSB3ZWVrbHkgYW5kIGluc3VsaW4gdGVhY2hpbmc7IGhvbWUgaGVhbHRoIGlzIGF2YWlsYWJsZSBhbmQgY292ZXJlZCBieSBNZWRpY2FyZS4gVGhlIHBsYW4gd2FzIGRpc2N1c3NlZCB3aXRoIHRoZSBwYXRpZW50IGFuZCBoaXMgd2lmZSwgd2hvIGFncmVlIHdpdGggaG9tZSBoZWFsdGguCgpEaXNjaGFyZ2Ugc3VtbWFyeSBzZW50IGVsZWN0cm9uaWNhbGx5IHRvIFBDUCBEci4gRmxvcmVudHluYSBLb3dhbGN6eWsgYW5kIHRvIFN1bnJpc2UgVmFsbGV5IEhvbWUgSGVhbHRoIGFnZW5jeSBvbiAyMDI2LTExLTIyLgoKRWxlY3Ryb25pY2FsbHkgc2lnbmVkIGJ5IFNvcmF5YSBMaW5kZ3JlbiwgTUQgb24gMjAyNi0xMS0yMiAxNjoxNQo="
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

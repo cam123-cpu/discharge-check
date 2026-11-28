@@ -1,0 +1,61 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Patient: Eleanor Pemberton-Hale (synthetic)
+Unit: 7 South Oncology
+Admission Date: 2026-11-16
+Discharge Date: 2026-11-21
+Attending: Dr. Viktor Halvorsen (Hospital Medicine)
+
+Chief Complaint: Abdominal pain, vomiting and inability to eat for five days.
+
+Discharge Diagnosis:
+1. Metastatic pancreatic adenocarcinoma with liver and peritoneal metastases, progressive despite second-line chemotherapy (principal)
+2. Cancer-related pain, now controlled
+3. Malignant partial gastric outlet obstruction, managed medically
+4. Hypercalcemia of malignancy, resolved
+
+Brief Hospital Course:
+79-year-old woman with pancreatic adenocarcinoma diagnosed in March 2026 presented with uncontrolled epigastric pain, vomiting and poor oral intake. CT showed progression of liver metastases and new peritoneal disease causing partial gastric outlet obstruction. Calcium was 12.4 and corrected to 9.8 with IV fluids and one dose of zoledronic acid. Pain was controlled with an oral long-acting morphine regimen and breakthrough doses after palliative care consultation. Vomiting improved with scheduled metoclopramide and dexamethasone and she is tolerating soft foods and liquids. Her oncologist, Dr. Imogen Castellanos, met with her and confirmed that no further cancer-directed therapy is recommended. After goals-of-care discussions she chose to focus on comfort and to go home with hospice.
+
+Condition at Discharge: Stable for discharge, comfortable. Mental status alert and oriented, with intact decision-making capacity. Pain 2/10 on current regimen.
+
+Discharge Disposition: Home with hospice care (Evergreen Hospice), living with her son
+
+Discharge Medications:
+- Morphine sulfate extended-release 15 mg by mouth every 12 hours
+- Morphine sulfate immediate-release 7.5 mg by mouth every 2 hours as needed for breakthrough pain
+- Metoclopramide 10 mg by mouth before meals and at bedtime
+- Dexamethasone 4 mg by mouth daily with breakfast
+- Senna 17.2 mg by mouth twice daily
+- Lorazepam 0.5 mg by mouth every 6 hours as needed for nausea or anxiety
+
+Medication Changes:
+- New: morphine extended-release and immediate-release for cancer pain (replace oxycodone)
+- New: metoclopramide and dexamethasone for nausea and gastric outlet obstruction
+- New: senna for opioid-induced constipation; lorazepam as needed
+- Stopped: oxycodone 5 mg as needed (replaced by morphine)
+- Stopped: atorvastatin 10 mg, amlodipine 5 mg and pancrelipase, no longer beneficial given comfort-focused goals
+
+Allergies: No known drug allergies
+
+Pending Results: None pending at discharge.
+
+Goals of Care: DNR/DNI, comfort-focused care. POLST completed and signed 2026-11-20 indicating comfort measures only, no hospital transfer unless comfort cannot be achieved at home. Patient's stated goals are to be at home with her son and grandchildren, to be free of pain, and to die at home when the time comes.
+
+Functional Status: Ambulates short distances in the home with a walker and standby assistance; spends most of the day in bed or recliner. Needs assistance with bathing and dressing.
+
+PCP: Dr. Leopold Ashworth, Meadowbrook Family Practice, 555-0146
+
+Followup Instructions:
+- Evergreen Hospice admission nursing visit at home on 2026-11-21 evening (confirmed with hospice intake)
+- Hospice medical director Dr. Ottilie Brennan to assume symptom management from discharge; hospice physician visit within 1 week
+- PCP Dr. Leopold Ashworth remains attending of record; phone check-in with the patient within 2 weeks
+- Oncology, Dr. Imogen Castellanos, telephone visit in 4 weeks on 2026-12-19 (optional, patient's request)
+
+Discharge planning evaluation: Completed by case management on 2026-11-19. Post-hospital needs are home hospice services, hospital bed and bedside commode; son lives with her and is the primary caregiver. Hospice services and equipment were confirmed available and delivered to the home on 2026-11-20.
+
+Goals of care and the hospice plan were discussed with the patient and her son by Dr. Halvorsen and the palliative care team on 2026-11-19 and 2026-11-20; the patient agreed with the plan and the son agrees.
+
+Discharge summary, POLST and medication list faxed to Evergreen Hospice and sent electronically to PCP Dr. Leopold Ashworth on 2026-11-21.
+
+Electronically signed by Viktor Halvorsen, MD on 2026-11-21 14:02

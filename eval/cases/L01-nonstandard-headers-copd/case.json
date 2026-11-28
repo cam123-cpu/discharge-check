@@ -1,0 +1,42 @@
+{
+  "id": "L01-nonstandard-headers-copd",
+  "category": "linguistic",
+  "title": "COPD exacerbation, home; diagnosis, med list, follow-up and PCP all present under nonstandard headers and abbreviations",
+  "disposition": "Home",
+  "discharge_date": "2026-11-20",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "not_applicable"
+  },
+  "rationale": {
+    "final_diagnosis": "The discharge diagnoses are listed under 'Impression at Discharge', a common synonym the section list does not include; the content is complete.",
+    "discharge_meds": "A full dosed discharge medication list appears under the abbreviated header 'Meds at d/c'.",
+    "followup": "Follow-up is in a 'Plan' paragraph: PMD Dr. Ostrowski in 1 wk and pulmonary clinic with Dr. Wielicki in 4-6 wks; who and when are both stated.",
+    "pcp_named": "The primary care clinician is named as 'her PMD, Dr. Nadia Ostrowski' with a phone number; PMD is a standard synonym for PCP.",
+    "pac_list": "Home without new services, so the post-acute rules do not apply.",
+    "meds_consistent": "No nursing instructions were provided."
+  },
+  "tags": ["paraphrase", "abbreviation", "nonstandard-header"]
+}

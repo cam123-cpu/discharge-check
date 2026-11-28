@@ -1,0 +1,46 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-10-06
+Discharge Date: 2026-10-12
+Attending: Dr. Annika Bergstrom-Lowe, Neurology (Stroke Service)
+
+Discharge Diagnoses:
+1. Acute ischemic stroke, left middle cerebral artery territory, cardioembolic
+2. New paroxysmal atrial fibrillation
+3. Right hemiparesis and expressive aphasia
+4. Hypertension
+5. Hyperlipidemia
+
+Hospital Course:
+63-year-old right-handed man presented 90 minutes after onset of right arm and leg weakness and word-finding difficulty (NIHSS 11). CT angiography showed a left M2 occlusion. He received IV tenecteplase and underwent thrombectomy with TICI 2b reperfusion. MRI showed a moderate left frontoparietal infarct without hemorrhagic transformation. Telemetry captured paroxysmal atrial fibrillation; apixaban was started on hospital day 4 after a stable repeat CT. NIHSS improved to 5. Swallow evaluation passed for a mechanical soft diet with thin liquids. PT, OT and speech therapy evaluated daily; see the case management note for discharge arrangements.
+
+Condition at Discharge: Stable. Alert, follows commands, mild expressive aphasia. Right arm 3/5, right leg 4/5.
+
+Discharge Medications:
+- Apixaban 5 mg by mouth twice daily
+- Atorvastatin 80 mg by mouth nightly
+- Amlodipine 5 mg by mouth daily
+- Metoprolol succinate 25 mg by mouth daily
+- Pantoprazole 40 mg by mouth daily
+
+Medication Changes:
+- New: apixaban 5 mg twice daily (atrial fibrillation, secondary stroke prevention)
+- New: metoprolol succinate 25 mg daily (rate control)
+- Increased: atorvastatin from 20 mg to 80 mg nightly
+- Stopped: aspirin 81 mg daily (now anticoagulated)
+
+Pending Results: None pending at discharge.
+
+Code Status: Full code. Patient and wife's goal is for him to regain enough function to return home and drive again.
+
+Functional Status: Moderate assistance for transfers; ambulates 40 feet with a hemi-walker and moderate assist of one; needs help with upper-body dressing and bathing.
+
+Follow-up:
+- Stroke clinic, Dr. Bergstrom-Lowe, in 6 weeks
+- Cardiology, Dr. Omar Haddadi, within 4 weeks for atrial fibrillation
+- PCP Dr. Lucinda Marsh (555-0151) within 2 weeks of leaving rehabilitation
+
+The plan of care was explained to the patient and his wife, who agree with the plan.
+Discharge summary sent electronically to PCP Dr. Lucinda Marsh and to the admitting rehabilitation facility on 2026-11-12.
+
+Electronically signed by Annika Bergstrom-Lowe, MD on 2026-11-12 09:40

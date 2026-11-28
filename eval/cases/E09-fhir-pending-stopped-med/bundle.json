@@ -1,0 +1,251 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "syn-e09",
+        "name": [
+          {
+            "family": "Example",
+            "given": [
+              "Synthetic"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "status": "finished",
+        "period": {
+          "start": "2026-11-19",
+          "end": "2026-11-22"
+        },
+        "reasonCode": [
+          {
+            "text": "Community-acquired pneumonia with hypoxemia"
+          }
+        ],
+        "hospitalization": {
+          "dischargeDisposition": {
+            "text": "Home"
+          }
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "category": [
+          {
+            "text": "encounter-diagnosis"
+          }
+        ],
+        "code": {
+          "text": "Community-acquired pneumonia, right lower lobe"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "category": [
+          {
+            "text": "encounter-diagnosis"
+          }
+        ],
+        "code": {
+          "text": "Acute kidney injury, resolved (NSAID-associated, prerenal)"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "category": [
+          {
+            "text": "problem-list-item"
+          }
+        ],
+        "code": {
+          "text": "Mild intermittent asthma"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Amoxicillin-clavulanate 875-125 mg"
+        },
+        "dosageInstruction": [
+          {
+            "text": "by mouth twice daily through 2026-11-26"
+          }
+        ],
+        "note": [
+          {
+            "text": "new, completes 7 days of antibiotics"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Azithromycin 250 mg"
+        },
+        "dosageInstruction": [
+          {
+            "text": "by mouth daily through 2026-11-23"
+          }
+        ],
+        "note": [
+          {
+            "text": "new, final dose of 5-day course"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Albuterol HFA 90 mcg"
+        },
+        "dosageInstruction": [
+          {
+            "text": "2 puffs every 4 hours as needed for wheeze"
+          }
+        ],
+        "note": [
+          {
+            "text": "unchanged home medication"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Acetaminophen 500 mg"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 to 2 tablets every 6 hours as needed for fever or pain, max 3 g per day"
+          }
+        ],
+        "note": [
+          {
+            "text": "new, use instead of ibuprofen"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "stopped",
+        "medicationCodeableConcept": {
+          "text": "Ibuprofen 400 mg"
+        },
+        "note": [
+          {
+            "text": "stopped: acute kidney injury; avoid NSAIDs until PCP rechecks kidney function"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "AllergyIntolerance",
+        "code": {
+          "text": "Sulfonamide antibiotics (hives)"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "status": "preliminary",
+        "code": {
+          "text": "Blood culture x2, collected 2026-11-19 (no growth at 48 hours)"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "status": "partial",
+        "code": {
+          "text": "Urine Legionella pneumophila antigen"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "status": "final",
+        "code": {
+          "text": "Respiratory viral PCR panel (negative)"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Appointment",
+        "status": "booked",
+        "description": "Follow-up with PCP Dr. Talia Mensah, kidney function recheck",
+        "start": "2026-11-27T10:30:00Z"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "status": "active",
+        "code": {
+          "text": "Chest x-ray to confirm resolution, ordered by Dr. Talia Mensah"
+        },
+        "occurrencePeriod": {
+          "start": "2027-01-04"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Goal",
+        "description": {
+          "text": "Full code. Patient's goal: return to teaching by 2026-12-01."
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DocumentReference",
+        "status": "current",
+        "author": [
+          {
+            "display": "Dr. Seraphina Quist"
+          }
+        ],
+        "content": [
+          {
+            "attachment": {
+              "contentType": "text/plain",
+              "data": "RElTQ0hBUkdFIFNVTU1BUlkgKFNZTlRIRVRJQyBSRUNPUkQpCgpBdHRlbmRpbmc6IERyLiBTZXJhcGhpbmEgUXVpc3QsIEhvc3BpdGFsIE1lZGljaW5lCgpIb3NwaXRhbCBDb3Vyc2U6CjQ1LXllYXItb2xkIHdvbWFuLCBhIG1pZGRsZS1zY2hvb2wgdGVhY2hlciB3aXRoIG1pbGQgaW50ZXJtaXR0ZW50IGFzdGhtYSwgYWRtaXR0ZWQgd2l0aCBmZXZlciwgcHJvZHVjdGl2ZSBjb3VnaCBhbmQgcmlnaHQgbG93ZXIgbG9iZSBjb25zb2xpZGF0aW9uIG9uIGNoZXN0IHgtcmF5IChDVVJCLTY1IHNjb3JlIDEsIGFkbWl0dGVkIGZvciBoeXBveGVtaWEsIFNwTzIgODklIG9uIHJvb20gYWlyKS4gVHJlYXRlZCB3aXRoIElWIGNlZnRyaWF4b25lIGFuZCBvcmFsIGF6aXRocm9teWNpbi4gRmV2ZXIgcmVzb2x2ZWQgd2l0aGluIDM2IGhvdXJzIGFuZCBzaGUgd2FzIHdlYW5lZCB0byByb29tIGFpciBvbiBob3NwaXRhbCBkYXkgMi4gQ3JlYXRpbmluZSByb3NlIHRvIDEuNCBhZnRlciBzZXZlcmFsIGRheXMgb2YgaWJ1cHJvZmVuIGF0IGhvbWUgYW5kIHJldHVybmVkIHRvIDAuOSB3aXRoIGZsdWlkczsgaWJ1cHJvZmVuIHdhcyBzdG9wcGVkLiBTd2l0Y2hlZCB0byBvcmFsIGFtb3hpY2lsbGluLWNsYXZ1bGFuYXRlIG9uIGRheSAzLiBCbG9vZCBjdWx0dXJlcyBzaG93IG5vIGdyb3d0aCBhdCA0OCBob3VycyBidXQgYXJlIG5vdCBmaW5hbDsgdGhlIHVyaW5lIExlZ2lvbmVsbGEgYW50aWdlbiBzZW50IG9uIGFkbWlzc2lvbiBpcyBzdGlsbCBpbiBwcm9jZXNzIGF0IHRoZSByZWZlcmVuY2UgbGFiLgoKQ29uZGl0aW9uIGF0IERpc2NoYXJnZTogR29vZC4gQWxlcnQgYW5kIG9yaWVudGVkLCBtZW50YWwgc3RhdHVzIG5vcm1hbC4gU3BPMiA5NiUgb24gcm9vbSBhaXIgYXQgcmVzdCBhbmQgOTQlIHdhbGtpbmcuCgpGdW5jdGlvbmFsIFN0YXR1czogSW5kZXBlbmRlbnQgd2l0aCBBRExzOyBhbWJ1bGF0aW5nIHdpdGhvdXQgYXNzaXN0YW5jZS4KClBlbmRpbmcgcmVzdWx0czogVGhlIGZpbmFsIGJsb29kIGN1bHR1cmUgcmVwb3J0IGFuZCB0aGUgdXJpbmUgTGVnaW9uZWxsYSBhbnRpZ2VuIGFyZSBwZW5kaW5nLiBEci4gVGFsaWEgTWVuc2FoJ3Mgb2ZmaWNlIHdpbGwgZm9sbG93IGJvdGggcmVzdWx0cyBhbmQgY2FsbCB0aGUgcGF0aWVudCBpZiB0cmVhdG1lbnQgbmVlZHMgdG8gY2hhbmdlLgoKUENQOiBEci4gVGFsaWEgTWVuc2FoLCBMaW5kZW5odXJzdCBQcmltYXJ5IENhcmUsIDU1NS0wMTM0LgoKRGlzY2hhcmdlIHBsYW5uaW5nIGV2YWx1YXRpb246IHNjcmVlbmVkIG9uIGFkbWlzc2lvbjsgbm8gcG9zdC1ob3NwaXRhbCBzZXJ2aWNlcyBuZWVkZWQuIExpdmVzIHdpdGggaGVyIGh1c2JhbmQgYW5kIHR3byB0ZWVuYWdlcnMuClRoZSBkaXNjaGFyZ2UgcGxhbiB3YXMgZGlzY3Vzc2VkIHdpdGggdGhlIHBhdGllbnQgYW5kIGhlciBodXNiYW5kLCB3aG8gdmVyYmFsaXplZCB1bmRlcnN0YW5kaW5nLgpEaXNjaGFyZ2Ugc3VtbWFyeSBzZW50IGVsZWN0cm9uaWNhbGx5IHRvIFBDUCBEci4gVGFsaWEgTWVuc2FoIG9uIDIwMjYtMTEtMjIuCgpFbGVjdHJvbmljYWxseSBzaWduZWQgYnkgU2VyYXBoaW5hIFF1aXN0LCBNRCBvbiAyMDI2LTExLTIyIDEzOjQ4Cg=="
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

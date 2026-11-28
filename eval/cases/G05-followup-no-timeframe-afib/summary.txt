@@ -1,0 +1,44 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-19
+Discharge Date: 2026-11-21
+Attending: Dr. Yusuf Karim (Cardiology)
+
+Discharge Diagnosis:
+1. New-onset atrial fibrillation with rapid ventricular response, now rate controlled
+2. Hypertension
+3. Obstructive sleep apnea, untreated
+
+Brief Hospital Course:
+63-year-old man presented with palpitations and lightheadedness for 12 hours; ECG showed atrial fibrillation at 148 bpm. TSH normal, troponin negative. Transthoracic echo: normal LV function, mild left atrial enlargement, no valvular disease. Rate controlled with IV then oral metoprolol to resting HR 70-85. CHA2DS2-VASc 1 for hypertension; after shared decision-making he elected anticoagulation in anticipation of possible cardioversion. Sleep apnea screening positive; outpatient sleep study ordered. Symptoms resolved.
+
+Condition at Discharge: Stable, asymptomatic, HR 78 irregular, alert and oriented.
+
+Discharge Disposition: Home
+
+Discharge Medications:
+- Metoprolol succinate 100 mg by mouth daily
+- Apixaban 5 mg by mouth twice daily
+- Lisinopril 10 mg by mouth daily
+
+Medication Changes:
+- New: metoprolol succinate 100 mg daily for rate control
+- New: apixaban 5 mg twice daily for stroke prevention
+- Changed: lisinopril decreased from 20 mg to 10 mg daily (blood pressure low-normal on metoprolol)
+
+Pending Results: None pending.
+
+Goals of Care: Full code. He wants to avoid long-term medications if a rhythm-control strategy works.
+
+Functional Status: Fully independent, ambulating without limitation.
+
+Follow-up:
+- Cardiology, Dr. Yusuf Karim, to discuss cardioversion versus continued rate control
+- PCP Dr. Selma Achterberg for blood pressure review
+- Sleep medicine for polysomnography; office will call the patient
+
+Discharge planning evaluation: no post-hospital services needed; independent and employed.
+Plan discussed with patient and his wife; both verbalized understanding of bleeding precautions.
+Summary sent electronically to PCP Dr. Selma Achterberg on 2026-11-21.
+
+Electronically signed by Yusuf Karim, MD on 2026-11-21 18:05
