@@ -4,12 +4,12 @@ Accepted: plain text (.txt, .md) and FHIR R4 JSON (.json, a Bundle or a
 single DocumentReference). Everything else is rejected before it is read."""
 from __future__ import annotations
 
-import base64
-import binascii
 import json
 import re
 import unicodedata
 from dataclasses import dataclass, field
+
+from .fhir.parse import FhirExtract, FhirParseError, parse_fhir
 
 DOC_KINDS = {
     "discharge_summary": "Discharge summary",
@@ -153,116 +153,24 @@ def split_sections(text: str) -> dict[str, str]:
 
 
 # ---------------- FHIR ----------------
-# FHIR files come from outside the hospital's control, so every field is
-# treated as possibly the wrong type: a string where an object belongs, a
-# number where a list belongs. Nothing here may raise anything but IngestError.
-
-MAX_RESOURCES = 2000
-
-
-def _d(x) -> dict:
-    return x if isinstance(x, dict) else {}
-
-
-def _l(x) -> list:
-    return x if isinstance(x, list) else []
-
-
-def _s(x, n: int = 500) -> str:
-    return x[:n] if isinstance(x, str) else ""
-
-
-def _cc_text(cc) -> str:
-    cc = _d(cc)
-    if _s(cc.get("text")):
-        return _s(cc.get("text"))
-    return ", ".join(_s(_d(c).get("display")) for c in _l(cc.get("coding")) if _s(_d(c).get("display")))
-
-
-def _attachment_text(att) -> str:
-    att = _d(att)
-    ctype = _s(att.get("contentType")) or "text/plain"
-    if ctype.split(";")[0].strip().lower() not in ("text/plain", "text/markdown"):
-        return ""
-    data = att.get("data")
-    if not isinstance(data, str) or len(data) > 4 * MAX_CHARS:
-        return ""
-    try:
-        return base64.b64decode(data, validate=True).decode("utf-8")
-    except (binascii.Error, ValueError, UnicodeDecodeError):
-        return ""
+# The parser lives in app/fhir/parse.py so the EHR client can share it.
 
 
 def fhir_to_text(obj) -> tuple[str, str]:
-    """Flatten a FHIR Bundle (or DocumentReference) into sectioned text.
+    """Flatten a FHIR Bundle or DocumentReference into sectioned text.
     Patient names, addresses and identifiers are never copied."""
-    if not isinstance(obj, dict) or obj.get("resourceType") not in ("Bundle", "DocumentReference"):
-        raise IngestError("JSON files must be a FHIR R4 Bundle or DocumentReference.")
-    if obj["resourceType"] == "Bundle":
-        entries = _l(obj.get("entry"))
-        if len(entries) > MAX_RESOURCES:
-            raise IngestError(f"The FHIR bundle has more than {MAX_RESOURCES} entries.")
-        resources = [_d(e).get("resource") for e in entries]
-    else:
-        resources = [obj]
-    resources = [r for r in resources if isinstance(r, dict)]
+    ex = _parse_fhir(obj)
+    return ex.text, ex.author
 
-    out: dict[str, list[str]] = {}
-    narrative: list[str] = []
-    author = ""
 
-    def add(section: str, line: str):
-        if line and line.strip(" -"):
-            out.setdefault(section, []).append(line)
-
-    for r in resources:
-        rt = r.get("resourceType")
-        if rt == "Encounter":
-            hosp = _d(r.get("hospitalization"))
-            add("Discharge Disposition", _cc_text(hosp.get("dischargeDisposition")))
-            period = _d(r.get("period"))
-            add("Admission Date", _s(period.get("start"))[:10])
-            add("Discharge Date", _s(period.get("end"))[:10])
-            for reason in _l(r.get("reasonCode")):
-                add("Reason for Admission", _cc_text(reason))
-        elif rt == "Condition":
-            cats = " ".join(_cc_text(c).lower() for c in _l(r.get("category")))
-            label = "Discharge Diagnosis" if "encounter" in cats or not cats else "Past Medical History"
-            add(label, "- " + _cc_text(r.get("code")))
-        elif rt == "MedicationRequest":
-            med = _cc_text(r.get("medicationCodeableConcept"))
-            dose = "; ".join(_s(_d(d).get("text")) for d in _l(r.get("dosageInstruction")) if _s(_d(d).get("text")))
-            note = " ".join(_s(_d(n).get("text")) for n in _l(r.get("note")) if _s(_d(n).get("text")))
-            line = f"- {med} {dose}".strip()
-            if note:
-                line += f" ({note})"
-            add("Medications Stopped" if r.get("status") == "stopped" else "Discharge Medications", line)
-        elif rt == "AllergyIntolerance":
-            add("Allergies", _cc_text(r.get("code")))
-        elif rt in ("Appointment", "ServiceRequest") and r.get("status") not in ("cancelled", "revoked"):
-            desc = _s(r.get("description")) or _cc_text(r.get("code")) or "Follow-up"
-            when = (_s(r.get("start")) or _s(_d(r.get("occurrencePeriod")).get("start")))[:10]
-            add("Followup Instructions", f"- {desc} {when}".strip())
-        elif rt == "DiagnosticReport":
-            status = _s(r.get("status"), 40)
-            if status in ("registered", "partial", "preliminary"):
-                add("Pending Results", f"- {_cc_text(r.get('code'))} (status: {status})")
-        elif rt == "Goal":
-            add("Goals of Care", _cc_text(r.get("description")))
-        elif rt == "DocumentReference":
-            for c in _l(r.get("content")):
-                t = _attachment_text(_d(c).get("attachment"))
-                if t:
-                    narrative.append(t)
-            for a in _l(r.get("author")):
-                if _s(_d(a).get("display")) and not author:
-                    author = _s(_d(a).get("display"), 80)
-
-    parts = [f"{k}:\n" + "\n".join(v) for k, v in out.items()]
-    text = clean_text("\n\n".join(narrative + parts).strip())
-    if not text:
-        raise IngestError("No usable clinical content was found in the FHIR file.")
-    return text, author
+def _parse_fhir(obj) -> FhirExtract:
+    try:
+        ex = parse_fhir(obj)
+    except FhirParseError as exc:
+        raise IngestError(str(exc)) from exc
+    # Attachment text arrives base64-encoded, so clean it like a typed upload.
+    ex.text = clean_text(ex.text)
+    return ex
 
 
 # [ \t]* rather than \s*: with re.M, a leading \s* re-scans every following
@@ -280,8 +188,11 @@ def parse_upload(raw: bytes, filename: str, kind: str, max_bytes: int) -> Parsed
             obj = json.loads(text)
         except (json.JSONDecodeError, RecursionError) as exc:  # RecursionError: deeply nested arrays
             raise IngestError("The JSON file could not be parsed.") from exc
-        text, author = fhir_to_text(obj)
-    warnings = phi_screen(text)
+        extract = _parse_fhir(obj)
+        text, author, fhir_warnings = extract.text, extract.author, extract.warnings
+    else:
+        fhir_warnings = []
+    warnings = fhir_warnings + phi_screen(text)
     if not author:
         m = _AUTHOR.search(text)
         if m:

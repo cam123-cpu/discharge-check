@@ -26,7 +26,7 @@ bundle = {
     "resourceType": "Bundle",
     "type": "collection",
     "entry": [
-        res({"resourceType": "Patient", "id": "syn4", "name": [{"family": "Example", "given": ["Synthetic"]}]}),
+        res({"resourceType": "Patient", "id": "syn4", "name": [{"family": "Example", "given": ["Testcase"]}]}),
         res({"resourceType": "Encounter", "status": "finished",
              "period": {"start": "2026-11-16", "end": "2026-11-19"},
              "reasonCode": [{"text": "Elective right total hip arthroplasty"}],

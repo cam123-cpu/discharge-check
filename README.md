@@ -11,7 +11,7 @@ touches the data (including Anthropic, if model review is on).
 
 ## What it does
 
-- **Ingest:** `.txt`, `.md`, or FHIR R4 `.json` (Bundle or DocumentReference).
+- **Ingest:** `.txt`, `.md`, or FHIR R4 `.json` (any Bundle type, DocumentReference, Composition or Encounter), or a pull from an EHR over SMART on FHIR (below).
   FHIR resources (Encounter, Condition, MedicationRequest, Appointment,
   DiagnosticReport, Goal, DocumentReference) are flattened into sections;
   patient names and identifiers are never copied.
@@ -84,6 +84,41 @@ pip-audit -r requirements.txt
 In a deployment, set `FORCE_HTTPS=1` and `ALLOWED_HOSTS`, and when a proxy
 terminates TLS add `--proxy-headers --forwarded-allow-ips=<proxy IP>` so the
 app sees the real scheme and client IP (rate limits and the access log use it).
+
+## Pull from an EHR sandbox (SMART on FHIR)
+
+`app/fhir/smart.py` is a SMART on FHIR R4 client and `app/fhir/parse.py` turns
+what it pulls into the same sectioned text an upload produces. Use synthetic
+sandboxes only; the Patient resource is never saved and patient names are
+redacted from narrative text.
+
+Settings go in `.env` (see the `FHIR_*` block in `.env.example`). Three modes:
+
+| Mode | Use it for | You need |
+| --- | --- | --- |
+| `open` | SMART Health IT open server (`https://r4.smarthealthit.org`), no login | `FHIR_BASE_URL` |
+| `backend` | Epic sandbox or any server with SMART Backend Services (system-to-system) | client id, a private key (RS384 or ES384) whose public JWKS you registered, `FHIR_KEY_ID` |
+| `standalone` | Sign in as a clinician in the browser (authorization code + PKCE) | client id, `FHIR_REDIRECT_URI` on `http://localhost:<port>/...` |
+
+```bash
+python -m scripts.fhir_pull discover                       # checks the server and its OAuth endpoints
+python -m scripts.fhir_pull jwks --key keys/epic.pem       # public JWKS to register a backend app
+python -m scripts.fhir_pull pull --patient <id> [--encounter <id>] --out data/pull.json
+python -m scripts.fhir_pull import --bundle data/pull.json --org-id 1 --label SYN-0100
+```
+
+To find a test patient on the open server:
+`curl -s 'https://r4.smarthealthit.org/Patient?_count=5' | python -m json.tool | grep '"id"'`.
+
+`pull` picks the most recent finished inpatient encounter when `--encounter` is
+left out, and fetches its Encounter, Conditions, MedicationRequests (with their
+Medications), allergies, DocumentReferences (and Binary attachments), pending
+DiagnosticReports, follow-up Appointments and ServiceRequests, CarePlans, Goals
+and Procedures. Searches a server does not support for an encounter fall back
+to patient-level and are filtered back to that encounter; types the token's
+scopes do not cover are skipped with a warning. Paging stays on the configured
+server, redirects are never followed, and tokens are never printed or logged.
+Keep private keys outside the repo (`*.pem` and `*.key` are git-ignored).
 
 ## Security checklist
 
