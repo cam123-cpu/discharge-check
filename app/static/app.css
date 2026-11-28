@@ -133,3 +133,21 @@ pre.doc { background: var(--sheet); border: 1px solid var(--rule); padding: 1.2r
   .check blockquote, .check .note, .check .fix, .check > .small { margin-left: 0; }
   .who { margin-left: 0; }
 }
+
+/* added in the hardening pass */
+.skip { position: absolute; left: -10000px; top: 0; background: var(--sheet); padding: .5rem .8rem; border: 1px solid var(--ink); z-index: 10; }
+.skip:focus { left: 1rem; top: .5rem; }
+.alert.warn { border-left-color: var(--unclear); background: #fbf5ea; }
+.filter { display: flex; gap: .5rem; align-items: flex-end; }
+.filter label { display: flex; flex-direction: column; gap: .2rem; font-size: .9rem; color: var(--ink-2); }
+.pager { display: flex; gap: 1.2rem; align-items: baseline; margin-top: 1rem; }
+details.done { margin-top: 1.5rem; border-top: 1px solid var(--rule); padding-top: .6rem; }
+details.done > summary { cursor: pointer; color: var(--ink-2); font-weight: 600; padding: .3rem 0; }
+details.done > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 700px) {
+  /* Wide tables scroll inside themselves instead of pushing the page sideways. */
+  table.grid { display: block; overflow-x: auto; max-width: 100%; }
+  .page, .top-inner, .foot { padding-left: 1rem; padding-right: 1rem; }
+  .pagehead { flex-wrap: wrap; }
+  .filter { flex-wrap: wrap; }
+}

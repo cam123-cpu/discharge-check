@@ -29,9 +29,11 @@ def test_login_and_cookie_flags(client):
 
 def test_wrong_password_and_rate_limit(client):
     for _ in range(5):
-        assert "incorrect" in login(client, "cm@a.test", "wrong").headers["location"]
+        login(client, "cm@a.test", "wrong")
+        assert "incorrect" in client.get("/login").text
     r = login(client, "cm@a.test")  # right password, but now locked out
-    assert "Too+many" in r.headers["location"]
+    assert r.headers["location"] == "/login"
+    assert "Too many attempts" in client.get("/login").text
 
 
 def test_honeypot_blocks_bots(client):
@@ -39,12 +41,14 @@ def test_honeypot_blocks_bots(client):
     import re
     pre = re.search(r'name="pre" value="([^"]+)"', page.text).group(1)
     r = client.post("/login", data={"email": "cm@a.test", "password": "correct horse battery staple", "pre": pre, "website": "x"}, follow_redirects=False)
-    assert "incorrect" in r.headers["location"]
+    assert r.headers["location"] == "/login" and "dc_session" not in r.headers.get("set-cookie", "")
+    assert "incorrect" in client.get("/login").text
 
 
 def test_login_requires_pre_token(client):
     r = client.post("/login", data={"email": "cm@a.test", "password": "x", "pre": "forged"}, follow_redirects=False)
-    assert "expired" in r.headers["location"]
+    assert r.headers["location"] == "/login"
+    assert "expired" in client.get("/login").text
 
 
 def test_other_org_cannot_see_patient(client, app):
@@ -75,8 +79,8 @@ def test_create_upload_check_flow(client, app):
     pid = r.headers["location"].rsplit("/", 1)[1]
     text = open("samples/syn-0001-summary.txt", "rb").read()
     r = client.post(f"/patients/{pid}/documents", data={"csrf": token, "kind": "discharge_summary", "confirm": "yes"},
-                    files={"file": ("summary.txt", text, "text/plain")}, follow_redirects=False)
-    assert "Added" in r.headers["location"]
+                    files={"file": ("summary.txt", text, "text/plain")}, follow_redirects=True)
+    assert "Added summary.txt" in r.text
     r = client.post(f"/patients/{pid}/check", data={"csrf": token}, follow_redirects=True)
     assert "Before signing" in r.text and "Complete" in r.text
     # Stored text is encrypted, not plain.
@@ -102,8 +106,8 @@ def test_upload_requires_confirmation(client, app):
     with app.state.db.connect() as conn:
         pid = conn.execute("SELECT id FROM patients WHERE label = 'A-1'").fetchone()[0]
     r = client.post(f"/patients/{pid}/documents", data={"csrf": token, "kind": "other"},
-                    files={"file": ("a.txt", b"hello", "text/plain")}, follow_redirects=False)
-    assert "Confirm" in r.headers["location"]
+                    files={"file": ("a.txt", b"hello", "text/plain")}, follow_redirects=True)
+    assert "Confirm the record is synthetic" in r.text
 
 
 # ---------- model review, with a fake client ----------

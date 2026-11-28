@@ -4,6 +4,7 @@ organization can never read another's records (row-level isolation).
 Clinical text is encrypted before it is written."""
 from __future__ import annotations
 
+import os
 import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
@@ -31,7 +32,8 @@ CREATE TABLE IF NOT EXISTS sessions (
     token_hash TEXT PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     csrf_token TEXT NOT NULL,
-    expires_at TEXT NOT NULL
+    expires_at TEXT NOT NULL,
+    last_seen TEXT NOT NULL DEFAULT ''
 );
 
 CREATE TABLE IF NOT EXISTS login_attempts (
@@ -63,7 +65,9 @@ CREATE TABLE IF NOT EXISTS documents (
     author TEXT NOT NULL DEFAULT '',
     body_enc BLOB NOT NULL,
     uploaded_by INTEGER REFERENCES users(id),
-    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    deleted_at TEXT,
+    deleted_by INTEGER REFERENCES users(id)
 );
 CREATE INDEX IF NOT EXISTS idx_documents_patient ON documents(org_id, patient_id);
 
@@ -91,6 +95,8 @@ CREATE TABLE IF NOT EXISTS findings (
 );
 CREATE INDEX IF NOT EXISTS idx_findings_org ON findings(org_id, rule_id);
 
+CREATE INDEX IF NOT EXISTS idx_analyses_latest ON analyses(org_id, patient_id, id);
+
 CREATE TABLE IF NOT EXISTS audit_log (
     id INTEGER PRIMARY KEY,
     org_id INTEGER,
@@ -100,19 +106,39 @@ CREATE TABLE IF NOT EXISTS audit_log (
     ip TEXT NOT NULL DEFAULT '',
     at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+CREATE INDEX IF NOT EXISTS idx_audit_org ON audit_log(org_id, id);
 """
+
+# Columns added after the first release. Each is applied once to an older
+# database; CREATE TABLE above already includes them for new ones.
+MIGRATIONS = [
+    ("sessions", "last_seen", "ALTER TABLE sessions ADD COLUMN last_seen TEXT NOT NULL DEFAULT ''"),
+    ("documents", "deleted_at", "ALTER TABLE documents ADD COLUMN deleted_at TEXT"),
+    ("documents", "deleted_by", "ALTER TABLE documents ADD COLUMN deleted_by INTEGER REFERENCES users(id)"),
+]
 
 
 class Database:
     def __init__(self, path: Path):
         self.path = path
-        path.parent.mkdir(parents=True, exist_ok=True)
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if not path.exists():
+            # Create the file owner-only before SQLite opens it: it holds password
+            # hashes, labels and the audit log even though clinical text is encrypted.
+            os.close(os.open(path, os.O_CREAT | os.O_WRONLY, 0o600))
         with self.connect() as conn:
+            # Old tables first get their new columns, then the script adds any
+            # indexes that depend on them.
+            for table, column, ddl in MIGRATIONS:
+                cols = {r[1] for r in conn.execute(f"PRAGMA table_info({table})")}
+                if cols and column not in cols:
+                    conn.execute(ddl)
             conn.executescript(SCHEMA)
+            conn.execute("PRAGMA journal_mode = WAL")
 
     @contextmanager
     def connect(self) -> Iterator[sqlite3.Connection]:
-        conn = sqlite3.connect(self.path)
+        conn = sqlite3.connect(self.path, timeout=10)
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA foreign_keys = ON")
         try:
@@ -140,16 +166,23 @@ class Database:
                         ORDER BY a.id DESC LIMIT 1) AS last_unclear,
                       (SELECT a.passed FROM analyses a WHERE a.patient_id = p.id AND a.org_id = p.org_id
                         ORDER BY a.id DESC LIMIT 1) AS last_passed,
-                      (SELECT COUNT(*) FROM documents d WHERE d.patient_id = p.id AND d.org_id = p.org_id) AS doc_count
+                      (SELECT COUNT(*) FROM documents d WHERE d.patient_id = p.id AND d.org_id = p.org_id
+                        AND d.deleted_at IS NULL) AS doc_count
                FROM patients p WHERE p.org_id = ? ORDER BY p.discharge_date DESC, p.id DESC""",
             (org_id,),
         ).fetchall()
 
     def documents(self, conn: sqlite3.Connection, org_id: int, patient_id: int):
         return conn.execute(
-            "SELECT * FROM documents WHERE org_id = ? AND patient_id = ? ORDER BY id",
+            "SELECT * FROM documents WHERE org_id = ? AND patient_id = ? AND deleted_at IS NULL ORDER BY id",
             (org_id, patient_id),
         ).fetchall()
+
+    def document(self, conn: sqlite3.Connection, org_id: int, patient_id: int, doc_id: int):
+        return conn.execute(
+            "SELECT * FROM documents WHERE id = ? AND patient_id = ? AND org_id = ? AND deleted_at IS NULL",
+            (doc_id, patient_id, org_id),
+        ).fetchone()
 
     def latest_analysis(self, conn: sqlite3.Connection, org_id: int, patient_id: int):
         return conn.execute(

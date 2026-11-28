@@ -8,6 +8,7 @@ import base64
 import binascii
 import json
 import re
+import unicodedata
 from dataclasses import dataclass, field
 
 DOC_KINDS = {
@@ -64,34 +65,69 @@ def decode_upload(raw: bytes, filename: str, max_bytes: int) -> tuple[str, str]:
         text = raw.decode("utf-8-sig")
     except UnicodeDecodeError as exc:
         raise IngestError("The file must be UTF-8 text.") from exc
-    text = re.sub(r"[\x01-\x08\x0b\x0c\x0e-\x1f\x7f]", "", text).replace("\r\n", "\n")
+    return name, clean_text(text)
+
+
+# Control characters, and invisible or direction-changing characters that can
+# hide text from a human reviewer while a model still reads it.
+_CONTROL = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\x9f]")
+_INVISIBLE = re.compile("[\u00ad\u200b-\u200f\u202a-\u202e\u2060-\u2064\u2066-\u206f\ufeff\ufff9-\ufffb]")
+
+
+def clean_text(text: str) -> str:
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    text = _INVISIBLE.sub("", _CONTROL.sub("", text))
     if len(text) > MAX_CHARS:
         raise IngestError("The file has too much text for one record.")
-    return name, text
+    return text
 
 
 # ---------------- PHI screen ----------------
 # The prototype is for synthetic or de-identified data only. This screen is a
 # guard rail, not a de-identification tool.
 
-_SSN = re.compile(r"\b\d{3}-\d{2}-\d{4}\b")
-_EMAIL = re.compile(r"\b[\w.+-]+@[\w-]+\.[\w.-]+\b")
+# Every quantifier is bounded so a hostile file cannot make these slow
+# (an unbounded `[\w.+-]+@` took 30+ seconds on 100 KB of "a.a.a.").
+_SSN = re.compile(r"\b\d{3}[- ]\d{2}[- ]\d{4}\b")
+_EMAIL = re.compile(r"[\w.+-]{1,64}@[\w-]{1,63}\.[\w.-]{2,63}")
 _PHONE = re.compile(r"\(?\b(\d{3})\)?[-. ]?(\d{3})[-. ]?(\d{4})\b")
 
 
 def phi_screen(text: str) -> list[str]:
-    if _SSN.search(text):
+    folded = unicodedata.normalize("NFKC", text)  # fullwidth digits count as digits
+    if _SSN.search(folded):
         raise IngestError(
             "The file contains what looks like a Social Security number. "
             "Only synthetic or de-identified records may be uploaded."
         )
     warnings = []
-    if _EMAIL.search(text):
+    if "@" in folded and _EMAIL.search(folded):
         warnings.append("Contains an email address. Confirm it is synthetic.")
-    phones = [m for m in _PHONE.finditer(text) if m.group(2) != "555"]
+    phones = [m for m in _PHONE.finditer(folded) if m.group(2) != "555"]
     if phones:
         warnings.append("Contains a phone number outside the fictional 555 range. Confirm it is synthetic.")
+    if injection_signals(text):
+        warnings.append("Contains text that reads like instructions to an AI reviewer. Model review cannot mark rules complete for this record.")
     return warnings
+
+
+# ---------------- prompt-injection screen ----------------
+# Clinical notes do not address AI systems. Text that does is either a test or
+# an attempt to steer the model review, so the analysis treats the model's
+# "complete" verdicts on such a record as needing a human check.
+
+_INJECTION = re.compile(
+    r"(\b(ignore|disregard|forget|override)\b[^\n]{0,40}\b(previous|prior|above|earlier|all|any|system|these|those)\b[^\n]{0,40}\b(instructions?|rules?|prompts?|directions?|guidelines?)\b"
+    r"|\bsystem prompt\b|\bnew instructions?\b|\byou are (now )?(an? |the )?(ai|assistant|language model|llm|reviewer|claude|gpt)\b"
+    r"|\b(ai|model|llm|automated) (reviewer|checker|review|system)s?\b[^\n]{0,40}\b(must|should|will|shall)\b"
+    r"|\bmark (all|every|each|these|the)\b[^\n]{0,40}\b(as )?(pass(ed)?|complete|compliant)\b"
+    r"|<\s*/?\s*(document|rules|system|instructions?)\b|^[ \t]*(assistant|system|human)[ \t]*:)",
+    re.I | re.M,
+)
+
+
+def injection_signals(text: str) -> bool:
+    return bool(_INJECTION.search(unicodedata.normalize("NFKC", text)))
 
 
 # ---------------- sections ----------------
@@ -117,25 +153,43 @@ def split_sections(text: str) -> dict[str, str]:
 
 
 # ---------------- FHIR ----------------
+# FHIR files come from outside the hospital's control, so every field is
+# treated as possibly the wrong type: a string where an object belongs, a
+# number where a list belongs. Nothing here may raise anything but IngestError.
+
+MAX_RESOURCES = 2000
+
+
+def _d(x) -> dict:
+    return x if isinstance(x, dict) else {}
+
+
+def _l(x) -> list:
+    return x if isinstance(x, list) else []
+
+
+def _s(x, n: int = 500) -> str:
+    return x[:n] if isinstance(x, str) else ""
+
 
 def _cc_text(cc) -> str:
-    if not isinstance(cc, dict):
-        return ""
-    if cc.get("text"):
-        return str(cc["text"])
-    codings = cc.get("coding") or []
-    return ", ".join(str(c.get("display", "")) for c in codings if isinstance(c, dict) and c.get("display"))
+    cc = _d(cc)
+    if _s(cc.get("text")):
+        return _s(cc.get("text"))
+    return ", ".join(_s(_d(c).get("display")) for c in _l(cc.get("coding")) if _s(_d(c).get("display")))
 
 
-def _attachment_text(att: dict) -> str:
-    if not isinstance(att, dict) or att.get("contentType", "text/plain").split(";")[0] not in ("text/plain", "text/markdown"):
+def _attachment_text(att) -> str:
+    att = _d(att)
+    ctype = _s(att.get("contentType")) or "text/plain"
+    if ctype.split(";")[0].strip().lower() not in ("text/plain", "text/markdown"):
         return ""
     data = att.get("data")
-    if not isinstance(data, str):
+    if not isinstance(data, str) or len(data) > 4 * MAX_CHARS:
         return ""
     try:
         return base64.b64decode(data, validate=True).decode("utf-8")
-    except (binascii.Error, UnicodeDecodeError):
+    except (binascii.Error, ValueError, UnicodeDecodeError):
         return ""
 
 
@@ -144,76 +198,76 @@ def fhir_to_text(obj) -> tuple[str, str]:
     Patient names, addresses and identifiers are never copied."""
     if not isinstance(obj, dict) or obj.get("resourceType") not in ("Bundle", "DocumentReference"):
         raise IngestError("JSON files must be a FHIR R4 Bundle or DocumentReference.")
-    resources = (
-        [e.get("resource") for e in obj.get("entry", []) if isinstance(e, dict)]
-        if obj["resourceType"] == "Bundle"
-        else [obj]
-    )
-    resources = [r for r in resources if isinstance(r, dict)][:2000]
+    if obj["resourceType"] == "Bundle":
+        entries = _l(obj.get("entry"))
+        if len(entries) > MAX_RESOURCES:
+            raise IngestError(f"The FHIR bundle has more than {MAX_RESOURCES} entries.")
+        resources = [_d(e).get("resource") for e in entries]
+    else:
+        resources = [obj]
+    resources = [r for r in resources if isinstance(r, dict)]
 
     out: dict[str, list[str]] = {}
     narrative: list[str] = []
     author = ""
 
     def add(section: str, line: str):
-        if line:
+        if line and line.strip(" -"):
             out.setdefault(section, []).append(line)
 
     for r in resources:
         rt = r.get("resourceType")
         if rt == "Encounter":
-            hosp = r.get("hospitalization") or {}
+            hosp = _d(r.get("hospitalization"))
             add("Discharge Disposition", _cc_text(hosp.get("dischargeDisposition")))
-            period = r.get("period") or {}
-            add("Admission Date", str(period.get("start", ""))[:10])
-            add("Discharge Date", str(period.get("end", ""))[:10])
-            for reason in r.get("reasonCode", []) or []:
+            period = _d(r.get("period"))
+            add("Admission Date", _s(period.get("start"))[:10])
+            add("Discharge Date", _s(period.get("end"))[:10])
+            for reason in _l(r.get("reasonCode")):
                 add("Reason for Admission", _cc_text(reason))
         elif rt == "Condition":
-            cats = " ".join(_cc_text(c).lower() for c in r.get("category", []) or [])
+            cats = " ".join(_cc_text(c).lower() for c in _l(r.get("category")))
             label = "Discharge Diagnosis" if "encounter" in cats or not cats else "Past Medical History"
             add(label, "- " + _cc_text(r.get("code")))
         elif rt == "MedicationRequest":
             med = _cc_text(r.get("medicationCodeableConcept"))
-            dose = "; ".join(str(d.get("text", "")) for d in r.get("dosageInstruction", []) or [] if isinstance(d, dict))
-            note = " ".join(str(n.get("text", "")) for n in r.get("note", []) or [] if isinstance(n, dict))
-            status = r.get("status", "")
+            dose = "; ".join(_s(_d(d).get("text")) for d in _l(r.get("dosageInstruction")) if _s(_d(d).get("text")))
+            note = " ".join(_s(_d(n).get("text")) for n in _l(r.get("note")) if _s(_d(n).get("text")))
             line = f"- {med} {dose}".strip()
             if note:
                 line += f" ({note})"
-            if status == "stopped":
-                add("Medications Stopped", line)
-            else:
-                add("Discharge Medications", line)
+            add("Medications Stopped" if r.get("status") == "stopped" else "Discharge Medications", line)
         elif rt == "AllergyIntolerance":
             add("Allergies", _cc_text(r.get("code")))
         elif rt in ("Appointment", "ServiceRequest") and r.get("status") not in ("cancelled", "revoked"):
-            desc = r.get("description") or _cc_text(r.get("code")) or "Follow-up"
-            when = str(r.get("start") or (r.get("occurrencePeriod") or {}).get("start") or "")[:10]
+            desc = _s(r.get("description")) or _cc_text(r.get("code")) or "Follow-up"
+            when = (_s(r.get("start")) or _s(_d(r.get("occurrencePeriod")).get("start")))[:10]
             add("Followup Instructions", f"- {desc} {when}".strip())
         elif rt == "DiagnosticReport":
-            name = _cc_text(r.get("code"))
-            if r.get("status") in ("registered", "partial", "preliminary"):
-                add("Pending Results", f"- {name} (status: {r.get('status')})")
+            status = _s(r.get("status"), 40)
+            if status in ("registered", "partial", "preliminary"):
+                add("Pending Results", f"- {_cc_text(r.get('code'))} (status: {status})")
         elif rt == "Goal":
             add("Goals of Care", _cc_text(r.get("description")))
         elif rt == "DocumentReference":
-            for c in r.get("content", []) or []:
-                t = _attachment_text((c or {}).get("attachment"))
+            for c in _l(r.get("content")):
+                t = _attachment_text(_d(c).get("attachment"))
                 if t:
                     narrative.append(t)
-            for a in r.get("author", []) or []:
-                if isinstance(a, dict) and a.get("display") and not author:
-                    author = str(a["display"])[:80]
+            for a in _l(r.get("author")):
+                if _s(_d(a).get("display")) and not author:
+                    author = _s(_d(a).get("display"), 80)
 
     parts = [f"{k}:\n" + "\n".join(v) for k, v in out.items()]
-    text = "\n\n".join(narrative + parts).strip()
+    text = clean_text("\n\n".join(narrative + parts).strip())
     if not text:
         raise IngestError("No usable clinical content was found in the FHIR file.")
     return text, author
 
 
-_AUTHOR = re.compile(r"^\s*(?:Attending|Author|Signed by|Electronically signed by)\s*:\s*(.+)$", re.I | re.M)
+# [ \t]* rather than \s*: with re.M, a leading \s* re-scans every following
+# blank line from every line start (minutes on a file of newlines).
+_AUTHOR = re.compile(r"^[ \t]*(?:Attending|Author|Signed by|Electronically signed by)[ \t]*:[ \t]*(\S.*)$", re.I | re.M)
 
 
 def parse_upload(raw: bytes, filename: str, kind: str, max_bytes: int) -> ParsedDocument:
@@ -224,7 +278,7 @@ def parse_upload(raw: bytes, filename: str, kind: str, max_bytes: int) -> Parsed
     if name.lower().endswith(".json"):
         try:
             obj = json.loads(text)
-        except json.JSONDecodeError as exc:
+        except (json.JSONDecodeError, RecursionError) as exc:  # RecursionError: deeply nested arrays
             raise IngestError("The JSON file could not be parsed.") from exc
         text, author = fhir_to_text(obj)
     warnings = phi_screen(text)

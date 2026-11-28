@@ -53,7 +53,7 @@ def build_brief(docs: list[Doc], discharge_hint: str = "") -> dict:
     get = {name: _find(docs, keys) for name, keys in SECTION_MAP.items()}
     admit = None
     for d in docs:
-        m = re.search(r"\badmission date\s*:\s*(\S+)", d.text, re.I)
+        m = re.search(r"\badmission date[ \t]*:[ \t]*(\S{1,40})", d.text, re.I)
         if m:
             admit = parse_date(m.group(1))
             break
