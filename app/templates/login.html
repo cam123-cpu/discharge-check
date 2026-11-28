@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Sign in · Discharge Check{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/sso.css">{% endblock %}
 {% block content %}
 <div class="login">
   <h1>Sign in</h1>
@@ -11,5 +12,14 @@
     <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
     <button type="submit" class="primary">Sign in</button>
   </form>
+  <section class="sso" aria-labelledby="sso-h">
+    <h2 id="sso-h">Sign in with your hospital</h2>
+    <p class="muted">If your hospital uses its own sign-in, enter your work email and you will be sent there.</p>
+    <form method="post" action="/sso/start" class="stack">
+      <input type="hidden" name="pre" value="{{ pre }}">
+      <label>Work email <input type="email" name="email" autocomplete="username" required maxlength="254"></label>
+      <button type="submit">Continue to hospital sign-in</button>
+    </form>
+  </section>
 </div>
 {% endblock %}

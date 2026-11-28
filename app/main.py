@@ -8,6 +8,7 @@ import secrets
 from collections import defaultdict
 from datetime import date, timedelta
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Annotated
 
 import anthropic
@@ -20,7 +21,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
-from . import analysis
+from . import analysis, mfa, sso
 from .config import Settings, load_settings
 from .db import Database
 from .ingest import DOC_KINDS, IngestError, parse_upload
@@ -31,6 +32,7 @@ from .security import (
     Cipher,
     Flash,
     LoginLimiter,
+    PendingLogins,
     RateLimiter,
     SecurityMiddleware,
     Sessions,
@@ -45,6 +47,11 @@ HERE = Path(__file__).parent
 Id = Annotated[int, PathParam(ge=1, le=2**53)]
 AUDIT_PAGE = 100
 PRE_COOKIE = "dc_pre"
+MFA_COOKIE = "dc_mfa"  # pending sign-in token while the second factor is owed
+# Paths a signed-in user may still open while their role requires two-factor
+# and they have not set it up yet.
+MFA_SETUP_PATHS = {"/account/security", "/account/security/2fa/start", "/account/security/2fa/confirm", "/logout",
+                   "/privacy", "/terms"}
 DISPOSITIONS = [
     "Home",
     "Home with home health services",
@@ -71,10 +78,17 @@ AUDIT_ACTIONS = {
     "patient_create": "Discharge added", "patient_view": "Discharge viewed", "document_upload": "Document added",
     "document_view": "Document viewed", "document_delete": "Document removed", "check_run": "Check run",
     "compliance_view": "Compliance overview viewed", "compliance_api": "Compliance data exported", "audit_view": "Access log viewed",
+    "login_blocked": "Sign-in blocked (too many attempts)",
+    **mfa.AUDIT_ACTIONS,
+    **sso.AUDIT_ACTIONS,
 }
 
 
 class AuthRequired(Exception):
+    pass
+
+
+class MfaSetupRequired(Exception):
     pass
 
 
@@ -84,6 +98,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     cipher = Cipher(settings.data_key)
     sessions = Sessions(db, settings)
     limiter = LoginLimiter(db, settings)
+    pending = PendingLogins(db, settings)
     rate = RateLimiter(db)
     flash = Flash(settings.session_pepper, settings.force_https)
     client = (anthropic.Anthropic(api_key=settings.anthropic_api_key, timeout=settings.model_timeout_seconds, max_retries=2)
@@ -113,6 +128,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         user = sessions.lookup(request.cookies.get(SESSION_COOKIE))
         if user is None:
             raise AuthRequired()
+        # Checked against today's policy, not only the flag set at sign-in, so a
+        # role added to MFA_REQUIRED_ROLES also applies to sessions already open.
+        # SSO sign-ins rely on the hospital's own MFA.
+        needs_setup = user["mfa_setup_required"] or (
+            user["auth_method"] == "password" and user["role"] in settings.mfa_required_roles and not user["mfa_enabled"])
+        if needs_setup and request.url.path not in MFA_SETUP_PATHS:
+            raise MfaSetupRequired()
         return user
 
     def require_role(*roles: str):
@@ -141,6 +163,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if notice or warnings or error:
             flash.set(resp, notice, warnings, error)
         return resp
+
+    @app.exception_handler(MfaSetupRequired)
+    async def _mfa_setup(request: Request, exc: MfaSetupRequired):
+        if request.url.path.startswith("/api/"):
+            return JSONResponse({"error": "Set up two-factor sign-in first."}, status_code=403)
+        return go("/account/security", error="Your role requires two-factor sign-in. Set it up to continue.")
 
     @app.exception_handler(AuthRequired)
     async def _auth(request: Request, exc: AuthRequired):
@@ -209,10 +237,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             with db.connect() as conn:
                 db.audit(conn, None, None, "login_blocked", f"email:{email[:80]}", ip)
             return go("/login", error=f"Too many attempts. Wait {settings.login_window_minutes} minutes and try again.")
+        for guard in password_guards:
+            refusal = guard(email)
+            if refusal:
+                burn_password_check(password)
+                return go("/login", error=refusal)
         user = None
         if _EMAIL_RE.match(email):
             with db.connect() as conn:
-                user = conn.execute("SELECT id, org_id, password_hash FROM users WHERE email = ?", (email,)).fetchone()
+                user = conn.execute("SELECT id, org_id, role, password_hash, totp_enabled_at FROM users WHERE email = ?",
+                                    (email,)).fetchone()
         if user is None:
             burn_password_check(password)
             limiter.record_failure(ip, email)
@@ -223,13 +257,36 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 db.audit(conn, user["org_id"], user["id"], "login_failed", ip=ip)
             return bad
         limiter.clear(email)
-        token = sessions.create(user["id"])
+        if user["totp_enabled_at"]:
+            # Password was right; the session waits for the second factor.
+            resp = RedirectResponse("/login/2fa", status_code=303)
+            set_cookie(resp, MFA_COOKIE, pending.create(user["id"]), settings.pending_login_minutes * 60)
+            resp.delete_cookie(PRE_COOKIE, path="/")
+            with db.connect() as conn:
+                db.audit(conn, user["org_id"], user["id"], "login_password_ok", ip=ip)
+            return resp
+        return start_session(request, user, "password")
+
+    def start_session(request: Request, user, method: str, audit_target: str = ""):
+        """The one place a session is created, after every factor the account
+        needs has been checked. `user` needs id, org_id, role, totp_enabled_at."""
+        setup_needed = (method == "password" and user["role"] in settings.mfa_required_roles
+                        and not user["totp_enabled_at"])
+        token = sessions.create(user["id"], method, setup_needed)
         with db.connect() as conn:
-            db.audit(conn, user["org_id"], user["id"], "login", ip=ip)
-        resp = RedirectResponse("/patients", status_code=303)
+            db.audit(conn, user["org_id"], user["id"], "login", audit_target or f"method:{method}", client_ip(request))
+        if setup_needed:
+            resp = go("/account/security", error="Your role requires two-factor sign-in. Set it up to continue.")
+        else:
+            resp = RedirectResponse("/patients", status_code=303)
         set_cookie(resp, SESSION_COOKIE, token, settings.session_hours * 3600)
         resp.delete_cookie(PRE_COOKIE, path="/")
+        resp.delete_cookie(MFA_COOKIE, path="/")
         return resp
+
+    # Callables (email) -> refusal message or "". SSO adds one so that staff of a
+    # hospital that enforces single sign-on cannot fall back to a password.
+    password_guards: list = []
 
     @app.post("/logout")
     def logout(request: Request, user=Depends(check_csrf)):
@@ -472,6 +529,17 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def terms(request: Request):
         return render(request, "legal.html", {"user": sessions.lookup(request.cookies.get(SESSION_COOKIE)), "page": "terms"})
 
+    # ---------- two-factor and hospital SSO (app/mfa.py, app/sso.py) ----------
+
+    ctx = SimpleNamespace(
+        settings=settings, db=db, cipher=cipher, sessions=sessions, pending=pending, limiter=limiter, rate=rate,
+        flash=flash, templates=templates, render=render, go=go, set_cookie=set_cookie, client_ip=client_ip,
+        current_user=current_user, check_csrf=check_csrf, start_session=start_session,
+        password_guards=password_guards, MFA_COOKIE=MFA_COOKIE, PRE_COOKIE=PRE_COOKIE,
+    )
+    app.state.auth = ctx
+    mfa.register(app, ctx)
+    sso.register(app, ctx)
     return app
 
 

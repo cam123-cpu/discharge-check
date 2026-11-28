@@ -3,6 +3,8 @@
 Usage (any OS, from the repository folder, with the virtual environment active):
     python -m scripts.setup                 # safe to run again; never overwrites keys
     python -m scripts.setup --new-passwords # print new passwords for the demo accounts
+    python -m scripts.setup --reset-2fa EMAIL  # someone lost their phone and recovery codes
+    python -m scripts.setup --issue-2fa-code EMAIL  # one-time code to set up two-factor
 """
 from __future__ import annotations
 
@@ -101,9 +103,62 @@ def new_passwords() -> None:
         conn.execute("DELETE FROM login_attempts")
 
 
+def reset_2fa(email: str, db=None) -> bool:
+    """Turn two-factor off for one account so its owner can sign in with the
+    password alone and set it up again. Also ends their sessions and any
+    half-finished sign-in. Returns False when no such account exists."""
+    from app.mfa import clear_two_factor
+
+    if db is None:
+        from app.config import load_settings
+        from app.db import Database
+        db = Database(load_settings().database_path)
+    with db.connect() as conn:
+        user = conn.execute("SELECT id, org_id FROM users WHERE email = ?", (email.strip().lower(),)).fetchone()
+        if user is None:
+            return False
+        clear_two_factor(conn, user["id"])
+        conn.execute("DELETE FROM pending_logins WHERE user_id = ?", (user["id"],))
+        conn.execute("DELETE FROM sessions WHERE user_id = ?", (user["id"],))
+        # No signed-in actor: the change came from the server console.
+        db.audit(conn, user["org_id"], None, "mfa_reset", f"user:{user['id']}", "console")
+    return True
+
+
+def issue_2fa_code(email: str, db=None, settings=None) -> str | None:
+    """A one-time setup code for one account (roles in MFA_REQUIRED_ROLES need
+    it to turn on two-factor). Returns None when no such account exists."""
+    from app.mfa import issue_setup_code
+
+    if settings is None:
+        from app.config import load_settings
+        settings = load_settings()
+    if db is None:
+        from app.db import Database
+        db = Database(settings.database_path)
+    with db.connect() as conn:
+        user = conn.execute("SELECT id, org_id FROM users WHERE email = ?", (email.strip().lower(),)).fetchone()
+        if user is None:
+            return None
+        code = issue_setup_code(conn, settings.session_pepper, user["id"], settings.mfa_setup_code_hours)
+        db.audit(conn, user["org_id"], None, "mfa_setup_code_issued", f"user:{user['id']}", "console")
+    return code
+
+
+def _print_setup_code(email: str) -> None:
+    from app.config import load_settings
+    code = issue_2fa_code(email)
+    if code is None:
+        raise SystemExit(f"No account with the email {email}.")
+    print(f"One-time setup code for {email} (valid {load_settings().mfa_setup_code_hours} hours): {code}")
+    print("Give it to them in person or by phone, not by email. They enter it under Security.")
+
+
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--new-passwords", action="store_true", help="reset the demo accounts' passwords and print them")
+    ap.add_argument("--reset-2fa", metavar="EMAIL", help="turn off two-factor sign-in for one account")
+    ap.add_argument("--issue-2fa-code", metavar="EMAIL", help="print a one-time code that lets this account set up two-factor")
     args = ap.parse_args(argv)
 
     made = ensure_env()
@@ -114,6 +169,16 @@ def main(argv: list[str] | None = None) -> None:
     for key, value in parse_env(read_env_text(ENV)).items():
         if key not in _SHELL_ENV:
             os.environ[key] = value
+    if args.reset_2fa:
+        if not reset_2fa(args.reset_2fa):
+            raise SystemExit(f"No account with the email {args.reset_2fa}.")
+        print(f"Two-factor sign-in is off for {args.reset_2fa}; their sessions were ended. "
+              "They can sign in with their password and set it up again.")
+        _print_setup_code(args.reset_2fa)
+        return
+    if args.issue_2fa_code:
+        _print_setup_code(args.issue_2fa_code)
+        return
     if args.new_passwords:
         new_passwords()
     else:

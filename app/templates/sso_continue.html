@@ -1,0 +1,29 @@
+{#- Standalone (not base.html) so it can carry a meta refresh in <head>.
+    Used to leave a form POST for the IdP (CSP form-action 'self' also covers
+    redirects), to land after the IdP callback with a same-site navigation (so
+    the SameSite=Strict session cookie is sent), and for SSO failures. -#}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% if next_url %}<meta http-equiv="refresh" content="0;url={{ next_url }}">{% endif %}
+<title>{{ title }} · Discharge Check</title>
+<link rel="stylesheet" href="/static/app.css">
+<link rel="stylesheet" href="/static/sso.css">
+</head>
+<body>
+<header class="top"><div class="top-inner"><a class="wordmark" href="/">Discharge Check</a></div></header>
+<main class="page" id="main">
+<div class="login sso-continue">
+  <h1>{{ title }}</h1>
+  {% if message %}<p class="alert" role="alert">{{ message }}</p>{% endif %}
+  {% if next_url %}
+  <p class="muted" role="status">Continuing… If nothing happens, <a href="{{ next_url }}">select this link</a>.</p>
+  {% else %}
+  <p><a href="/login">Back to sign-in</a></p>
+  {% endif %}
+</div>
+</main>
+</body>
+</html>

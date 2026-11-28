@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Recovery codes · Discharge Check{% endblock %}
+{% block content %}
+<h1>{{ heading }}</h1>
+<p class="alert warn" role="status">Save these recovery codes now. They are shown only once. Each one signs you in once if you do not have your phone.</p>
+<ul class="codes mono">
+  {% for c in codes %}<li>{{ c }}</li>{% endfor %}
+</ul>
+<p class="muted small">Print them or keep them in a password manager. Do not keep them on the same phone as your authenticator app. Any older codes no longer work.</p>
+<p><a class="button primary" href="/patients">I saved my codes</a></p>
+{% endblock %}

@@ -6,6 +6,7 @@
 <title>{% block title %}Discharge Check{% endblock %}</title>
 <link rel="stylesheet" href="/static/app.css">
 <script src="/static/app.js" defer></script>
+{% block head %}{% endblock %}
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -21,6 +22,7 @@
     </nav>
     <div class="who">
       <span>{{ user.display_name }}, {{ ROLE_LABELS[user.role] }} · {{ user.org_name }}</span>
+      <a href="/account/security" {% if nav == 'security' %}aria-current="page"{% endif %}>Security</a>
       <form method="post" action="/logout" class="inline">
         <input type="hidden" name="csrf" value="{{ user.csrf_token }}">
         <button type="submit" class="linkish">Sign out</button>
