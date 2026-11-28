@@ -5,6 +5,11 @@
   <div>
     <h1>Access log</h1>
     <p class="meta">Every sign-in, record view, upload, removal and check for your organization, newest first.</p>
+    {% if integrity.ok %}
+    <p class="meta integrity ok">Tamper check passed: the {% if integrity.partial %}most recent {% endif %}access log entries match the hash chain.</p>
+    {% else %}
+    <p class="meta integrity bad" role="alert">Tamper check failed at event {{ integrity.broken_id }}: {{ integrity.reason }}. Report this to your security officer.</p>
+    {% endif %}
   </div>
   <form method="get" action="/audit" class="filter">
     <label>Show

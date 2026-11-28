@@ -78,6 +78,7 @@ class Settings:
     uploads_per_hour: int = 120  # per user
     allowed_hosts: tuple[str, ...] = ("*",)
     model_timeout_seconds: float = 180.0
+    audit_key: str = ""  # empty: derived from data_key (see app/audit.py)
 
 
 def load_settings() -> Settings:
@@ -105,4 +106,5 @@ def load_settings() -> Settings:
         force_https=force_https,
         database_path=db,
         allowed_hosts=hosts or ("*",),
+        audit_key=os.environ.get("AUDIT_KEY", ""),
     )

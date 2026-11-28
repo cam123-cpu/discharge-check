@@ -1,0 +1,48 @@
+# Local / dev run of the production image. Not a deployment.
+#
+# First run:
+#   1. Create .env on the host with the two keys. Either
+#        cp .env.example .env   and fill DATA_KEY / SESSION_PEPPER with the
+#        one-liners shown in that file, or
+#        python -m scripts.setup   (in a host venv; it writes .env and also
+#        seeds a host-side data/app.db, which the container does not use).
+#      `scripts.setup` cannot run inside the container: it writes .env into
+#      /app, and the container's root filesystem is read-only.
+#      Leave DATABASE_PATH out of .env (or set it to /data/app.db); the
+#      image already points it at the /data volume.
+#   2. Seed the demo data into the volume (prints the demo passwords once):
+#        docker compose run --rm app python -m scripts.seed
+#      New passwords later:
+#        docker compose run --rm app python -c "from scripts.setup import new_passwords; new_passwords()"
+#   3. docker compose up --build    ->  http://localhost:8000
+#
+# Start over: docker compose down -v   (deletes the data volume)
+#
+# FORCE_HTTPS=1 needs TLS in front (a load balancer); keep FORCE_HTTPS=0 for
+# plain http://localhost here.
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: discharge-check:dev
+    env_file: .env
+    environment:
+      DATABASE_PATH: /data/app.db
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - app-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    restart: unless-stopped
+
+volumes:
+  app-data:

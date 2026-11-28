@@ -20,7 +20,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
-from . import analysis
+from . import analysis, audit as audit_chain
 from .config import Settings, load_settings
 from .db import Database
 from .ingest import DOC_KINDS, IngestError, parse_upload
@@ -36,6 +36,7 @@ from .security import (
     Sessions,
     burn_password_check,
     csrf_ok,
+    is_health_check,
     verify_password,
 )
 
@@ -44,6 +45,9 @@ HERE = Path(__file__).parent
 # Path ids: positive and inside SQLite's 64-bit range (a larger number used to crash the query).
 Id = Annotated[int, PathParam(ge=1, le=2**53)]
 AUDIT_PAGE = 100
+# The /audit page re-verifies the chain on each view; past this many rows it
+# checks only the newest ones (run scripts/verify_audit.py for the full log).
+AUDIT_VERIFY_MAX = 50_000
 PRE_COOKIE = "dc_pre"
 DISPOSITIONS = [
     "Home",
@@ -67,8 +71,8 @@ _EMAIL_RE = re.compile(r"^[^@\s]{1,64}@[^@\s]{1,190}$")
 
 
 AUDIT_ACTIONS = {
-    "login": "Signed in", "login_failed": "Sign-in failed", "logout": "Signed out",
-    "patient_create": "Discharge added", "patient_view": "Discharge viewed", "document_upload": "Document added",
+    "login": "Signed in", "login_failed": "Sign-in failed", "login_blocked": "Sign-in blocked (too many attempts)",
+    "logout": "Signed out", "patient_list": "Discharge list viewed", "patient_create": "Discharge added", "patient_view": "Discharge viewed", "document_upload": "Document added",
     "document_view": "Document viewed", "document_delete": "Document removed", "check_run": "Check run",
     "compliance_view": "Compliance overview viewed", "compliance_api": "Compliance data exported", "audit_view": "Access log viewed",
 }
@@ -78,9 +82,19 @@ class AuthRequired(Exception):
     pass
 
 
+class _HostCheck(TrustedHostMiddleware):
+    """Host allow-list for everything except the load balancer's health
+    probe, which arrives addressed to the task IP."""
+
+    async def __call__(self, scope, receive, send):
+        if is_health_check(scope):
+            return await self.app(scope, receive, send)
+        return await super().__call__(scope, receive, send)
+
+
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or load_settings()
-    db = Database(settings.database_path)
+    db = Database(settings.database_path, audit_chain.derive_key(settings.audit_key, settings.data_key))
     cipher = Cipher(settings.data_key)
     sessions = Sessions(db, settings)
     limiter = LoginLimiter(db, settings)
@@ -93,7 +107,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     # Multipart overhead on top of the file itself.
     app.add_middleware(SecurityMiddleware, force_https=settings.force_https, max_body=settings.max_upload_bytes + 64 * 1024)
     if "*" not in settings.allowed_hosts:
-        app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(settings.allowed_hosts))
+        app.add_middleware(_HostCheck, allowed_hosts=list(settings.allowed_hosts))
     app.mount("/static", StaticFiles(directory=HERE / "static"), name="static")
     templates = Jinja2Templates(directory=HERE / "templates")
     templates.env.globals.update(DOC_KINDS=DOC_KINDS, ROLE_LABELS=ROLE_LABELS, RULES_VERSION=RULES_VERSION)
@@ -216,6 +230,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if user is None:
             burn_password_check(password)
             limiter.record_failure(ip, email)
+            with db.connect() as conn:
+                db.audit(conn, None, None, "login_failed", f"email:{email[:80]}", ip)
             return bad
         if not verify_password(user["password_hash"], password):
             limiter.record_failure(ip, email)
@@ -246,6 +262,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def patients(request: Request, user=Depends(current_user)):
         with db.connect() as conn:
             rows = db.patients(conn, user["org_id"])
+            db.audit(conn, user["org_id"], user["user_id"], "patient_list", ip=client_ip(request))
         return render(request, "patients.html", {"user": user, "patients": rows, "nav": "patients"})
 
     @app.get("/patients/new", response_class=HTMLResponse)
@@ -455,14 +472,21 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             where += " AND a.action = ?"
             args.append(action)
         with db.connect() as conn:
+            # `where` holds only constant fragments; every value is a bound parameter.
+            sql = ("SELECT a.at, a.action, a.target, a.ip, u.display_name FROM audit_log a "
+                   "LEFT JOIN users u ON u.id = a.user_id WHERE " + where +  # nosec B608
+                   " ORDER BY a.id DESC LIMIT ? OFFSET ?")
             rows = conn.execute(
-                f"""SELECT a.at, a.action, a.target, a.ip, u.display_name FROM audit_log a
-                    LEFT JOIN users u ON u.id = a.user_id WHERE {where} ORDER BY a.id DESC LIMIT ? OFFSET ?""",
+                sql,
                 (*args, AUDIT_PAGE + 1, (page - 1) * AUDIT_PAGE),
             ).fetchall()
+            integrity = audit_chain.verify(conn, db.audit_key, last=AUDIT_VERIFY_MAX)
+            if not integrity.ok:
+                log.error("Access log integrity check failed at event %s: %s", integrity.broken_id, integrity.reason)
             db.audit(conn, user["org_id"], user["user_id"], "audit_view", ip=client_ip(request))
         return render(request, "audit.html", {"user": user, "rows": rows[:AUDIT_PAGE], "page": page, "action": action,
-                                              "more": len(rows) > AUDIT_PAGE, "actions": AUDIT_ACTIONS, "nav": "audit"})
+                                              "more": len(rows) > AUDIT_PAGE, "actions": AUDIT_ACTIONS, "nav": "audit",
+                                              "integrity": integrity})
 
     @app.get("/privacy", response_class=HTMLResponse)
     def privacy(request: Request):

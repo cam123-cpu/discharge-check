@@ -220,8 +220,20 @@ _ERROR_PAGE = (b"<!doctype html><html lang=en><meta charset=utf-8><title>Error</
                b"<a href=/>Back to discharges</a></p></main>")
 
 
+HEALTH_PATH = "/healthz"
+HEALTH_BODY = b'{"status":"ok"}'
+
+
+def is_health_check(scope: Scope) -> bool:
+    """Exact path and method only: load balancers probe by task IP over plain
+    HTTP, so this one response skips the host check and the HTTPS redirect.
+    It reads nothing and writes nothing."""
+    return scope.get("type") == "http" and scope.get("path") == HEALTH_PATH and scope.get("method") in ("GET", "HEAD")
+
+
 class SecurityMiddleware:
     """Pure ASGI (so it also wraps error responses):
+    - answers GET/HEAD /healthz itself, before any redirect, with no data;
     - HTTP -> HTTPS redirect and HSTS when force_https is on;
     - refuses request bodies over max_body bytes before any parsing, including
       for signed-out callers (multipart parsing happens before the auth check);
@@ -260,6 +272,11 @@ class SecurityMiddleware:
         if scope["type"] != "http":
             return await self.app(scope, receive, send)
         path = scope.get("path", "/").encode()
+        if is_health_check(scope):
+            headers = [(b"content-type", b"application/json"), (b"content-length", str(len(HEALTH_BODY)).encode())]
+            await send({"type": "http.response.start", "status": 200, "headers": headers + self._security_headers(path)})
+            await send({"type": "http.response.body", "body": b"" if scope["method"] == "HEAD" else HEALTH_BODY})
+            return
         if self.force_https and scope.get("scheme") != "https":
             host = dict(scope["headers"]).get(b"host", b"").decode("latin-1")
             qs = scope.get("query_string", b"").decode("latin-1")

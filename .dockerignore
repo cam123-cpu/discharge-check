@@ -1,0 +1,36 @@
+# Build context allow-list is enforced by the Dockerfile's COPY lines; this
+# keeps secrets, data and bulk out of the context entirely.
+.git
+.github
+.gitignore
+.dockerignore
+Dockerfile
+docker-compose*.yml
+
+# Secrets and local data: never in an image
+.env
+.env.*
+!.env.example
+data/
+*.db
+*.db-*
+*.sqlite*
+
+# Environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Not needed at run time
+tests/
+docs/
+*.md
+!samples/*.md
+.vscode/
+.idea/

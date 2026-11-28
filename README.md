@@ -81,6 +81,20 @@ python -m pytest -q
 pip-audit -r requirements.txt
 ```
 
+Verify the access log (exit code 0 if intact, 1 if a row was changed, inserted
+or removed):
+
+```bash
+python -m scripts.verify_audit
+python -m scripts.verify_audit --head   # newest id + hash as JSON, to anchor externally
+```
+
+The chain cannot by itself show that the newest rows were cut off, so in a
+deployment ship the `--head` output on a schedule to write-once storage and
+compare against it. `GET /healthz` returns `{"status":"ok"}` for load balancer
+and container health checks; it needs no sign-in and skips the host check and
+HTTPS redirect.
+
 In a deployment, set `FORCE_HTTPS=1` and `ALLOWED_HOSTS`, and when a proxy
 terminates TLS add `--proxy-headers --forwarded-allow-ips=<proxy IP>` so the
 app sees the real scheme and client IP (rate limits and the access log use it).
@@ -108,7 +122,7 @@ app sees the real scheme and client IP (rate limits and the access log use it).
 | Record integrity | Removing a document is a soft delete kept for retention, allowed to the uploader or an administrator only |
 | Errors | Unhandled errors return a plain page with security headers and no stack trace |
 | Scan dependencies | `pip-audit` (clean at time of writing) |
-| HIPAA-style access log | Every sign-in, sign-out, record view, upload, removal, check, compliance view and export is logged; compliance staff can page and filter it |
+| HIPAA-style access log | Every sign-in (including failed and blocked attempts), sign-out, discharge list and record view, upload, removal, check, compliance view, export and access-log view is logged; compliance staff can page and filter it. The log is tamper-evident: each row carries an HMAC-SHA256 hash chained to the previous row (key `AUDIT_KEY`, or derived from `DATA_KEY`), database triggers refuse UPDATE and DELETE, and the access-log page shows whether the chain verifies (`app/audit.py`) |
 | Database file | Created owner-only (0600) in an owner-only folder |
 
 Full findings from the November 2026 penetration test: [docs/security-review-2026-11.md](docs/security-review-2026-11.md).
