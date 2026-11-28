@@ -78,6 +78,18 @@ class Settings:
     uploads_per_hour: int = 120  # per user
     allowed_hosts: tuple[str, ...] = ("*",)
     model_timeout_seconds: float = 180.0
+    audit_key: str = ""  # empty: derived from data_key (see app/audit.py)
+    # Earlier keys, kept only to read old data while rotating (see docs/key-rotation.md).
+    data_key_previous: tuple[str, ...] = ()
+    audit_key_previous: tuple[str, ...] = ()
+
+    def audit_keyring(self):
+        from .audit import keyring_from
+        return keyring_from(self.audit_key, self.data_key, self.audit_key_previous, self.data_key_previous)
+
+
+def _env_list(name: str) -> tuple[str, ...]:
+    return tuple(v.strip() for v in os.environ.get(name, "").split(",") if v.strip())
 
 
 def load_settings() -> Settings:
@@ -91,6 +103,12 @@ def load_settings() -> Settings:
     if not valid_data_key(data_key):
         raise RuntimeError("DATA_KEY in .env is not a valid key (it must be 44 characters from Fernet.generate_key()). "
                            "If the database is new, delete the DATA_KEY line and run `python -m scripts.setup`.")
+    data_previous = _env_list("DATA_KEY_PREVIOUS")
+    for k in data_previous:
+        if not valid_data_key(k):
+            raise RuntimeError("An entry in DATA_KEY_PREVIOUS is not a valid key (each must come from Fernet.generate_key()).")
+    if data_key in data_previous:
+        raise RuntimeError("DATA_KEY must not also be listed in DATA_KEY_PREVIOUS.")
     force_https = os.environ.get("FORCE_HTTPS", "0") == "1"
     hosts = tuple(h.strip() for h in os.environ.get("ALLOWED_HOSTS", "").split(",") if h.strip())
     if force_https and (not hosts or "*" in hosts):
@@ -105,4 +123,7 @@ def load_settings() -> Settings:
         force_https=force_https,
         database_path=db,
         allowed_hosts=hosts or ("*",),
+        audit_key=os.environ.get("AUDIT_KEY", ""),
+        data_key_previous=data_previous,
+        audit_key_previous=_env_list("AUDIT_KEY_PREVIOUS"),
     )

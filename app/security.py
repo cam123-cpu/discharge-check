@@ -12,7 +12,7 @@ from datetime import datetime, timedelta, timezone
 
 from argon2 import PasswordHasher
 from argon2.exceptions import InvalidHashError, VerifyMismatchError
-from cryptography.fernet import Fernet, InvalidToken
+from cryptography.fernet import Fernet, InvalidToken, MultiFernet
 from starlette.datastructures import MutableHeaders
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
@@ -43,10 +43,28 @@ def burn_password_check(password: str) -> None:
 
 
 class Cipher:
-    """Field-level encryption for clinical text (Fernet: AES-128-CBC + HMAC)."""
+    """Field-level encryption for clinical text (Fernet: AES-128-CBC + HMAC).
+    New data is always encrypted with `key`; `previous` keys only decrypt
+    rows that `python -m scripts.rotate_data_key` has not re-encrypted yet."""
 
-    def __init__(self, key: str):
-        self._f = Fernet(key.encode())
+    def __init__(self, key: str, previous: tuple[str, ...] = ()):
+        self._primary = Fernet(key.encode())
+        self._f = MultiFernet([self._primary, *(Fernet(k.encode()) for k in previous)])
+
+    def is_current(self, blob: bytes) -> bool:
+        """True if the primary key alone can read this blob."""
+        try:
+            self._primary.decrypt(blob)
+            return True
+        except InvalidToken:
+            return False
+
+    def rotate(self, blob: bytes) -> bytes:
+        """Re-encrypt with the primary key (raises if no configured key can read it)."""
+        try:
+            return self._f.rotate(blob)
+        except InvalidToken as exc:
+            raise RuntimeError("Stored record could not be decrypted with any configured key") from exc
 
     def encrypt(self, text: str) -> bytes:
         return self._f.encrypt(text.encode("utf-8"))
@@ -73,11 +91,36 @@ class Sessions:
     def _hash(self, token: str) -> str:
         return hmac.new(self.settings.session_pepper.encode(), token.encode(), hashlib.sha256).hexdigest()
 
+    def _end(self, conn, rows, now: datetime) -> None:
+        """Delete timed-out sessions and log each automatic logoff
+        (HIPAA 164.312(a)(2)(iii) and (b))."""
+        for row in rows:
+            action = "session_expired" if row["expires_at"] < now.isoformat() else "session_timeout"
+            conn.execute("DELETE FROM sessions WHERE token_hash = ?", (row["token_hash"],))
+            self.db.audit(conn, row["org_id"], row["user_id"], action)
+
+    def _stale(self, conn, now: datetime, where: str = "", args: tuple = ()):
+        idle_limit = (now - timedelta(minutes=self.settings.idle_minutes)).isoformat()
+        return conn.execute(
+            "SELECT s.token_hash, s.expires_at, s.user_id, u.org_id FROM sessions s JOIN users u ON u.id = s.user_id "
+            "WHERE (s.expires_at < ? OR s.last_seen < ?)" + where,  # nosec B608 - constant fragments only
+            (now.isoformat(), idle_limit, *args),
+        ).fetchall()
+
+    def sweep(self) -> None:
+        """End every timed-out session, so each one is logged even if its
+        browser never comes back. Runs at each sign-in; safe to call any time."""
+        now = _now()
+        with self.db.connect() as conn:
+            self._end(conn, self._stale(conn, now), now)
+
     def create(self, user_id: int) -> str:
         token = secrets.token_urlsafe(32)
         expires = (_now() + timedelta(hours=self.settings.session_hours)).isoformat()
+        self.sweep()
         with self.db.connect() as conn:
-            conn.execute("DELETE FROM sessions WHERE user_id = ? OR expires_at < ?", (user_id, _now().isoformat()))
+            # Signing in again replaces the user's other session (the new sign-in is logged).
+            conn.execute("DELETE FROM sessions WHERE user_id = ?", (user_id,))
             conn.execute(
                 "INSERT INTO sessions (token_hash, user_id, csrf_token, expires_at, last_seen) VALUES (?, ?, ?, ?, ?)",
                 (self._hash(token), user_id, secrets.token_urlsafe(32), expires, _now().isoformat()),
@@ -100,7 +143,7 @@ class Sessions:
             now = _now()
             idle_limit = (now - timedelta(minutes=self.settings.idle_minutes)).isoformat()
             if row["expires_at"] < now.isoformat() or (row["last_seen"] or "") < idle_limit:
-                conn.execute("DELETE FROM sessions WHERE token_hash = ?", (row["token_hash"],))
+                self._end(conn, [row], now)
                 return None
             # Sliding idle timeout; write at most once a minute.
             if row["last_seen"] < (now - timedelta(minutes=1)).isoformat():
@@ -220,8 +263,20 @@ _ERROR_PAGE = (b"<!doctype html><html lang=en><meta charset=utf-8><title>Error</
                b"<a href=/>Back to discharges</a></p></main>")
 
 
+HEALTH_PATH = "/healthz"
+HEALTH_BODY = b'{"status":"ok"}'
+
+
+def is_health_check(scope: Scope) -> bool:
+    """Exact path and method only: load balancers probe by task IP over plain
+    HTTP, so this one response skips the host check and the HTTPS redirect.
+    It reads nothing and writes nothing."""
+    return scope.get("type") == "http" and scope.get("path") == HEALTH_PATH and scope.get("method") in ("GET", "HEAD")
+
+
 class SecurityMiddleware:
     """Pure ASGI (so it also wraps error responses):
+    - answers GET/HEAD /healthz itself, before any redirect, with no data;
     - HTTP -> HTTPS redirect and HSTS when force_https is on;
     - refuses request bodies over max_body bytes before any parsing, including
       for signed-out callers (multipart parsing happens before the auth check);
@@ -260,6 +315,11 @@ class SecurityMiddleware:
         if scope["type"] != "http":
             return await self.app(scope, receive, send)
         path = scope.get("path", "/").encode()
+        if is_health_check(scope):
+            headers = [(b"content-type", b"application/json"), (b"content-length", str(len(HEALTH_BODY)).encode())]
+            await send({"type": "http.response.start", "status": 200, "headers": headers + self._security_headers(path)})
+            await send({"type": "http.response.body", "body": b"" if scope["method"] == "HEAD" else HEALTH_BODY})
+            return
         if self.force_https and scope.get("scheme") != "https":
             host = dict(scope["headers"]).get(b"host", b"").decode("latin-1")
             qs = scope.get("query_string", b"").decode("latin-1")

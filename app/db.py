@@ -4,11 +4,16 @@ organization can never read another's records (row-level isolation).
 Clinical text is encrypted before it is written."""
 from __future__ import annotations
 
+import logging
 import os
 import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Iterator
+
+from . import audit as audit_chain
+
+log = logging.getLogger(__name__)
 
 SCHEMA = """
 PRAGMA foreign_keys = ON;
@@ -104,7 +109,10 @@ CREATE TABLE IF NOT EXISTS audit_log (
     action TEXT NOT NULL,
     target TEXT NOT NULL DEFAULT '',
     ip TEXT NOT NULL DEFAULT '',
-    at TEXT NOT NULL DEFAULT (datetime('now'))
+    at TEXT NOT NULL DEFAULT (datetime('now')),
+    prev_hash TEXT NOT NULL DEFAULT '',
+    row_hash TEXT NOT NULL DEFAULT '',
+    key_id TEXT NOT NULL DEFAULT ''
 );
 CREATE INDEX IF NOT EXISTS idx_audit_org ON audit_log(org_id, id);
 """
@@ -115,12 +123,18 @@ MIGRATIONS = [
     ("sessions", "last_seen", "ALTER TABLE sessions ADD COLUMN last_seen TEXT NOT NULL DEFAULT ''"),
     ("documents", "deleted_at", "ALTER TABLE documents ADD COLUMN deleted_at TEXT"),
     ("documents", "deleted_by", "ALTER TABLE documents ADD COLUMN deleted_by INTEGER REFERENCES users(id)"),
+    ("audit_log", "prev_hash", "ALTER TABLE audit_log ADD COLUMN prev_hash TEXT NOT NULL DEFAULT ''"),
+    ("audit_log", "row_hash", "ALTER TABLE audit_log ADD COLUMN row_hash TEXT NOT NULL DEFAULT ''"),
+    ("audit_log", "key_id", "ALTER TABLE audit_log ADD COLUMN key_id TEXT NOT NULL DEFAULT ''"),
 ]
 
 
 class Database:
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, audit_key: "audit_chain.KeyRing | bytes | None" = None):
+        """audit_key (a KeyRing, or one key) seals access-log rows (see
+        app/audit.py). Scripts that never write the log may leave it out."""
         self.path = path
+        self.audit_key = None if audit_key is None else audit_chain.as_ring(audit_key)
         path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         if not path.exists():
             # Create the file owner-only before SQLite opens it: it holds password
@@ -134,6 +148,16 @@ class Database:
                 if cols and column not in cols:
                     conn.execute(ddl)
             conn.executescript(SCHEMA)
+            # Rows from before the hash chain are sealed once, then the
+            # append-only triggers go on (sealing needs UPDATE, so order matters).
+            if self.audit_key is not None:
+                audit_chain.seal_legacy(conn, self.audit_key)
+                audit_chain.install_triggers(conn)
+                audit_chain.note_rotation(conn, self.audit_key)
+            elif conn.execute("SELECT 1 FROM audit_log WHERE row_hash = '' LIMIT 1").fetchone() is None:
+                audit_chain.install_triggers(conn)
+            else:
+                log.warning("Access log has unsealed rows; start the app once to seal them.")
             conn.execute("PRAGMA journal_mode = WAL")
 
     @contextmanager
@@ -141,6 +165,8 @@ class Database:
         conn = sqlite3.connect(self.path, timeout=10)
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA foreign_keys = ON")
+        if self.audit_key is not None:
+            audit_chain.register(conn, self.audit_key)
         try:
             yield conn
             conn.commit()
@@ -191,7 +217,7 @@ class Database:
         ).fetchone()
 
     def audit(self, conn: sqlite3.Connection, org_id, user_id, action: str, target: str = "", ip: str = ""):
-        conn.execute(
-            "INSERT INTO audit_log (org_id, user_id, action, target, ip) VALUES (?, ?, ?, ?, ?)",
-            (org_id, user_id, action, target, ip),
-        )
+        """Append to the hash-chained access log, in the caller's transaction."""
+        if self.audit_key is None:
+            raise RuntimeError("Database was opened without an audit key; it cannot write the access log.")
+        audit_chain.append(conn, self.audit_key, org_id, user_id, action, target, ip)
