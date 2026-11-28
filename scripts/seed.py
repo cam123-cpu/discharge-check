@@ -44,7 +44,8 @@ def main() -> None:
     cipher = Cipher(s.data_key)
     with db.connect() as conn:
         if conn.execute("SELECT COUNT(*) FROM orgs").fetchone()[0]:
-            print("Database already has data; delete it to re-seed:", s.database_path)
+            print("Demo data already exists. To get new passwords run: python -m scripts.setup --new-passwords")
+            print("To start over, delete", s.database_path, "and run python -m scripts.setup again.")
             return
         org_id = conn.execute("INSERT INTO orgs (name) VALUES (?)", ("Demo General Hospital",)).lastrowid
         conn.execute("INSERT INTO orgs (name) VALUES (?)", ("Other Hospital",))

@@ -35,20 +35,44 @@ touches the data (including Anthropic, if model review is on).
 
 ## Run it
 
+You need Python 3.11 or newer and git. `python -m scripts.setup` creates
+`.env` with fresh keys and loads the demo data. It is safe to run again: it
+never changes keys that are already set, and it repairs a `.env` written by
+Windows PowerShell (UTF-16) or with empty placeholder lines.
+
+**macOS / Linux**
+
 ```bash
-python3 -m venv .venv && . .venv/bin/activate
+git clone https://github.com/cam123-cpu/discharge-check.git
+cd discharge-check
+python3 -m venv .venv
+. .venv/bin/activate
 pip install -r requirements-dev.txt
-cp .env.example .env          # then fill DATA_KEY and SESSION_PEPPER (commands are in the file)
-python -m scripts.seed        # creates demo users (prints passwords once) and 5 synthetic discharges
+python -m scripts.setup
 uvicorn app.main:get_app --factory --port 8000 --no-server-header
 ```
 
-In a deployment, set `FORCE_HTTPS=1` and `ALLOWED_HOSTS`, and when a proxy
-terminates TLS add `--proxy-headers --forwarded-allow-ips=<proxy IP>` so the
-app sees the real scheme and client IP (rate limits and the access log use it).
+**Windows (PowerShell)**
 
-Open http://localhost:8000, sign in as `compliance@demo.test`, open each
-discharge and press **Run check**.
+```powershell
+git clone https://github.com/cam123-cpu/discharge-check.git
+cd discharge-check
+python -m venv .venv
+Set-ExecutionPolicy -Scope Process Bypass   # lets this window run the activate script
+.venv\Scripts\Activate.ps1
+pip install -r requirements-dev.txt
+python -m scripts.setup
+uvicorn app.main:get_app --factory --port 8000 --no-server-header
+```
+
+Open http://localhost:8000. Setup prints five demo accounts with random
+passwords, once. Sign in as `compliance@demo.test` (or `admin@demo.test`,
+who can also remove documents), open a discharge and press **Run check**.
+
+- Lost the passwords? `python -m scripts.setup --new-passwords`
+- Start over? Delete the `data` folder and run `python -m scripts.setup`.
+- Model review: add `ANTHROPIC_API_KEY=...` to `.env` and restart. Without it
+  the built-in pattern rules run on their own.
 
 Tests and dependency scan:
 
@@ -56,6 +80,10 @@ Tests and dependency scan:
 python -m pytest -q
 pip-audit -r requirements.txt
 ```
+
+In a deployment, set `FORCE_HTTPS=1` and `ALLOWED_HOSTS`, and when a proxy
+terminates TLS add `--proxy-headers --forwarded-allow-ips=<proxy IP>` so the
+app sees the real scheme and client IP (rate limits and the access log use it).
 
 ## Security checklist
 

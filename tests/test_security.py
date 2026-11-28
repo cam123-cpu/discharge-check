@@ -342,6 +342,7 @@ def test_unknown_host_is_refused(settings):
     assert TestClient(app, base_url="http://evil.test").get("/login").status_code == 400
 
 
+@pytest.mark.skipif(os.name == "nt", reason="Windows has no Unix file modes; NTFS ACLs apply instead")
 def test_database_file_is_owner_only(settings):
     create_app(settings)
     assert stat.S_IMODE(os.stat(settings.database_path).st_mode) == 0o600

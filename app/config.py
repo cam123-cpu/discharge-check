@@ -6,17 +6,54 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-def _load_dotenv(path: Path) -> None:
-    """Minimal .env loader so local runs work without extra dependencies.
-    Existing environment variables always win."""
-    if not path.is_file():
-        return
-    for raw in path.read_text().splitlines():
+def read_env_text(path: Path) -> str:
+    """Read a .env file whatever wrote it. Windows PowerShell 5.1 writes UTF-16
+    with `>>` and `Out-File`, and Notepad may add a UTF-8 byte-order mark."""
+    raw = path.read_bytes()
+    if raw.startswith(b"\xfe\xff"):
+        return raw.decode("utf-16", errors="replace")
+    # `>>` onto a UTF-8 file appends a UTF-16 chunk that starts with its own
+    # byte-order mark, so decode each chunk on its own.
+    first, *rest = raw.split(b"\xff\xfe")
+    parts = [first.decode("utf-8-sig", errors="replace")]
+    parts += [chunk.decode("utf-16-le", errors="replace") for chunk in rest]
+    return "\n".join(parts)
+
+
+def parse_env(text: str) -> dict[str, str]:
+    """KEY=value lines. Blank values are skipped, and a later non-blank value
+    for the same key wins, so a key appended below an empty placeholder works."""
+    out: dict[str, str] = {}
+    for raw in text.replace("\x00", "").splitlines():
         line = raw.strip()
+        if line.startswith("export "):
+            line = line[7:].strip()
         if not line or line.startswith("#") or "=" not in line:
             continue
         key, _, value = line.partition("=")
-        os.environ.setdefault(key.strip(), value.strip())
+        value = value.strip().strip('"').strip("'")
+        if value:
+            out[key.strip()] = value
+    return out
+
+
+def valid_data_key(key: str) -> bool:
+    try:
+        from cryptography.fernet import Fernet
+        Fernet(key.encode())
+        return True
+    except (ValueError, TypeError):
+        return False
+
+
+def _load_dotenv(path: Path) -> None:
+    """Minimal .env loader so local runs work without extra dependencies.
+    Variables already set in the environment always win."""
+    if not path.is_file():
+        return
+    for key, value in parse_env(read_env_text(path)).items():
+        if not os.environ.get(key):
+            os.environ[key] = value
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -48,9 +85,12 @@ def load_settings() -> Settings:
     pepper = os.environ.get("SESSION_PEPPER", "")
     if not data_key or not pepper:
         raise RuntimeError(
-            "DATA_KEY and SESSION_PEPPER must be set. Copy .env.example to .env "
-            "and generate both values (see the comments in that file)."
+            "DATA_KEY and SESSION_PEPPER are not set. Run `python -m scripts.setup` "
+            "once; it creates .env with both values."
         )
+    if not valid_data_key(data_key):
+        raise RuntimeError("DATA_KEY in .env is not a valid key (it must be 44 characters from Fernet.generate_key()). "
+                           "If the database is new, delete the DATA_KEY line and run `python -m scripts.setup`.")
     force_https = os.environ.get("FORCE_HTTPS", "0") == "1"
     hosts = tuple(h.strip() for h in os.environ.get("ALLOWED_HOSTS", "").split(",") if h.strip())
     if force_https and (not hosts or "*" in hosts):
