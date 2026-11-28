@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{{ p.label }} · Discharge Check{% endblock %}
 {% macro status(s) -%}
-<span class="st st-{{ s }}">{{ {'pass': 'Complete', 'fail': 'Missing', 'unclear': 'Review', 'not_applicable': 'Not applicable'}[s] }}</span>
+<span class="st st-{{ s }}">{{ {'pass': 'Shown', 'fail': 'Missing', 'unclear': 'Review', 'not_applicable': 'Not applicable'}[s] }}</span>
 {%- endmacro %}
 {% macro quoted(items) -%}
 <ul class="brief-list">
@@ -15,26 +15,54 @@
 <div class="pagehead">
   <div>
     <h1>{{ p.label }}</h1>
-    <p class="meta">{{ p.unit or 'Unit not recorded' }} · {{ p.attending or 'Attending not recorded' }} · Discharged <span class="mono">{{ p.discharge_date or 'date not recorded' }}</span> · {{ p.disposition or 'Disposition not recorded' }}</p>
+    <p class="meta">{{ p.unit or 'Unit not recorded' }} · {{ p.attending or 'Attending not recorded' }} · Discharged <span class="mono">{{ p.discharge_date or 'date not recorded' }}</span> · {{ p.disposition or 'Disposition not recorded' }} · {{ clock.label }}</p>
   </div>
-  <form method="post" action="/patients/{{ p.id }}/check" data-busy="Checking the record...">
+  <form method="post" action="/patients/{{ p.id }}/check" class="check-form" data-busy="Checking the record...">
     <input type="hidden" name="csrf" value="{{ user.csrf_token }}">
+    {% if model_on %}
+    <label class="check-label"><input type="checkbox" name="use_model" value="yes"> Also ask the model. This sends the text to Anthropic. It can add a doubt. It cannot clear a miss.</label>
+    {% endif %}
     <button type="submit" class="primary" {% if not docs %}disabled{% endif %}>{% if result %}Run check again{% else %}Run check{% endif %}</button>
   </form>
 </div>
 
 {% if notice %}<p class="notice" role="status">{{ notice }}</p>{% endif %}
+{% if unreadable %}<p class="alert" role="alert">The saved check could not be read. Run the check again.</p>{% endif %}
 {% for w in warnings %}<p class="alert" role="alert">{{ w }}</p>{% endfor %}
 
 <div class="cols">
 <section class="main-col" aria-labelledby="checks-h">
   <h2 id="checks-h">Before signing</h2>
+  <p class="muted small">A missing item means the uploaded text does not show it. It does not mean the care did not happen.</p>
   {% if result %}
   <p class="summary-line">
-    <strong>{{ result.tally.fail }}</strong> missing, <strong>{{ result.tally.unclear }}</strong> to review, <strong>{{ result.tally['pass'] }}</strong> complete
-    <span class="muted">· checked {{ analysis.created_at }} UTC by {{ 'Claude with quote verification' if result.engine == 'model' else 'pattern rules' }}</span>
+    <strong>{{ result.tally.fail }}</strong> missing, <strong>{{ result.tally.unclear }}</strong> to review, <strong>{{ result.tally['pass'] }}</strong> shown in the text
+    <span class="muted">· checked {{ analysis.created_at }} UTC by {{ 'pattern rules; the model could add a doubt but not clear a miss' if result.engine == 'model' else 'pattern rules' }}</span>
   </p>
-  {% if not model_on %}<p class="muted small">Pattern rules only. Add an Anthropic API key on the server for model review and richer briefs.</p>{% endif %}
+  {% if not model_on %}<p class="muted small">Pattern rules only. Model review is off until an Anthropic API key is set, and it stays off unless you ask for it on a check.</p>{% endif %}
+  {% if result.medication_reconciliation and result.medication_reconciliation.status != 'not_applicable' %}
+  {% set med = result.medication_reconciliation %}
+  <section class="meds" aria-labelledby="meds-h">
+    <h3 id="meds-h">Medication lists</h3>
+    {% if med.status == 'pass' %}
+    <p>The discharge summary and the nursing instructions name the same {{ med.shared|length }} medications.</p>
+    {% elif med.status == 'fail' %}
+    <p>These two lists do not match. The patient should leave with one list.</p>
+    <div class="cols even">
+      <div>
+        <h3>Only in the summary</h3>
+        {% if med.only_summary %}<ul class="brief-list">{% for n in med.only_summary %}<li class="mono">{{ n }}</li>{% endfor %}</ul>{% else %}<p class="muted">None</p>{% endif %}
+      </div>
+      <div>
+        <h3>Only in the nursing instructions</h3>
+        {% if med.only_nursing %}<ul class="brief-list">{% for n in med.only_nursing %}<li class="mono">{{ n }}</li>{% endfor %}</ul>{% else %}<p class="muted">None</p>{% endif %}
+      </div>
+    </div>
+    {% else %}
+    <p>{{ med.note }}</p>
+    {% endif %}
+  </section>
+  {% endif %}
   {% for group, items in groups.items() %}
   <h3 class="group">{{ group }}</h3>
   <ol class="checks">
@@ -48,7 +76,8 @@
       {% if f.evidence %}<blockquote>{{ f.evidence }}{% if f.source %}<cite>{{ f.source }}</cite>{% endif %}</blockquote>{% endif %}
       {% if f.note %}<p class="note">{{ f.note }}</p>{% endif %}
       {% if f.status in ('fail', 'unclear') %}<p class="fix"><span>To fix:</span> {{ f.rule.fix }}</p>{% endif %}
-      {% if f.pattern_status %}<p class="small muted">Pattern rules said {{ f.pattern_status.replace('_', ' ') }}; the model review differs, so a person should confirm.</p>{% endif %}
+      {% if f.pattern_status and f.model_status and f.pattern_status != f.model_status %}<p class="small muted">Pattern rules said {{ f.pattern_status.replace('_', ' ') }}. Model review said {{ f.model_status.replace('_', ' ') }}. The checklist keeps the more cautious one.</p>
+      {% elif f.pattern_status %}<p class="small muted">Pattern rules said {{ f.pattern_status.replace('_', ' ') }}. The model review differs, so this stays cautious.</p>{% endif %}
     </li>
     {% endfor %}
   </ol>

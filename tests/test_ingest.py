@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pytest
 
@@ -53,3 +54,28 @@ def test_fhir_drops_patient_identity():
 def test_non_fhir_json_rejected():
     with pytest.raises(IngestError):
         parse_upload(b'{"hello": 1}', "b.json", "other", MAX)
+
+
+@pytest.mark.parametrize("text", [
+    b"DOB: 01/02/1940",
+    b"Date of birth: 1940-01-02",
+    b"MRN: 1234567",
+    b"Medical record number AB-4491",
+    b"Lives at 12 Maple Street",
+])
+def test_blocks_direct_identifiers(text):
+    with pytest.raises(IngestError):
+        parse_upload(text, "a.txt", "other", MAX)
+
+
+def test_age_is_not_treated_as_an_identifier():
+    doc = parse_upload(b"71-year-old man walked the unit.\nDischarge Diagnosis:\n- Pneumonia", "a.txt", "other", MAX)
+    assert "Pneumonia" in doc.text
+
+
+def test_bundled_samples_pass_the_identifier_screen():
+    root = Path(__file__).resolve().parent.parent / "samples"
+    for path in sorted(root.iterdir()):
+        if path.suffix.lower() not in {".txt", ".md", ".json"} or path.name == "README.md":
+            continue
+        parse_upload(path.read_bytes(), path.name, "discharge_summary", 2_000_000)

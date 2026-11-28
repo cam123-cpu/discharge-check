@@ -77,12 +77,36 @@ def decode_upload(raw: bytes, filename: str, max_bytes: int) -> tuple[str, str]:
 _SSN = re.compile(r"\b\d{3}-\d{2}-\d{4}\b")
 _EMAIL = re.compile(r"\b[\w.+-]+@[\w-]+\.[\w.-]+\b")
 _PHONE = re.compile(r"\(?\b(\d{3})\)?[-. ]?(\d{3})[-. ]?(\d{4})\b")
+_DOB = re.compile(
+    r"\b(?:DOB|D\.O\.B\.|date of birth|birth date)\b\s*[:#-]?\s*(?:\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|\d{4}-\d{2}-\d{2})\b",
+    re.I,
+)
+_MRN = re.compile(r"\b(?:MRN|medical record number)\b\s*[:#-]?\s*[A-Za-z0-9][A-Za-z0-9-]{3,}\b", re.I)
+_STREET = re.compile(
+    r"\b\d{1,6}\s+(?:[A-Za-z0-9.'-]+\s+){1,5}(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Court|Ct|Place|Pl)\b\.?",
+    re.I,
+)
 
 
 def phi_screen(text: str) -> list[str]:
     if _SSN.search(text):
         raise IngestError(
             "The file contains what looks like a Social Security number. "
+            "Only synthetic or de-identified records may be uploaded."
+        )
+    if _DOB.search(text):
+        raise IngestError(
+            "The file contains what looks like a date of birth. "
+            "Only synthetic or de-identified records may be uploaded."
+        )
+    if _MRN.search(text):
+        raise IngestError(
+            "The file contains what looks like a medical record number. "
+            "Only synthetic or de-identified records may be uploaded."
+        )
+    if _STREET.search(text):
+        raise IngestError(
+            "The file contains what looks like a street address. "
             "Only synthetic or de-identified records may be uploaded."
         )
     warnings = []

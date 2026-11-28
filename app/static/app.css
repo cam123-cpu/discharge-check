@@ -45,6 +45,9 @@ code, .mono { font-family: var(--mono); font-size: .88em; }
 .foot p { margin: .2rem 0; }
 
 .pagehead { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; margin-bottom: 1rem; }
+.check-form { display: flex; flex-direction: column; align-items: flex-end; gap: .55rem; max-width: 22rem; }
+.check-form .check-label { display: flex; gap: .45rem; align-items: flex-start; font-size: .82rem; text-align: left; color: var(--ink); }
+.meds { background: var(--sheet); border: 1px solid var(--rule); padding: .2rem 1rem .8rem; margin: .4rem 0 1.2rem; }
 .meta { color: var(--ink-2); margin: .1rem 0 0; }
 .crumb { margin: 0 0 .5rem; font-size: .9rem; }
 

@@ -4,5 +4,5 @@
 <p class="crumb"><a href="/patients">Discharges</a> / <a href="/patients/{{ p.id }}">{{ p.label }}</a></p>
 <h1>{{ doc.filename }}</h1>
 <p class="meta">{{ DOC_KINDS[doc.kind] }}{% if doc.author %} · {{ doc.author }}{% endif %} · added {{ doc.created_at }} UTC</p>
-<pre class="doc">{{ text }}</pre>
+{% if unreadable %}<p class="alert" role="alert">This document could not be read. It may have been saved with a different key.</p>{% else %}<pre class="doc">{{ text }}</pre>{% endif %}
 {% endblock %}

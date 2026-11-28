@@ -13,7 +13,7 @@
     <a class="wordmark" href="/">Discharge Check</a>
     {% if user %}
     <nav class="mainnav" aria-label="Main">
-      <a href="/patients" {% if nav == 'patients' %}aria-current="page"{% endif %}>Patients</a>
+      <a href="/patients" {% if nav == 'patients' %}aria-current="page"{% endif %}>Queue</a>
       {% if user.role in ('compliance', 'admin') %}<a href="/compliance" {% if nav == 'compliance' %}aria-current="page"{% endif %}>Compliance</a>{% endif %}
       <a href="/rules" {% if nav == 'rules' %}aria-current="page"{% endif %}>Rules</a>
       {% if user.role in ('compliance', 'admin') %}<a href="/audit" {% if nav == 'audit' %}aria-current="page"{% endif %}>Access log</a>{% endif %}
@@ -32,7 +32,7 @@
 {% block content %}{% endblock %}
 </main>
 <footer class="foot">
-  <p>Prototype. Use synthetic or de-identified records only. Results support human review and do not replace it.</p>
+  <p>Prototype. Synthetic or de-identified records only. “Shown” means the text contains what the rule looks for. A person decides whether to sign.</p>
   <p><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · Rule library {{ RULES_VERSION }}</p>
 </footer>
 </body>

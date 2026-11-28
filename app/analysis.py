@@ -8,7 +8,11 @@ import anthropic
 
 from . import llm
 from .brief import build_brief
-from .rules import RULES, RULES_VERSION, Doc, Finding, is_post_acute, run_pattern_checks, tally
+from .rules import RULES, RULES_VERSION, Doc, Finding, is_post_acute, medication_reconciliation, run_pattern_checks, tally
+
+# Lower is more cautious. A model result may move a rule down this scale.
+# It may not move a rule up: a quoted sentence is not enough to clear a miss.
+_SEVERITY = {"fail": 0, "unclear": 1, "pass": 2}
 
 
 def merge(pattern: list[Finding], model: dict[str, Finding]) -> list[Finding]:
@@ -18,9 +22,24 @@ def merge(pattern: list[Finding], model: dict[str, Finding]) -> list[Finding]:
         if m is None:
             out.append(f)
             continue
-        if m.status != f.status:
+        if f.status not in _SEVERITY or m.status not in _SEVERITY:
+            if m.status != f.status:
+                f.pattern_status = f.status
+                f.model_status = m.status
+            out.append(f)
+            continue
+        if m.status == f.status:
+            # Agreement. Keep a model quote when the quote check already accepted it.
+            out.append(m if m.evidence else f)
+            continue
+        if _SEVERITY[m.status] < _SEVERITY[f.status]:
             m.pattern_status = f.status
-        out.append(m)
+            m.model_status = m.status
+            out.append(m)
+        else:
+            f.pattern_status = f.status
+            f.model_status = m.status
+            out.append(f)
     return out
 
 
@@ -43,6 +62,7 @@ def analyze(docs: list[Doc], *, disposition_hint: str, discharge_hint: str, clie
         "rules_version": RULES_VERSION,
         "brief": brief,
         "model_brief": model_brief,
+        "medication_reconciliation": medication_reconciliation(docs),
         "findings": [f.to_dict() for f in findings],
         "tally": tally(findings),
     }
@@ -55,12 +75,10 @@ def store(db, conn, cipher, org_id: int, patient_id: int, user_id: int, result: 
            VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
         (org_id, patient_id, result["engine"], cipher.encrypt(json.dumps(result)), t["pass"], t["fail"], t["unclear"], user_id),
     )
-    aid = cur.lastrowid
-    conn.executemany(
-        "INSERT INTO findings (org_id, analysis_id, patient_id, rule_id, status) VALUES (?, ?, ?, ?, ?)",
-        [(org_id, aid, patient_id, f["rule_id"], f["status"]) for f in result["findings"]],
-    )
-    return aid
+    # Rule-level status stays inside result_enc. A plaintext findings row would
+    # let a copied database show which clinical rules failed, and a tampered
+    # row could change the dashboard without breaking the sealed blob.
+    return cur.lastrowid
 
 
 RULE_ORDER = [r.id for r in RULES]

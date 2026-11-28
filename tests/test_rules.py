@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from app.ingest import parse_upload
-from app.rules import Doc, run_pattern_checks
+from app.rules import Doc, days_until_deadline, medication_reconciliation, run_pattern_checks
 
 S = Path(__file__).resolve().parent.parent / "samples"
 TODAY = date(2026, 11, 27)
@@ -62,6 +62,20 @@ def test_signature_without_time():
     assert s["authenticated"] == "fail"
     assert s["timeliness"] == "pass"
     assert s["hospital_course"] == "unclear"
+
+
+def test_medication_diff_names_the_mismatch():
+    docs = docs_for(("syn-0002-summary.txt", "discharge_summary"), ("syn-0002-nursing.txt", "nursing_instructions"))
+    diff = medication_reconciliation(docs)
+    assert diff["status"] == "fail"
+    assert "insulin" in diff["only_summary"]
+    assert "lisinopril" in diff["only_nursing"]
+
+
+def test_deadline_days_are_signed():
+    assert days_until_deadline("2026-11-14", TODAY) == 17
+    assert days_until_deadline("2026-10-10", TODAY) < 0
+    assert days_until_deadline("", TODAY) is None
 
 
 @pytest.mark.parametrize("text,expected", [

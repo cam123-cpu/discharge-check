@@ -57,7 +57,8 @@ class Finding:
     source: str = ""
     note: str = ""
     engine: str = "pattern"
-    pattern_status: str = ""  # what the pattern checker said, when the model overrode it
+    pattern_status: str = ""  # pattern result when it differs from the stored status
+    model_status: str = ""  # model result when it differs from the stored status
 
     def to_dict(self):
         return asdict(self)
@@ -116,6 +117,23 @@ def is_post_acute(docs: list[Doc], disposition_hint: str = "") -> bool:
             if key in d.sections and POST_ACUTE.search(d.sections[key]):
                 return True
     return False
+
+
+RECORD_DEADLINE_DAYS = 30
+
+
+def days_until_deadline(discharge: str | date | None, today: date | None = None) -> int | None:
+    """Days remaining in the 30-day completion window. Negative means past it."""
+    today = today or date.today()
+    if isinstance(discharge, date):
+        dc: date | None = discharge
+    elif isinstance(discharge, str) and discharge:
+        dc = parse_date(discharge)
+    else:
+        dc = None
+    if dc is None:
+        return None
+    return RECORD_DEADLINE_DAYS - (today - dc).days
 
 
 def discharge_date(docs: list[Doc], hint: str = "") -> date | None:
@@ -229,25 +247,37 @@ def _check_timeliness(rule: Rule, docs: list[Doc], dc_date: date | None, today: 
     return Finding(rule.id, "unclear", note=f"Not signed yet. {30 - elapsed} days remain before the 30-day limit.")
 
 
-def _check_meds_consistent(rule: Rule, docs: list[Doc]) -> Finding:
+def medication_reconciliation(docs: list[Doc]) -> dict:
+    """Compare medication names in the summary and the nursing instructions."""
     summary = next((d for d in docs if d.kind == "discharge_summary"), None)
     nursing = next((d for d in docs if d.kind == "nursing_instructions"), None)
+    empty = {"only_summary": [], "only_nursing": [], "shared": []}
     if not nursing:
-        return Finding(rule.id, "not_applicable", note="No nursing discharge instructions uploaded.")
+        return {**empty, "status": "not_applicable", "note": "No nursing discharge instructions uploaded."}
     if not summary:
-        return Finding(rule.id, "unclear", note="No discharge summary to compare against.")
+        return {**empty, "status": "unclear", "note": "No discharge summary to compare against."}
     a, b = med_names(_med_section(summary)), med_names(_med_section(nursing))
     if not a or not b:
-        return Finding(rule.id, "unclear", note="Could not find a medication list in both documents.")
-    only_a, only_b = sorted(a - b), sorted(b - a)
+        return {**empty, "status": "unclear", "note": "Could not find a medication list in both documents."}
+    only_a, only_b, shared = sorted(a - b), sorted(b - a), sorted(a & b)
     if not only_a and not only_b:
-        return Finding(rule.id, "pass", note=f"Both documents list the same {len(a)} medications.", source=f"{summary.filename}, {nursing.filename}")
+        return {"status": "pass", "only_summary": [], "only_nursing": [], "shared": shared,
+                "note": f"Both documents list the same {len(a)} medications."}
     parts = []
     if only_a:
         parts.append("only in summary: " + ", ".join(only_a))
     if only_b:
         parts.append("only in nursing instructions: " + ", ".join(only_b))
-    return Finding(rule.id, "fail", note="Medication lists differ (" + "; ".join(parts) + ").", source=f"{summary.filename}, {nursing.filename}")
+    return {"status": "fail", "only_summary": only_a, "only_nursing": only_b, "shared": shared,
+            "note": "Medication lists differ (" + "; ".join(parts) + ")."}
+
+
+def _check_meds_consistent(rule: Rule, docs: list[Doc]) -> Finding:
+    diff = medication_reconciliation(docs)
+    summary = next((d for d in docs if d.kind == "discharge_summary"), None)
+    nursing = next((d for d in docs if d.kind == "nursing_instructions"), None)
+    names = [d.filename for d in (summary, nursing) if d is not None]
+    return Finding(rule.id, diff["status"], note=diff["note"], source=", ".join(names))
 
 
 def run_pattern_checks(docs: list[Doc], disposition_hint: str = "", discharge_hint: str = "", today: date | None = None) -> list[Finding]:

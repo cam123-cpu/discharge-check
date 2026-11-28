@@ -2,7 +2,7 @@
 {% block title %}Rules · Discharge Check{% endblock %}
 {% block content %}
 <h1>Rule library</h1>
-<p class="meta">Version {{ RULES_VERSION }}. Rules live in <code>app/rules.json</code> so state requirements and hospital policies can be added without code changes.</p>
+<p class="meta">Version {{ RULES_VERSION }}. These checks look for words in the uploaded text. A hospital can add a keyword rule in <code>app/rules.json</code>. Signature, the 30-day clock, and the medication comparison are computed in code. None of this is a survey finding.</p>
 <table class="grid">
   <thead><tr><th>Group</th><th>Rule</th><th>Citation</th><th>What is checked</th></tr></thead>
   <tbody>
