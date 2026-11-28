@@ -1,0 +1,5 @@
+/* Hospital single sign-on: the section on the sign-in page and the continue page. */
+.sso { margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }
+.sso h2 { font-size: 1.05rem; margin: 0 0 .35rem; }
+.sso p { margin: 0 0 .8rem; }
+.sso-continue { margin-top: 2rem; }

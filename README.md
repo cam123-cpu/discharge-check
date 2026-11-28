@@ -85,6 +85,51 @@ In a deployment, set `FORCE_HTTPS=1` and `ALLOWED_HOSTS`, and when a proxy
 terminates TLS add `--proxy-headers --forwarded-allow-ips=<proxy IP>` so the
 app sees the real scheme and client IP (rate limits and the access log use it).
 
+## Two-factor and hospital sign-in
+
+**Two-factor (authenticator app).** Anyone can turn it on under **Security**
+(top right): scan the QR code with Google Authenticator, Microsoft
+Authenticator, 1Password or similar, type the six-digit code, and save the ten
+recovery codes shown once. After that, sign-in asks for a code after the
+password. Each code works once; each recovery code works once.
+
+- Make it mandatory for some roles: `MFA_REQUIRED_ROLES=physician,nurse,admin`
+  in `.env`. Those users are sent to the setup page after their password and
+  cannot reach patient data until it is done. It is off by default, so the
+  demo accounts sign in with just a password.
+- Lost phone and lost recovery codes: `python -m scripts.setup --reset-2fa user@hospital.org`
+  turns it off for that account and signs them out everywhere (logged).
+
+**Hospital single sign-on (OIDC).** A hospital's identity provider (Entra ID,
+Okta, Ping, Keycloak, ADFS with OIDC) can sign its staff in. Register the app
+with the IdP using the redirect URI `{PUBLIC_BASE_URL}/sso/callback`, then:
+
+```bash
+export HOSPITAL_SSO_SECRET=...   # never put the secret on the command line
+python -m scripts.sso add --org "Demo General Hospital" --slug demo-idp --name "Demo General SSO" \
+    --issuer https://login.example.org/tenant/v2.0 --client-id <id> \
+    --client-secret-env HOSPITAL_SSO_SECRET --domains demo.test
+python -m scripts.sso list
+python -m scripts.sso disable demo-idp
+python -m scripts.sso link demo-idp admin@demo.test <IdP subject id>
+```
+
+Staff then use **Sign in with your hospital** on the login page and enter their
+work email. Options: `--auto-provision --default-role nurse` creates accounts on
+first sign-in (never as administrator); `--enforce` turns off password sign-in
+for that email domain. SSO sign-ins skip the app's own two-factor step because
+the hospital's IdP is expected to enforce MFA.
+Existing accounts are linked to the IdP by email on first SSO sign-in, except
+administrators and accounts with two-factor on: link those with `scripts.sso link`.
+
+The check uses authorization code + PKCE, state and nonce, verifies the ID
+token signature (RS256/ES256 only), issuer, audience and expiry, and requires
+a verified email. An IdP user is linked to an existing account only inside the
+hospital that owns the provider. **SAML:** `app/sso.py` has a `SAMLProvider`
+slot with the same interface; today, put an OIDC broker (Entra ID, Okta,
+Keycloak) in front of a SAML-only IdP, or plug `python3-saml` into that slot.
+Tests mock the IdP completely (`tests/test_sso.py`), so none need a network.
+
 ## Security checklist
 
 | Item | How it is handled |
@@ -97,6 +142,8 @@ app sees the real scheme and client IP (rate limits and the access log use it).
 | Lock record access / block field tampering | `org_id`, `role` and authorship come from the session, never from the form; forms accept only named fields with validation |
 | Secure session cookies | Random token, only a keyed hash stored, `HttpOnly`, `SameSite=Strict`, `Secure` when `FORCE_HTTPS=1`, 8-hour expiry |
 | Hash passwords | Argon2id |
+| Multi-factor sign-in | Optional TOTP for everyone, mandatory per role with `MFA_REQUIRED_ROLES`; codes single-use with replay blocked; attempts counted before each check (5 per sign-in and per account per 15 minutes); recovery codes stored as keyed hashes; turning it off needs password and code and ends every session |
+| Single sign-on | OIDC code flow with PKCE, state, nonce and a browser-bound cookie; ID token signature, issuer, audience, expiry checked; verified email required; links never cross hospitals; optional enforcement turns off passwords for a domain |
 | Rate limit login / bot protection | 5 failures per email and 50 per IP per 15 minutes (a hospital shares one IP); a successful sign-in clears only that account's counter; hidden honeypot field; login form token; equal timing for unknown emails |
 | Rate limit costly actions | Per user: 30 checks and 120 uploads per hour |
 | Automatic logoff | Sessions end after 30 idle minutes and 8 hours in total (HIPAA 164.312(a)(2)(iii)) |
@@ -119,5 +166,5 @@ Full findings from the November 2026 penetration test: [docs/security-review-202
   with a stubbed client). Add a key and run the check on the samples.
 - No accuracy measurement: next step is a hand-labeled set of 100 to 200
   MIMIC-IV-Note summaries to measure agreement per rule.
-- No EHR integration, SSO, or multi-factor sign-in. Privacy and Terms pages are drafts.
+- No EHR integration. No built-in SAML (use an OIDC broker for now). Privacy and Terms pages are drafts.
 - SQLite is for the prototype; use Postgres with RLS and managed keys before a pilot.
