@@ -3,6 +3,7 @@
 Usage (any OS, from the repository folder, with the virtual environment active):
     python -m scripts.setup                 # safe to run again; never overwrites keys
     python -m scripts.setup --new-passwords # print new passwords for the demo accounts
+    python -m scripts.setup --reset-2fa EMAIL  # someone lost their phone and recovery codes
 """
 from __future__ import annotations
 
@@ -101,9 +102,32 @@ def new_passwords() -> None:
         conn.execute("DELETE FROM login_attempts")
 
 
+def reset_2fa(email: str, db=None) -> bool:
+    """Turn two-factor off for one account so its owner can sign in with the
+    password alone and set it up again. Also ends their sessions and any
+    half-finished sign-in. Returns False when no such account exists."""
+    from app.mfa import clear_two_factor
+
+    if db is None:
+        from app.config import load_settings
+        from app.db import Database
+        db = Database(load_settings().database_path)
+    with db.connect() as conn:
+        user = conn.execute("SELECT id, org_id FROM users WHERE email = ?", (email.strip().lower(),)).fetchone()
+        if user is None:
+            return False
+        clear_two_factor(conn, user["id"])
+        conn.execute("DELETE FROM pending_logins WHERE user_id = ?", (user["id"],))
+        conn.execute("DELETE FROM sessions WHERE user_id = ?", (user["id"],))
+        # No signed-in actor: the change came from the server console.
+        db.audit(conn, user["org_id"], None, "mfa_reset", f"user:{user['id']}", "console")
+    return True
+
+
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--new-passwords", action="store_true", help="reset the demo accounts' passwords and print them")
+    ap.add_argument("--reset-2fa", metavar="EMAIL", help="turn off two-factor sign-in for one account")
     args = ap.parse_args(argv)
 
     made = ensure_env()
@@ -114,6 +138,12 @@ def main(argv: list[str] | None = None) -> None:
     for key, value in parse_env(read_env_text(ENV)).items():
         if key not in _SHELL_ENV:
             os.environ[key] = value
+    if args.reset_2fa:
+        if not reset_2fa(args.reset_2fa):
+            raise SystemExit(f"No account with the email {args.reset_2fa}.")
+        print(f"Two-factor sign-in is off for {args.reset_2fa}; their sessions were ended. "
+              "They can sign in with their password and set it up again.")
+        return
     if args.new_passwords:
         new_passwords()
     else:

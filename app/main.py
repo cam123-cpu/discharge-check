@@ -50,7 +50,8 @@ PRE_COOKIE = "dc_pre"
 MFA_COOKIE = "dc_mfa"  # pending sign-in token while the second factor is owed
 # Paths a signed-in user may still open while their role requires two-factor
 # and they have not set it up yet.
-MFA_SETUP_PATHS = ("/account/security", "/logout", "/privacy", "/terms")
+MFA_SETUP_PATHS = {"/account/security", "/account/security/2fa/start", "/account/security/2fa/confirm", "/logout",
+                   "/privacy", "/terms"}
 DISPOSITIONS = [
     "Home",
     "Home with home health services",
@@ -127,7 +128,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         user = sessions.lookup(request.cookies.get(SESSION_COOKIE))
         if user is None:
             raise AuthRequired()
-        if user["mfa_setup_required"] and not request.url.path.startswith(MFA_SETUP_PATHS):
+        # Checked against today's policy, not only the flag set at sign-in, so a
+        # role added to MFA_REQUIRED_ROLES also applies to sessions already open.
+        # SSO sign-ins rely on the hospital's own MFA.
+        needs_setup = user["mfa_setup_required"] or (
+            user["auth_method"] == "password" and user["role"] in settings.mfa_required_roles and not user["mfa_enabled"])
+        if needs_setup and request.url.path not in MFA_SETUP_PATHS:
             raise MfaSetupRequired()
         return user
 

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Two-factor sign-in · Discharge Check{% endblock %}
+{% block content %}
+<div class="login">
+  <h1>Enter your code</h1>
+  <p class="muted">Open your authenticator app and enter the six-digit code for Discharge Check. If you do not have your phone, enter one of your recovery codes.</p>
+  <form method="post" action="/login/2fa" class="stack">
+    <input type="hidden" name="csrf" value="{{ form_token }}">
+    <label>Code <input type="text" name="code" inputmode="numeric" autocomplete="one-time-code" required maxlength="64" autofocus></label>
+    <button type="submit" class="primary">Continue</button>
+  </form>
+  <p class="small"><a href="/login">Start over</a></p>
+</div>
+{% endblock %}

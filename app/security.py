@@ -151,6 +151,12 @@ class RateLimiter:
         with self.db.connect() as conn:
             conn.executemany("DELETE FROM login_attempts WHERE key = ?", [(k,) for k in keys])
 
+    def reserve(self, key: str, limit: int, window: timedelta) -> bool:
+        """Record a use first, then check the count. Unlike allow(), parallel
+        requests cannot all pass the check before any of them is counted."""
+        self.hit(key)
+        return self.count(key, window) <= limit
+
     def allow(self, key: str, limit: int, window: timedelta) -> bool:
         """Count one use of an action and say whether it is within the limit."""
         if self.count(key, window) >= limit:
@@ -221,6 +227,13 @@ class PendingLogins:
     def fail(self, token_hash: str) -> None:
         with self.db.connect() as conn:
             conn.execute("UPDATE pending_logins SET attempts = attempts + 1 WHERE token_hash = ?", (token_hash,))
+
+    def take_attempt(self, token_hash: str) -> bool:
+        """Count one attempt before the code is checked, in one statement, so
+        parallel requests cannot all slip under the limit."""
+        with self.db.connect() as conn:
+            return conn.execute("UPDATE pending_logins SET attempts = attempts + 1 WHERE token_hash = ? AND attempts < ?",
+                                (token_hash, self.settings.mfa_max_attempts)).rowcount == 1
 
     def consume(self, token_hash: str) -> bool:
         """Single use: True only for the one request that deletes the row."""
