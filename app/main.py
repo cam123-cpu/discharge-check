@@ -22,7 +22,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from . import analysis
 from .config import Settings, load_settings
-from .db import Database
+from .db import Database, utcnow_text
 from .ingest import DOC_KINDS, IngestError, parse_upload
 from .rules import RULES, RULES_BY_ID, RULES_VERSION, Doc
 from .security import (
@@ -80,7 +80,7 @@ class AuthRequired(Exception):
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or load_settings()
-    db = Database(settings.database_path)
+    db = Database(settings.database)
     cipher = Cipher(settings.data_key)
     sessions = Sessions(db, settings)
     limiter = LoginLimiter(db, settings)
@@ -363,7 +363,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 raise HTTPException(status_code=404)
             if user["role"] != "admin" and row["uploaded_by"] != user["user_id"]:
                 raise HTTPException(status_code=403)
-            conn.execute("UPDATE documents SET deleted_at = datetime('now'), deleted_by = ? WHERE id = ?", (user["user_id"], doc_id))
+            conn.execute("UPDATE documents SET deleted_at = ?, deleted_by = ? WHERE id = ?", (utcnow_text(), user["user_id"], doc_id))
             db.audit(conn, user["org_id"], user["user_id"], "document_delete", f"document:{doc_id}", client_ip(request))
         return go(f"/patients/{patient_id}", notice=f"Removed {row['filename']}. Run the check again to update the results.")
 

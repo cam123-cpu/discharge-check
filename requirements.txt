@@ -6,3 +6,7 @@ argon2-cffi==25.1.0
 cryptography==50.0.2
 anthropic==2.14.0
 pydantic==2.14.4
+sqlalchemy==2.1.9
+alembic==1.20.1
+# Postgres driver; the binary wheel installs on Windows without a compiler.
+psycopg[binary]==3.3.9

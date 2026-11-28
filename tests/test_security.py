@@ -267,7 +267,7 @@ def test_unhandled_error_gives_plain_500_with_headers(client, app):
     login(client, "cm@a.test")
     pid = _patient_a(app)
     with app.state.db.connect() as conn:
-        conn.execute("INSERT INTO documents (org_id, patient_id, kind, filename, body_enc) SELECT org_id, id, 'other', 'x.txt', X'00' FROM patients WHERE id = ?", (pid,))
+        conn.execute("INSERT INTO documents (org_id, patient_id, kind, filename, body_enc) SELECT org_id, id, 'other', 'x.txt', ? FROM patients WHERE id = ?", (b"\x00", pid))
     r = client.get(f"/patients/{pid}/documents/1")
     assert r.status_code == 500 and "Traceback" not in r.text
     assert "default-src 'self'" in r.headers["content-security-policy"]
@@ -391,6 +391,7 @@ def test_unknown_host_is_refused(settings):
 
 
 @pytest.mark.skipif(os.name == "nt", reason="Windows has no Unix file modes; NTFS ACLs apply instead")
+@pytest.mark.skipif(bool(os.environ.get("TEST_DATABASE_URL")), reason="SQLite file only")
 def test_database_file_is_owner_only(settings):
     create_app(settings)
     assert stat.S_IMODE(os.stat(settings.database_path).st_mode) == 0o600

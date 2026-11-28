@@ -41,7 +41,11 @@ def ensure_env(path: Path = ENV, example: Path = EXAMPLE) -> list[str]:
     text = read_env_text(path) if path.is_file() else (example.read_text(encoding="utf-8") if example.is_file() else "")
     have = parse_env(text)
     if "DATA_KEY" in have and not valid_data_key(have["DATA_KEY"]):
-        if db_has_data(path.parent, have):
+        # DATABASE_URL / DATABASE_PATH set in the shell win over .env, as in the app.
+        shell = {k: os.environ[k] for k in ("DATABASE_URL", "DATABASE_PATH")
+                 if path == ENV and k in _SHELL_ENV and os.environ.get(k)}
+        target_env = {**have, **shell}
+        if db_has_data(path.parent, target_env):
             raise SystemExit("DATA_KEY in .env is not a valid key, and the database already holds records encrypted "
                              "with some key. Restore the original DATA_KEY, or delete the database to start over.")
         print("DATA_KEY in .env was not a valid key; replacing it (the database is empty).")
@@ -72,16 +76,50 @@ def ensure_env(path: Path = ENV, example: Path = EXAMPLE) -> list[str]:
 
 
 def db_has_data(root: Path, env: dict[str, str]) -> bool:
-    import sqlite3
-    db = Path(env.get("DATABASE_PATH", "data/app.db"))
-    db = db if db.is_absolute() else root / db
-    if not db.is_file():
-        return False
+    """Whether the database (DATABASE_URL, else the SQLite file at
+    DATABASE_PATH) holds any documents, which are encrypted with DATA_KEY."""
+    sys.path.insert(0, str(ROOT))
+    from sqlalchemy import create_engine, func, inspect, select, table
+    from sqlalchemy.exc import SQLAlchemyError
+    from sqlalchemy.pool import NullPool
+
+    from app.config import database_target
+    from app.db import _sqlite_file, normalize_url
+
     try:
-        with sqlite3.connect(db) as conn:
-            return conn.execute("SELECT COUNT(*) FROM documents").fetchone()[0] > 0
-    except sqlite3.Error:
-        return True  # unreadable: assume it matters
+        url = normalize_url(database_target(env, root))
+    except SQLAlchemyError:
+        return True  # a malformed DATABASE_URL: assume it matters
+    is_sqlite = url.get_backend_name() == "sqlite"
+    if is_sqlite:
+        path = _sqlite_file(url)
+        if path is not None and not path.is_file():
+            return False  # never created, so nothing is encrypted yet
+    try:
+        # A short timeout so an unreachable server fails fast instead of hanging.
+        args = {"timeout": 5} if is_sqlite else {"connect_timeout": 5}
+        engine = create_engine(url, poolclass=NullPool, connect_args=args)
+    except (SQLAlchemyError, ImportError, ValueError):
+        return True  # unusable URL: assume it matters
+    try:
+        with engine.connect() as conn:
+            if not inspect(conn).has_table("documents"):
+                return False  # an empty or never-migrated database holds no records
+            return conn.execute(select(func.count()).select_from(table("documents"))).scalar_one() > 0
+    except SQLAlchemyError:
+        return True  # unreadable or unreachable: assume it matters
+    finally:
+        engine.dispose()
+
+
+def describe_database(target: str | Path) -> str:
+    """A line for the console naming the database, never its password."""
+    from app.db import _sqlite_file, normalize_url, redact
+    url = normalize_url(target)
+    path = _sqlite_file(url) if url.get_backend_name() == "sqlite" else None
+    if path is not None:
+        return f"Database: SQLite file {path}"
+    return f"Database: {redact(url)}"
 
 
 def new_passwords() -> None:
@@ -90,7 +128,7 @@ def new_passwords() -> None:
     from app.security import hash_password
     from scripts.seed import USERS
 
-    db = Database(load_settings().database_path)
+    db = Database(load_settings().database)
     print("New demo passwords (save these; they are not shown again):")
     with db.connect() as conn:
         for email, _, role in USERS:
@@ -114,6 +152,8 @@ def main(argv: list[str] | None = None) -> None:
     for key, value in parse_env(read_env_text(ENV)).items():
         if key not in _SHELL_ENV:
             os.environ[key] = value
+    from app.config import database_target
+    print(describe_database(database_target()))
     if args.new_passwords:
         new_passwords()
     else:
