@@ -1,0 +1,350 @@
+{
+  "resourceType": "Bundle",
+  "type": "searchset",
+  "entry": [
+    {
+      "search": {
+        "mode": "outcome"
+      },
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "warning",
+            "diagnostics": "secret detail"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://fhir.example.test/r4/Patient/p2",
+      "search": {
+        "mode": "include"
+      },
+      "resource": {
+        "resourceType": "Patient",
+        "id": "p2",
+        "name": [
+          {
+            "text": "Bramblewick Sample"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://fhir.example.test/r4/Encounter/old",
+      "search": {
+        "mode": "match"
+      },
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "old",
+        "class": {
+          "code": "IMP"
+        },
+        "period": {
+          "start": "2026-03-01",
+          "end": "2026-03-04"
+        },
+        "hospitalization": {
+          "dischargeDisposition": {
+            "text": "Skilled nursing facility (SNF)"
+          }
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.example.test/r4/Encounter/new",
+      "search": {
+        "mode": "match"
+      },
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "new",
+        "class": {
+          "code": "IMP"
+        },
+        "period": {
+          "start": "2026-11-10",
+          "end": "2026-11-14"
+        },
+        "hospitalization": {
+          "dischargeDisposition": {
+            "text": "Home with home health services"
+          }
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.example.test/r4/Encounter/er",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "er",
+        "class": {
+          "code": "EMER"
+        },
+        "period": {
+          "start": "2026-11-20",
+          "end": "2026-11-20"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "c-old",
+        "code": {
+          "text": "Hip fracture"
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "encounter-diagnosis"
+              }
+            ]
+          }
+        ],
+        "encounter": {
+          "reference": "Encounter/old"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "c-new",
+        "code": {
+          "text": "Heart failure exacerbation"
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "encounter-diagnosis"
+              }
+            ]
+          }
+        ],
+        "encounter": {
+          "reference": "https://fhir.example.test/r4/Encounter/new"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "c-pl",
+        "code": {
+          "text": "Chronic kidney disease stage 3"
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "problem-list-item"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "c-res",
+        "code": {
+          "text": "Resolved old problem"
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "problem-list-item"
+              }
+            ]
+          }
+        ],
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "resolved"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Furosemide 40 mg"
+        },
+        "encounter": {
+          "reference": "Encounter/new"
+        },
+        "dosageInstruction": [
+          {
+            "text": "once daily"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Oldmed 5 mg"
+        },
+        "encounter": {
+          "reference": "Encounter/old"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "AllergyIntolerance",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "716186003",
+              "display": "No known allergy"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Binary",
+        "id": "bin-2",
+        "contentType": "text/html",
+        "data": "PGh0bWw+PGJvZHk+PGgyPkRpc2NoYXJnZSBJbnN0cnVjdGlvbnM8L2gyPjxwPkNhbGwgdGhlIGNsaW5pYyBhdCA1NTUtMDE1NSBpZiBmZXZlciByZXR1cm5zLjwvcD48cD5CcmFtYmxld2ljayBtYXkgc2hvd2VyLjwvcD48L2JvZHk+PC9odG1sPg"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DocumentReference",
+        "id": "dr-1",
+        "status": "current",
+        "date": "2026-11-13T12:00:00Z",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "34745-0"
+            }
+          ]
+        },
+        "context": {
+          "encounter": [
+            {
+              "reference": "Encounter/new"
+            }
+          ]
+        },
+        "content": [
+          {
+            "attachment": {
+              "contentType": "text/plain",
+              "data": "TnVyc2luZyBkaXNjaGFyZ2Ugbm90ZSwgb2xkZXIgZHJhZnQuIERpZXQgYXMgdG9sZXJhdGVkLg=="
+            }
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DocumentReference",
+        "id": "dr-2",
+        "status": "current",
+        "date": "2026-11-14T15:00:00Z",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "34745-0"
+            }
+          ]
+        },
+        "author": [
+          {
+            "reference": "Practitioner/n1"
+          }
+        ],
+        "context": {
+          "encounter": [
+            {
+              "reference": "Encounter/new"
+            }
+          ]
+        },
+        "content": [
+          {
+            "attachment": {
+              "contentType": "application/pdf",
+              "url": "https://elsewhere.example.test/doc.pdf"
+            }
+          },
+          {
+            "attachment": {
+              "contentType": "text/html",
+              "url": "Binary/bin-2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DocumentReference",
+        "id": "dr-3",
+        "status": "superseded",
+        "date": "2026-11-15T15:00:00Z",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "34745-0"
+            }
+          ]
+        },
+        "context": {
+          "encounter": [
+            {
+              "reference": "Encounter/new"
+            }
+          ]
+        },
+        "content": [
+          {
+            "attachment": {
+              "contentType": "text/plain",
+              "data": "U3VwZXJzZWRlZCB0ZXh0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "n1",
+        "name": [
+          {
+            "given": [
+              "Rowan"
+            ],
+            "family": "Nursely",
+            "prefix": [
+              "RN"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,615 @@
+{
+  "resourceType": "Bundle",
+  "type": "document",
+  "meta": {
+    "fhirVersion": "4.0.1"
+  },
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000001",
+      "resource": {
+        "resourceType": "Composition",
+        "status": "final",
+        "date": "2026-11-20T10:00:00Z",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "18842-5",
+              "display": "Discharge summary"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000002"
+        },
+        "encounter": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000003"
+        },
+        "author": [
+          {
+            "reference": "urn:uuid:00000000-0000-4000-8000-000000000002",
+            "display": "Quillfeather Testperson"
+          },
+          {
+            "reference": "urn:uuid:00000000-0000-4000-8000-000000000004"
+          }
+        ],
+        "attester": [
+          {
+            "mode": "legal",
+            "party": {
+              "reference": "urn:uuid:00000000-0000-4000-8000-000000000004"
+            }
+          }
+        ],
+        "title": "Discharge summary",
+        "section": [
+          {
+            "title": "Hospital Course",
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Admitted with community acquired pneumonia &amp; sepsis. Quillfeather improved on IV antibiotics.</p><script>alert('x')</script><style>p{color:red}</style><ul><li>Transitioned to oral therapy day 3</li><li>Ambulating independently</li></ul></div>"
+            }
+          },
+          {
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "18776-5"
+                }
+              ]
+            },
+            "text": {
+              "div": "<div>Home with daughter; resume usual diet.</div>"
+            },
+            "section": [
+              {
+                "title": "Activity",
+                "text": {
+                  "div": "<div>Walk daily as tolerated.</div>"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000002",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "pat-q",
+        "name": [
+          {
+            "family": "Testperson",
+            "given": [
+              "Quillfeather",
+              "Jo"
+            ]
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "555-0142"
+          }
+        ],
+        "birthDate": "1950-01-01",
+        "identifier": [
+          {
+            "system": "urn:example:ids",
+            "value": "ZZ-TEST-1"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000003",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "enc-q",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "period": {
+          "start": "2026-11-15T08:00:00Z",
+          "end": "2026-11-20T09:30:00Z"
+        },
+        "reasonReference": [
+          {
+            "reference": "urn:uuid:00000000-0000-4000-8000-000000000010"
+          }
+        ],
+        "diagnosis": [
+          {
+            "condition": {
+              "reference": "urn:uuid:00000000-0000-4000-8000-000000000012"
+            },
+            "use": {
+              "coding": [
+                {
+                  "code": "DD"
+                }
+              ]
+            },
+            "rank": 2
+          },
+          {
+            "condition": {
+              "reference": "urn:uuid:00000000-0000-4000-8000-000000000011"
+            },
+            "use": {
+              "coding": [
+                {
+                  "code": "DD"
+                }
+              ]
+            },
+            "rank": 1
+          }
+        ],
+        "hospitalization": {
+          "dischargeDisposition": {
+            "coding": [
+              {
+                "code": "home",
+                "display": "Home"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000004",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "pr-1",
+        "name": [
+          {
+            "use": "official",
+            "prefix": [
+              "Dr."
+            ],
+            "given": [
+              "Ada"
+            ],
+            "family": "Synthwell"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000010",
+      "resource": {
+        "resourceType": "Condition",
+        "code": {
+          "text": "Fever and productive cough"
+        },
+        "encounter": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000003"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000011",
+      "resource": {
+        "resourceType": "Condition",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "233604007",
+              "display": "Pneumonia"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "encounter-diagnosis"
+              }
+            ]
+          }
+        ],
+        "encounter": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000003"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000012",
+      "resource": {
+        "resourceType": "Condition",
+        "code": {
+          "text": "Sepsis due to pneumonia"
+        },
+        "encounter": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000003"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000013",
+      "resource": {
+        "resourceType": "Condition",
+        "code": {
+          "text": "Type 2 diabetes mellitus"
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "problem-list-item"
+              }
+            ]
+          }
+        ],
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000014",
+      "resource": {
+        "resourceType": "Condition",
+        "code": {
+          "text": "Asthma"
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "code": "refuted"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "problem-list-item"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000015",
+      "resource": {
+        "resourceType": "Condition",
+        "code": {
+          "text": "Wrong patient diagnosis"
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "code": "entered-in-error"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000020",
+      "resource": {
+        "resourceType": "Medication",
+        "code": {
+          "coding": [
+            {
+              "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+              "code": "308191",
+              "display": "Amoxicillin 875 mg / clavulanate 125 mg tablet"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000021",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "intent": "order",
+        "medicationReference": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000020"
+        },
+        "encounter": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000003"
+        },
+        "dosageInstruction": [
+          {
+            "doseAndRate": [
+              {
+                "doseQuantity": {
+                  "value": 1,
+                  "unit": "tablet"
+                }
+              }
+            ],
+            "route": {
+              "text": "Oral"
+            },
+            "timing": {
+              "repeat": {
+                "frequency": 2,
+                "period": 1,
+                "periodUnit": "d"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000022",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "on-hold",
+        "intent": "plan",
+        "medicationCodeableConcept": {
+          "text": "Metformin 500 mg"
+        },
+        "encounter": {
+          "reference": "Encounter/enc-q"
+        },
+        "dosageInstruction": [
+          {
+            "text": "twice daily with meals"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000023",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "stopped",
+        "medicationCodeableConcept": {
+          "text": "Lisinopril 10 mg"
+        },
+        "encounter": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000003"
+        },
+        "note": [
+          {
+            "text": "held for low blood pressure"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000024",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "cancelled",
+        "medicationCodeableConcept": {
+          "text": "Cancelledmed 1 mg"
+        },
+        "encounter": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000003"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000025",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "entered-in-error",
+        "medicationCodeableConcept": {
+          "text": "Errormed 1 mg"
+        },
+        "encounter": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000003"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000026",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "medicationCodeableConcept": {
+          "text": "Acetaminophen 500 mg"
+        },
+        "encounter": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000003"
+        },
+        "dosageInstruction": [
+          {
+            "doseAndRate": [
+              {
+                "doseQuantity": {
+                  "value": 2,
+                  "unit": "tablet"
+                }
+              }
+            ],
+            "timing": {
+              "repeat": {
+                "frequency": 1,
+                "period": 6,
+                "periodUnit": "h"
+              }
+            },
+            "asNeededCodeableConcept": {
+              "text": "pain"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000030",
+      "resource": {
+        "resourceType": "AllergyIntolerance",
+        "code": {
+          "text": "Penicillin"
+        },
+        "criticality": "high",
+        "reaction": [
+          {
+            "manifestation": [
+              {
+                "text": "Hives"
+              },
+              {
+                "coding": [
+                  {
+                    "display": "Wheezing"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000031",
+      "resource": {
+        "resourceType": "Procedure",
+        "status": "completed",
+        "code": {
+          "text": "Chest radiograph"
+        },
+        "performedDateTime": "2026-11-15",
+        "encounter": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000003"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000032",
+      "resource": {
+        "resourceType": "Procedure",
+        "status": "not-done",
+        "code": {
+          "text": "Bronchoscopy"
+        },
+        "encounter": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000003"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000033",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "status": "preliminary",
+        "code": {
+          "text": "Blood culture"
+        },
+        "encounter": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000003"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000034",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "status": "final",
+        "code": {
+          "text": "Complete blood count"
+        },
+        "encounter": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000003"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000035",
+      "resource": {
+        "resourceType": "Appointment",
+        "status": "booked",
+        "serviceType": [
+          {
+            "text": "Primary care follow-up"
+          }
+        ],
+        "start": "2026-11-27T09:00:00Z",
+        "participant": [
+          {
+            "actor": {
+              "reference": "urn:uuid:00000000-0000-4000-8000-000000000002",
+              "display": "Quillfeather Testperson"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000036",
+      "resource": {
+        "resourceType": "Appointment",
+        "status": "cancelled",
+        "description": "Cancelled visit",
+        "start": "2026-11-28"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000037",
+      "resource": {
+        "resourceType": "CarePlan",
+        "status": "active",
+        "encounter": {
+          "reference": "urn:uuid:00000000-0000-4000-8000-000000000003"
+        },
+        "activity": [
+          {
+            "detail": {
+              "status": "scheduled",
+              "description": "Repeat chest radiograph in 6 weeks"
+            }
+          },
+          {
+            "detail": {
+              "status": "cancelled",
+              "description": "Cancelled activity"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000038",
+      "resource": {
+        "resourceType": "Goal",
+        "lifecycleStatus": "active",
+        "description": {
+          "text": "Full code; return to independent living"
+        },
+        "target": [
+          {
+            "dueDate": "2027-01-15"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:00000000-0000-4000-8000-000000000039",
+      "resource": {
+        "resourceType": "RelatedPerson",
+        "name": [
+          {
+            "given": [
+              "Marigoldine"
+            ],
+            "family": "Testperson"
+          }
+        ]
+      }
+    }
+  ]
+}

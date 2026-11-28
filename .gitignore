@@ -6,3 +6,8 @@ __pycache__/
 *.db-*
 data/
 .pytest_cache/
+
+# EHR client keys and tokens
+*.pem
+*.key
+jwks-private*.json
