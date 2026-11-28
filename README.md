@@ -95,10 +95,15 @@ password. Each code works once; each recovery code works once.
 
 - Make it mandatory for some roles: `MFA_REQUIRED_ROLES=physician,nurse,admin`
   in `.env`. Those users are sent to the setup page after their password and
-  cannot reach patient data until it is done. It is off by default, so the
-  demo accounts sign in with just a password.
+  cannot reach patient data until it is done. To set it up they also need a
+  one-time setup code from an administrator, so someone who has only stolen a
+  password cannot enrol their own phone first:
+  `python -m scripts.setup --issue-2fa-code user@hospital.org` (valid 72 hours;
+  hand it over in person or by phone). It is off by default, so the demo
+  accounts sign in with just a password.
 - Lost phone and lost recovery codes: `python -m scripts.setup --reset-2fa user@hospital.org`
-  turns it off for that account and signs them out everywhere (logged).
+  turns it off for that account, signs them out everywhere and prints a new
+  setup code (all logged).
 
 **Hospital single sign-on (OIDC).** A hospital's identity provider (Entra ID,
 Okta, Ping, Keycloak, ADFS with OIDC) can sign its staff in. Register the app
@@ -142,7 +147,7 @@ Tests mock the IdP completely (`tests/test_sso.py`), so none need a network.
 | Lock record access / block field tampering | `org_id`, `role` and authorship come from the session, never from the form; forms accept only named fields with validation |
 | Secure session cookies | Random token, only a keyed hash stored, `HttpOnly`, `SameSite=Strict`, `Secure` when `FORCE_HTTPS=1`, 8-hour expiry |
 | Hash passwords | Argon2id |
-| Multi-factor sign-in | Optional TOTP for everyone, mandatory per role with `MFA_REQUIRED_ROLES`; codes single-use with replay blocked; attempts counted before each check (5 per sign-in and per account per 15 minutes); recovery codes stored as keyed hashes; turning it off needs password and code and ends every session |
+| Multi-factor sign-in | Optional TOTP for everyone, mandatory per role with `MFA_REQUIRED_ROLES` (setup then needs a one-time code from an administrator, and the new key is visible only to the session that started setup); codes single-use with replay blocked; attempts counted before each check (5 per sign-in and per account per 15 minutes); recovery codes stored as keyed hashes; turning it off needs password and code and ends every session |
 | Single sign-on | OIDC code flow with PKCE, state, nonce and a browser-bound cookie; ID token signature, issuer, audience, expiry checked; verified email required; links never cross hospitals; optional enforcement turns off passwords for a domain |
 | Rate limit login / bot protection | 5 failures per email and 50 per IP per 15 minutes (a hospital shares one IP); a successful sign-in clears only that account's counter; hidden honeypot field; login form token; equal timing for unknown emails |
 | Rate limit costly actions | Per user: 30 checks and 120 uploads per hour |

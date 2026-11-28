@@ -65,10 +65,10 @@ def clock(monkeypatch):
     return c
 
 
-def enrol(client, email="rn@a.test"):
+def enrol(client, email="rn@a.test", setup_code=""):
     """Sign in, set up two-factor, return (secret, recovery codes)."""
     assert login(client, email).status_code == 303
-    client.post("/account/security/2fa/start", data={"csrf": csrf_of(client, "/account/security")})
+    client.post("/account/security/2fa/start", data={"csrf": csrf_of(client, "/account/security"), "setup_code": setup_code})
     page = client.get("/account/security").text
     secret = re.search(r'class="secret mono">([A-Z2-7 ]+)<', page).group(1).replace(" ", "")
     assert "otpauth://totp/" in page and "data:image/svg+xml" in page
@@ -286,7 +286,7 @@ def test_required_role_must_set_up_and_cannot_disable(settings, clock):
     assert client.get("/patients", follow_redirects=False).headers["location"] == "/account/security"
     assert client.get("/account/security").status_code == 200
     client.cookies.clear()
-    secret, _ = enrol(client)  # setup is reachable while locked out of everything else
+    secret, _ = enrol(client, setup_code=_issue(app))  # setup is reachable while locked out of everything else
     login(client, "rn@a.test")
     clock.t += 30
     assert second_step(client, mfa.totp_at(secret, clock.t)).headers["location"] == "/patients"
@@ -310,7 +310,7 @@ def test_session_unlocks_right_after_setup(settings, clock):
                      (org, hash_password(PASSWORD)))
     client = TestClient(app)
     login(client, "rn@a.test")
-    client.post("/account/security/2fa/start", data={"csrf": csrf_of(client, "/account/security")})
+    client.post("/account/security/2fa/start", data={"csrf": csrf_of(client, "/account/security"), "setup_code": _issue(app)})
     secret = re.search(r'class="secret mono">([A-Z2-7 ]+)<', client.get("/account/security").text).group(1).replace(" ", "")
     client.post("/account/security/2fa/confirm", data={"csrf": csrf_of(client, "/account/security"), "code": mfa.totp_at(secret, clock.t)})
     assert client.get("/patients", follow_redirects=False).status_code == 200
@@ -429,3 +429,119 @@ def test_required_role_applies_to_sessions_already_open(app, settings):
         assert c.get("/account/security-x", follow_redirects=False).status_code in (303, 404)
     finally:
         object.__setattr__(app.state.settings, "mfa_required_roles", ())
+
+
+# ---------- administrator-issued setup code (roles that require two-factor) ----------
+
+def _issue(app, email="rn@a.test"):
+    from scripts.setup import issue_2fa_code
+    return issue_2fa_code(email, app.state.db, app.state.settings)
+
+
+@pytest.fixture
+def required_app(settings):
+    app = create_app(dataclasses.replace(settings, mfa_required_roles=("nurse",)))
+    from tests.conftest import hash_password
+    with app.state.db.connect() as conn:
+        org = conn.execute("INSERT INTO orgs (name) VALUES ('Org A')").lastrowid
+        conn.execute("INSERT INTO users (org_id, email, display_name, role, password_hash) VALUES (?, 'rn@a.test', 'rn', 'nurse', ?)",
+                     (org, hash_password(PASSWORD)))
+    return app
+
+
+def _start(client, code=""):
+    return client.post("/account/security/2fa/start",
+                       data={"csrf": csrf_of(client, "/account/security"), "setup_code": code}, follow_redirects=True)
+
+
+def _pending_secret(client):
+    m = re.search(r'class="secret mono">([A-Z2-7 ]+)<', client.get("/account/security").text)
+    return m.group(1).replace(" ", "") if m else None
+
+
+def test_required_role_cannot_set_up_with_only_a_password(required_app, clock):
+    """Someone with a stolen password could enrol their own authenticator
+    before the real owner, then hold the account."""
+    c = TestClient(required_app)
+    login(c, "rn@a.test")
+    assert "Setup code from your administrator" in c.get("/account/security").text
+    assert "setup code is not right" in _start(c).text
+    assert "setup code is not right" in _start(c, "aaaa-bbbb-cccc").text
+    assert _pending_secret(c) is None
+    with required_app.state.db.connect() as conn:
+        assert conn.execute("SELECT totp_pending_enc FROM users").fetchone()[0] is None
+
+
+def test_setup_code_is_single_use_and_expires(required_app, clock):
+    code = _issue(required_app)
+    c = TestClient(required_app)
+    login(c, "rn@a.test")
+    _start(c, code.upper().replace("-", " "))  # typed loosely still works
+    first = _pending_secret(c)
+    assert first
+    _start(c)  # "start over" from the same session needs no new code
+    assert _pending_secret(c) not in (None, first)
+    c2 = TestClient(required_app)
+    login(c2, "rn@a.test")  # a new sign-in: the code was used already
+    assert "setup code is not right" in _start(c2, code).text
+    expired = _issue(required_app)
+    with required_app.state.db.connect() as conn:
+        conn.execute("UPDATE users SET mfa_setup_code_expires = '2000-01-01T00:00:00+00:00'")
+    assert "setup code is not right" in _start(c2, expired).text
+
+
+def test_new_setup_code_replaces_the_old_one(required_app, clock):
+    old = _issue(required_app)
+    new = _issue(required_app)
+    c = TestClient(required_app)
+    login(c, "rn@a.test")
+    assert "setup code is not right" in _start(c, old).text
+    _start(c, new)
+    assert _pending_secret(c)
+
+
+def test_pending_key_is_hidden_from_a_second_sign_in(required_app, clock):
+    """The owner is mid-setup; someone signs in with the stolen password. They
+    must not see or confirm the key the owner is scanning."""
+    owner = TestClient(required_app)
+    login(owner, "rn@a.test")
+    _start(owner, _issue(required_app))
+    secret = _pending_secret(owner)
+    thief = TestClient(required_app)
+    login(thief, "rn@a.test")
+    page = thief.get("/account/security").text
+    assert secret.lower() not in page.lower().replace(" ", "") and _pending_secret(thief) is None
+    r = thief.post("/account/security/2fa/confirm", data={"csrf": csrf_of(thief, "/account/security"),
+                                                         "code": mfa.totp_at(secret, clock.t)}, follow_redirects=False)
+    assert r.headers["location"] == "/account/security"
+    with required_app.state.db.connect() as conn:
+        assert conn.execute("SELECT totp_enabled_at FROM users").fetchone()[0] is None
+    assert "setup code is not right" in _start(thief).text
+
+
+def test_setup_code_guesses_are_limited(required_app, clock):
+    code = _issue(required_app)
+    c = TestClient(required_app)
+    login(c, "rn@a.test")
+    for _ in range(required_app.state.settings.mfa_max_attempts):
+        _start(c, "wrong-code-xx")
+    assert "Too many wrong attempts" in _start(c, code).text
+
+
+def test_optional_users_need_no_setup_code(client, clock):
+    secret, _ = enrol(client)
+    assert secret
+
+
+def test_cli_issue_2fa_code(required_app, settings, monkeypatch, capsys):
+    from scripts import setup
+    monkeypatch.setenv("DATA_KEY", settings.data_key)
+    monkeypatch.setenv("SESSION_PEPPER", settings.session_pepper)
+    monkeypatch.setenv("DATABASE_PATH", str(settings.database_path))
+    code = setup.issue_2fa_code("RN@a.test")
+    assert re.fullmatch(r"[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}", code)
+    assert setup.issue_2fa_code("nobody@a.test") is None
+    with required_app.state.db.connect() as conn:
+        row = conn.execute("SELECT mfa_setup_code_hash FROM users").fetchone()
+        assert row[0] and code not in row[0]  # only a keyed hash is stored
+        assert conn.execute("SELECT COUNT(*) FROM audit_log WHERE action = 'mfa_setup_code_issued'").fetchone()[0] == 1

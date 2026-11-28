@@ -9,7 +9,7 @@ import re
 import secrets
 import struct
 import time
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from urllib.parse import quote
 
 import segno
@@ -26,6 +26,7 @@ AUDIT_ACTIONS: dict[str, str] = {
     "recovery_code_used": "Recovery code used",
     "recovery_codes_regenerated": "Recovery codes replaced",
     "mfa_reset": "Two-factor reset by an administrator",
+    "mfa_setup_code_issued": "Two-factor setup code issued",
 }
 
 STEP = 30  # seconds per code (RFC 6238 default; what every authenticator app assumes)
@@ -124,10 +125,35 @@ def replace_recovery_codes(conn, pepper: str, user_id: int) -> list[str]:
     return codes
 
 
+def setup_code_hash(pepper: str, user_id: int, code: str) -> str:
+    key = hmac.new(pepper.encode(), b"mfa-setup-code-key", hashlib.sha256).digest()
+    return hmac.new(key, f"{user_id}:{normalize_recovery(code)}".encode(), hashlib.sha256).hexdigest()
+
+
+def issue_setup_code(conn, pepper: str, user_id: int, hours: int) -> str:
+    """A one-time code an administrator hands to one person (in person or by
+    phone, not by email), which roles that require two-factor must enter to
+    set it up. Replaces any earlier code for that account."""
+    code = new_recovery_code()
+    expires = (datetime.now(timezone.utc) + timedelta(hours=hours)).isoformat()
+    conn.execute("UPDATE users SET mfa_setup_code_hash = ?, mfa_setup_code_expires = ? WHERE id = ?",
+                 (setup_code_hash(pepper, user_id, code), expires, user_id))
+    return code
+
+
+def consume_setup_code(conn, pepper: str, user_id: int, code: str) -> bool:
+    """Single use, in one statement, and only before it expires."""
+    now = datetime.now(timezone.utc).isoformat()
+    return conn.execute(
+        "UPDATE users SET mfa_setup_code_hash = NULL, mfa_setup_code_expires = NULL"
+        " WHERE id = ? AND mfa_setup_code_hash = ? AND mfa_setup_code_expires > ?",
+        (user_id, setup_code_hash(pepper, user_id, code), now)).rowcount == 1
+
+
 def clear_two_factor(conn, user_id: int) -> None:
     """Everything two-factor for one account. Shared with scripts/setup.py --reset-2fa."""
-    conn.execute("UPDATE users SET totp_secret_enc = NULL, totp_pending_enc = NULL, totp_enabled_at = NULL"
-                 " WHERE id = ?", (user_id,))
+    conn.execute("UPDATE users SET totp_secret_enc = NULL, totp_pending_enc = NULL, totp_enabled_at = NULL,"
+                 " totp_pending_session = NULL WHERE id = ?", (user_id,))
     conn.execute("DELETE FROM recovery_codes WHERE user_id = ?", (user_id,))
 
 
@@ -140,8 +166,18 @@ def register(app, ctx) -> None:
 
     def load_user(conn, user_id: int):
         return conn.execute(
-            """SELECT id, org_id, email, role, totp_secret_enc, totp_pending_enc, totp_enabled_at, totp_last_step
-               FROM users WHERE id = ?""", (user_id,)).fetchone()
+            """SELECT id, org_id, email, role, totp_secret_enc, totp_pending_enc, totp_enabled_at, totp_last_step,
+                      totp_pending_session FROM users WHERE id = ?""", (user_id,)).fetchone()
+
+    def needs_setup_code(user) -> bool:
+        return user["role"] in settings.mfa_required_roles
+
+    def my_pending(row, user) -> bool:
+        # A pending key belongs to the session that started setup. Signing in
+        # again ends that session (one session per account), so someone who
+        # signs in with a stolen password cannot read or confirm the new key.
+        return bool(row["totp_pending_enc"]) and bool(row["totp_pending_session"]) and hmac.compare_digest(
+            row["totp_pending_session"], user["token_hash"])
 
     def use_totp(user, code: str) -> str:
         """'ok', 'replay' or 'wrong'. Moving totp_last_step forward is a single
@@ -267,7 +303,7 @@ def register(app, ctx) -> None:
         with db.connect() as conn:
             row = load_user(conn, user["user_id"])
         setup = None
-        if not row["totp_enabled_at"] and row["totp_pending_enc"]:
+        if not row["totp_enabled_at"] and my_pending(row, user):
             secret = cipher.decrypt(row["totp_pending_enc"])
             uri = otpauth_uri(secret, settings.mfa_issuer, row["email"])
             setup = {"secret": group_secret(secret), "uri": uri, "qr": qr_data_uri(uri)}
@@ -275,14 +311,33 @@ def register(app, ctx) -> None:
             "user": user, "nav": "security", "enabled_at": row["totp_enabled_at"], "setup": setup,
             "remaining": remaining_codes(row["id"]) if row["totp_enabled_at"] else 0, "total": RECOVERY_COUNT,
             "required": user["role"] in settings.mfa_required_roles,
+            "needs_code": needs_setup_code(user),
         })
 
     @app.post("/account/security/2fa/start")
-    def start(request: Request, user=Depends(ctx.check_csrf)):
+    async def start(request: Request, user=Depends(ctx.check_csrf)):
+        uid = user["user_id"]
+        with db.connect() as conn:
+            row = load_user(conn, uid)
+        if row["totp_enabled_at"]:
+            return ctx.go("/account/security")
+        # "Start over" from the session that already proved the setup code
+        # does not need another code.
+        if needs_setup_code(user) and not my_pending(row, user):
+            setup_code = str((await request.form()).get("setup_code", ""))[:64]
+            if account_blocked(uid):
+                return too_many()
+            with db.connect() as conn:
+                ok = consume_setup_code(conn, settings.session_pepper, uid, setup_code)
+            if not ok:
+                audit(row, "mfa_failed", "stage:setup-code", request)
+                return ctx.go("/account/security", error="That setup code is not right or has expired. "
+                                                         "Ask your administrator for a new one.")
+            ctx.rate.clear(account_key(uid))
         # The secret is only ever in the database and the page body, never a URL.
         with db.connect() as conn:
-            conn.execute("UPDATE users SET totp_pending_enc = ? WHERE id = ? AND totp_enabled_at IS NULL",
-                         (cipher.encrypt(new_secret()), user["user_id"]))
+            conn.execute("UPDATE users SET totp_pending_enc = ?, totp_pending_session = ? WHERE id = ? AND totp_enabled_at IS NULL",
+                         (cipher.encrypt(new_secret()), user["token_hash"], uid))
         return RedirectResponse("/account/security", status_code=303)
 
     def show_codes(request: Request, user, codes: list[str], heading: str):
@@ -296,7 +351,7 @@ def register(app, ctx) -> None:
             return too_many()
         with db.connect() as conn:
             row = load_user(conn, uid)
-        if row["totp_enabled_at"] or not row["totp_pending_enc"]:
+        if row["totp_enabled_at"] or not my_pending(row, user):
             return ctx.go("/account/security")
         step = matching_step(cipher.decrypt(row["totp_pending_enc"]), code)
         if step is None:
@@ -306,7 +361,7 @@ def register(app, ctx) -> None:
             # The WHERE makes a double-submitted form enable it once only.
             done = conn.execute(
                 """UPDATE users SET totp_secret_enc = totp_pending_enc, totp_pending_enc = NULL,
-                          totp_enabled_at = datetime('now'), totp_last_step = ?
+                          totp_pending_session = NULL, totp_enabled_at = datetime('now'), totp_last_step = ?
                    WHERE id = ? AND totp_enabled_at IS NULL AND totp_pending_enc = ?""",
                 (step, uid, row["totp_pending_enc"])).rowcount  # the key that was checked, not a newer one
             if not done:

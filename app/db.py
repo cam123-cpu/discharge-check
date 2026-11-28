@@ -30,7 +30,13 @@ CREATE TABLE IF NOT EXISTS users (
     totp_secret_enc BLOB,
     totp_pending_enc BLOB,
     totp_enabled_at TEXT,
-    totp_last_step INTEGER NOT NULL DEFAULT 0
+    totp_last_step INTEGER NOT NULL DEFAULT 0,
+    -- The session that started setup; only it may see and confirm the new key.
+    totp_pending_session TEXT,
+    -- One-time setup code issued by an administrator (keyed hash), needed by
+    -- roles that must use two-factor, so a stolen password cannot enrol first.
+    mfa_setup_code_hash TEXT,
+    mfa_setup_code_expires TEXT
 );
 
 -- Single-use recovery codes for two-factor. Only a keyed hash is stored.
@@ -182,6 +188,9 @@ MIGRATIONS = [
     ("users", "totp_pending_enc", "ALTER TABLE users ADD COLUMN totp_pending_enc BLOB"),
     ("users", "totp_enabled_at", "ALTER TABLE users ADD COLUMN totp_enabled_at TEXT"),
     ("users", "totp_last_step", "ALTER TABLE users ADD COLUMN totp_last_step INTEGER NOT NULL DEFAULT 0"),
+    ("users", "totp_pending_session", "ALTER TABLE users ADD COLUMN totp_pending_session TEXT"),
+    ("users", "mfa_setup_code_hash", "ALTER TABLE users ADD COLUMN mfa_setup_code_hash TEXT"),
+    ("users", "mfa_setup_code_expires", "ALTER TABLE users ADD COLUMN mfa_setup_code_expires TEXT"),
     ("sessions", "auth_method", "ALTER TABLE sessions ADD COLUMN auth_method TEXT NOT NULL DEFAULT 'password'"),
     ("sessions", "mfa_setup_required", "ALTER TABLE sessions ADD COLUMN mfa_setup_required INTEGER NOT NULL DEFAULT 0"),
 ]

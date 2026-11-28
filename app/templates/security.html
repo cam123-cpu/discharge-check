@@ -56,9 +56,13 @@
   {% else %}
   <p><span class="st st-not_applicable">Off</span></p>
   <p>Add a second step to sign-in: a six-digit code from an authenticator app on your phone. Someone who learns your password still cannot sign in.</p>
-  <form method="post" action="/account/security/2fa/start">
+  <form method="post" action="/account/security/2fa/start" class="stack narrow">
     <input type="hidden" name="csrf" value="{{ user.csrf_token }}">
-    <button type="submit" class="primary">Set up two-factor sign-in</button>
+    {% if needs_code %}
+    <p>Your role requires two-factor sign-in. To set it up you need the one-time setup code your administrator gives you in person or by phone. It proves the person setting it up is you, not someone who only knows your password.</p>
+    <label>Setup code from your administrator <input type="text" name="setup_code" autocomplete="off" autocapitalize="off" spellcheck="false" required maxlength="64" placeholder="xxxx-xxxx-xxxx"></label>
+    {% endif %}
+    <div><button type="submit" class="primary">Set up two-factor sign-in</button></div>
   </form>
   {% endif %}
 </section>

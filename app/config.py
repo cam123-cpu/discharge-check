@@ -83,6 +83,7 @@ class Settings:
     mfa_required_roles: tuple[str, ...] = ()
     mfa_issuer: str = "Discharge Check"
     pending_login_minutes: int = 5
+    mfa_setup_code_hours: int = 72  # how long an administrator's setup code stays valid
     mfa_max_attempts: int = 5  # per pending sign-in, and per account per login window
     # Hospital SSO: the public base URL builds the redirect URI the IdP sends users back to.
     public_base_url: str = "http://localhost:8000"
