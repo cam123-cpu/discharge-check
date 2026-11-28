@@ -12,22 +12,37 @@ from .ingest import injection_signals
 from .rules import RULES, RULES_VERSION, Doc, Finding, is_post_acute, run_pattern_checks, tally
 
 
-GUARD_NOTE = ("The record contains text aimed at an AI reviewer, so the model cannot mark this complete "
-              "on its own. A person needs to confirm it. ")
+GUARD_NOTE = ("The record contains text aimed at an AI reviewer, so the model was not allowed to soften "
+              "this result. A person needs to confirm it. ")
+NA_NOTE = ("The model judged this rule not applicable, but the discharge details show it applies "
+           "(for example a post-acute referral). A person needs to check. ")
+
+# How much attention a status asks for. "Not applicable" asks for none: the
+# rule drops out of the checklist and the compliance rates.
+STRICTNESS = {"not_applicable": 0, "pass": 1, "unclear": 2, "fail": 3}
 
 
 def merge(pattern: list[Finding], model: dict[str, Finding], guarded: bool = False) -> list[Finding]:
-    """Model findings replace pattern findings. When the record looks like it
-    is trying to steer the model (guarded), the model may only make a result
-    stricter: it can flag a gap the patterns missed, never clear one."""
+    """Model findings replace pattern findings, with two limits.
+
+    - Whether a rule applies is decided in code (disposition and which
+      documents exist), never by the model. A model "not applicable" on a rule
+      the code says applies becomes "unclear", because it would otherwise
+      remove the rule from the checklist and the dashboard with no evidence.
+    - When the record looks like it is trying to steer the model (guarded),
+      the model may only make a result stricter: it can flag a gap the
+      patterns missed, never clear, soften or dismiss one."""
     out = []
     for f in pattern:
         m = model.get(f.rule_id)
         if m is None:
             out.append(f)
             continue
-        if guarded and m.status == "pass" and f.status != "pass":
-            m.status, m.note = "unclear", GUARD_NOTE + m.note
+        if guarded and STRICTNESS[m.status] < STRICTNESS[f.status]:
+            out.append(Finding(f.rule_id, f.status, f.evidence, f.source, GUARD_NOTE + f.note, engine="model"))
+            continue
+        if m.status == "not_applicable" and f.status != "not_applicable":
+            m.status, m.evidence, m.note = "unclear", "", NA_NOTE + m.note
         if m.status != f.status:
             m.pattern_status = f.status
         out.append(m)
