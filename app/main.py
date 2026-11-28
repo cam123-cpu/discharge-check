@@ -75,6 +75,8 @@ AUDIT_ACTIONS = {
     "logout": "Signed out", "patient_list": "Discharge list viewed", "patient_create": "Discharge added", "patient_view": "Discharge viewed", "document_upload": "Document added",
     "document_view": "Document viewed", "document_delete": "Document removed", "check_run": "Check run",
     "compliance_view": "Compliance overview viewed", "compliance_api": "Compliance data exported", "audit_view": "Access log viewed",
+    "session_timeout": "Signed out after inactivity", "session_expired": "Signed out at session time limit",
+    "audit_key_rotated": "Access log key rotated", "data_key_rotated": "Encryption key rotated",
 }
 
 
@@ -94,8 +96,8 @@ class _HostCheck(TrustedHostMiddleware):
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or load_settings()
-    db = Database(settings.database_path, audit_chain.derive_key(settings.audit_key, settings.data_key))
-    cipher = Cipher(settings.data_key)
+    db = Database(settings.database_path, settings.audit_keyring())
+    cipher = Cipher(settings.data_key, settings.data_key_previous)
     sessions = Sessions(db, settings)
     limiter = LoginLimiter(db, settings)
     rate = RateLimiter(db)

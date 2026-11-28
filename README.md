@@ -106,14 +106,14 @@ app sees the real scheme and client IP (rate limits and the access log use it).
 | Hide API keys | Keys only from environment / `.env`; `.env` is git-ignored; the browser never sees them |
 | Purge Git secrets | No secrets in the repo; run `gitleaks detect` before the first push |
 | Public DB key / row-level security | No browser-side database access at all. Every patient query requires the user's `org_id` (`app/db.py`); a cross-org test proves another hospital gets a 404. Move to Postgres RLS when multi-tenant |
-| Encrypt sensitive data | Document text and results encrypted at rest (Fernet, key from `DATA_KEY`) |
+| Encrypt sensitive data | Document text and results encrypted at rest (Fernet, key from `DATA_KEY`); keys rotate without downtime ([docs/key-rotation.md](docs/key-rotation.md)) |
 | Server-side auth | Every route checks the session server-side; roles enforced on compliance pages and API |
 | Lock record access / block field tampering | `org_id`, `role` and authorship come from the session, never from the form; forms accept only named fields with validation |
 | Secure session cookies | Random token, only a keyed hash stored, `HttpOnly`, `SameSite=Strict`, `Secure` when `FORCE_HTTPS=1`, 8-hour expiry |
 | Hash passwords | Argon2id |
 | Rate limit login / bot protection | 5 failures per email and 50 per IP per 15 minutes (a hospital shares one IP); a successful sign-in clears only that account's counter; hidden honeypot field; login form token; equal timing for unknown emails |
 | Rate limit costly actions | Per user: 30 checks and 120 uploads per hour |
-| Automatic logoff | Sessions end after 30 idle minutes and 8 hours in total (HIPAA 164.312(a)(2)(iii)) |
+| Automatic logoff | Sessions end after 30 idle minutes and 8 hours in total (HIPAA 164.312(a)(2)(iii)); each automatic logoff is written to the access log, including sessions whose browser never came back |
 | Parameterize queries | All SQL uses placeholders; path ids are range-checked before they reach SQLite |
 | Validate input / escape output | Server-side validation on every field; Jinja autoescaping; strict CSP with no inline scripts; no page shows text taken from the URL (messages travel in a signed one-time cookie); validation errors never echo input |
 | Restrict file uploads | Extension allow-list, 2 MB cap enforced before the body is parsed (also for signed-out callers), UTF-8 text only, no binaries, control and invisible characters stripped, filename sanitized, SSN pattern refused |

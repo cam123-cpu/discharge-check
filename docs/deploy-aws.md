@@ -85,9 +85,9 @@ key used only for this app:
 
 | Secret | What it does | Rotation |
 | --- | --- | --- |
-| `DATA_KEY` | Fernet key that encrypts document text and results at rest | Not supported yet (needs a re-encryption job). Gap. |
+| `DATA_KEY` | Fernet key that encrypts document text and results at rest | Supported: `DATA_KEY_PREVIOUS` plus `scripts.rotate_data_key` ([key-rotation.md](key-rotation.md)) |
 | `SESSION_PEPPER` | Keys session token hashes and signed cookies | Rotate any time; every user is signed out |
-| `AUDIT_KEY` | HMAC key for the hash-chained audit log | Not supported yet (needs a chain epoch). Gap. |
+| `AUDIT_KEY` | HMAC key for the hash-chained audit log | Supported: `AUDIT_KEY_PREVIOUS`; keep old keys as long as their rows ([key-rotation.md](key-rotation.md)) |
 | `ANTHROPIC_API_KEY` | Model review (optional) | Rotate in the Anthropic console, then update the secret and redeploy |
 
 Generate keys offline, on a trusted machine, and paste them straight into
@@ -226,8 +226,6 @@ DATABASE_PATH=/data/app.db        # SQLite stopgap only
 - No multi-factor sign-in and no SSO for app users. This is the largest gap
   for a pilot with real PHI.
 - SQLite storage. Postgres with row-level security is in progress.
-- `DATA_KEY` cannot be rotated: there is no re-encryption job yet.
-- `AUDIT_KEY` cannot be rotated: the audit chain has no key epoch yet.
 - The `/healthz` route must pass the host and HTTPS checks (section 4).
 - Model review has been tested only with a stubbed client. Measure prompt
   injection resistance against the live model before enabling it.

@@ -3,6 +3,9 @@
 Usage:
   python -m scripts.verify_audit          check every row; exit 0 if intact, 1 if not
   python -m scripts.verify_audit --head   print the newest row's id and hash as JSON
+  python -m scripts.verify_audit --export-key
+                                          print the current key as hex:..., to keep in
+                                          AUDIT_KEY_PREVIOUS before it changes (a secret)
 
 Ship the --head output on a schedule to a write-once store (for example S3
 with Object Lock). The chain alone cannot show that the newest rows were cut
@@ -25,8 +28,13 @@ from app.config import load_settings  # noqa: E402
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Verify the access log's hash chain.")
     parser.add_argument("--head", action="store_true", help="print the chain head as JSON and exit")
+    parser.add_argument("--export-key", action="store_true",
+                        help="print the current access-log key as hex:..., for AUDIT_KEY_PREVIOUS (it is a secret)")
     args = parser.parse_args(argv)
     settings = load_settings()
+    if args.export_key:
+        print(audit.export_key(settings.audit_keyring().current))
+        return 0
     if not settings.database_path.is_file():
         print(f"No database at {settings.database_path}", file=sys.stderr)
         return 1
@@ -35,7 +43,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.head:
             print(json.dumps(audit.head(conn)))
             return 0
-        result = audit.verify(conn, audit.derive_key(settings.audit_key, settings.data_key))
+        result = audit.verify(conn, settings.audit_keyring())
     finally:
         conn.close()
     if result.ok:

@@ -74,7 +74,7 @@ def test_rehashed_row_breaks_the_next_link(client, app):
     """Recomputing a row's hash without the key is impossible; with a wrong key the row itself fails."""
     _use_app(client, app)
     with _raw(app) as conn:
-        r = conn.execute("SELECT id, at, org_id, user_id, action, target, ip, prev_hash FROM audit_log WHERE id = 3").fetchone()
+        r = conn.execute("SELECT id, at, org_id, user_id, action, target, ip, prev_hash, key_id FROM audit_log WHERE id = 3").fetchone()
         forged = audit.row_hash(b"guess", *r[:5], "edited", *r[6:])
         conn.execute("UPDATE audit_log SET target = 'edited', row_hash = ? WHERE id = 3", (forged,))
     res = _verify(app)
@@ -191,8 +191,8 @@ def test_audit_key_setting_changes_the_chain(settings):
 
 
 def test_canonical_encoding_is_unambiguous():
-    assert audit.canonical(1, "t", 1, 2, "a", "b,c", "", "p") != audit.canonical(1, "t", 1, 2, "a,b", "c", "", "p")
-    assert audit.canonical(1, "t", None, 2, "a", "", "", "p") != audit.canonical(1, "t", "None", 2, "a", "", "", "p")
+    assert audit.canonical(1, "t", 1, 2, "a", "b,c", "", "p", "k") != audit.canonical(1, "t", 1, 2, "a,b", "c", "", "p", "k")
+    assert audit.canonical(1, "t", None, 2, "a", "", "", "p", "k") != audit.canonical(1, "t", "None", 2, "a", "", "", "p", "k")
 
 
 @pytest.fixture

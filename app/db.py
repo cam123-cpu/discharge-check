@@ -111,7 +111,8 @@ CREATE TABLE IF NOT EXISTS audit_log (
     ip TEXT NOT NULL DEFAULT '',
     at TEXT NOT NULL DEFAULT (datetime('now')),
     prev_hash TEXT NOT NULL DEFAULT '',
-    row_hash TEXT NOT NULL DEFAULT ''
+    row_hash TEXT NOT NULL DEFAULT '',
+    key_id TEXT NOT NULL DEFAULT ''
 );
 CREATE INDEX IF NOT EXISTS idx_audit_org ON audit_log(org_id, id);
 """
@@ -124,15 +125,16 @@ MIGRATIONS = [
     ("documents", "deleted_by", "ALTER TABLE documents ADD COLUMN deleted_by INTEGER REFERENCES users(id)"),
     ("audit_log", "prev_hash", "ALTER TABLE audit_log ADD COLUMN prev_hash TEXT NOT NULL DEFAULT ''"),
     ("audit_log", "row_hash", "ALTER TABLE audit_log ADD COLUMN row_hash TEXT NOT NULL DEFAULT ''"),
+    ("audit_log", "key_id", "ALTER TABLE audit_log ADD COLUMN key_id TEXT NOT NULL DEFAULT ''"),
 ]
 
 
 class Database:
-    def __init__(self, path: Path, audit_key: bytes | None = None):
-        """audit_key seals access-log rows (see app/audit.py). Scripts that
-        never write the log may leave it out."""
+    def __init__(self, path: Path, audit_key: "audit_chain.KeyRing | bytes | None" = None):
+        """audit_key (a KeyRing, or one key) seals access-log rows (see
+        app/audit.py). Scripts that never write the log may leave it out."""
         self.path = path
-        self.audit_key = audit_key
+        self.audit_key = None if audit_key is None else audit_chain.as_ring(audit_key)
         path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         if not path.exists():
             # Create the file owner-only before SQLite opens it: it holds password
@@ -148,9 +150,10 @@ class Database:
             conn.executescript(SCHEMA)
             # Rows from before the hash chain are sealed once, then the
             # append-only triggers go on (sealing needs UPDATE, so order matters).
-            if audit_key is not None:
-                audit_chain.seal_legacy(conn, audit_key)
+            if self.audit_key is not None:
+                audit_chain.seal_legacy(conn, self.audit_key)
                 audit_chain.install_triggers(conn)
+                audit_chain.note_rotation(conn, self.audit_key)
             elif conn.execute("SELECT 1 FROM audit_log WHERE row_hash = '' LIMIT 1").fetchone() is None:
                 audit_chain.install_triggers(conn)
             else:
@@ -217,4 +220,4 @@ class Database:
         """Append to the hash-chained access log, in the caller's transaction."""
         if self.audit_key is None:
             raise RuntimeError("Database was opened without an audit key; it cannot write the access log.")
-        audit_chain.append(conn, org_id, user_id, action, target, ip)
+        audit_chain.append(conn, self.audit_key, org_id, user_id, action, target, ip)
