@@ -277,6 +277,34 @@ def adopt_legacy_sqlite(conn: Connection) -> bool:
     return True
 
 
+def set_rls_context(conn: Connection, org_id: int | None) -> None:
+    """Tell Postgres row-level security (migration 0004) whose transaction this
+    is: one organization, or the system when org_id is None. Settings are
+    transaction-local, so a pooled connection never carries them over. SQLite
+    has no row-level security; the org-scoped queries are its only guard."""
+    if conn.dialect.name != "postgresql":
+        return
+    if org_id is None:
+        conn.exec_driver_sql("SELECT set_config('app.rls_bypass', 'on', true), set_config('app.org_id', '', true)")
+    else:
+        conn.exec_driver_sql("SELECT set_config('app.rls_bypass', 'off', true), set_config('app.org_id', %s, true)",
+                             (str(int(org_id)),))
+
+
+def rls_inert_reason(conn: Connection) -> str | None:
+    """Why row-level security would not apply to this Postgres login, if so:
+    superusers and BYPASSRLS roles skip every policy."""
+    if conn.dialect.name != "postgresql":
+        return None
+    row = conn.exec_driver_sql(
+        "SELECT rolsuper, rolbypassrls FROM pg_roles WHERE rolname = current_user").fetchone()
+    if row and row[0]:
+        return "the database role is a superuser"
+    if row and row[1]:
+        return "the database role has BYPASSRLS"
+    return None
+
+
 def sqlite_fk_off(conn: Connection) -> None:
     """Turn SQLite foreign keys off on this connection, outside any transaction.
     Batch migrations rebuild a table by dropping it, which would otherwise
@@ -305,6 +333,18 @@ class Database:
         self.engine = self._make_engine(echo)
         if migrate:
             self.migrate()
+            self._warn_if_rls_inert()
+
+    def _warn_if_rls_inert(self) -> None:
+        if self.url.get_backend_name() != "postgresql":
+            return
+        with self.engine.connect() as conn:
+            reason = rls_inert_reason(conn)
+        if reason:
+            import logging
+            logging.getLogger("discharge.db").warning(
+                "Row-level security is not enforced because %s. Connect as a role that "
+                "owns the tables but is neither superuser nor BYPASSRLS (see README).", reason)
 
     # ---- engine ----
 
@@ -360,8 +400,15 @@ class Database:
         )
 
     @contextmanager
-    def connect(self) -> Iterator[DBConnection]:
+    def connect(self, org_id: int | None = None) -> Iterator[DBConnection]:
+        """One transaction. Pass the signed-in user's org_id for anything done
+        on a user's behalf: on Postgres, row-level security then lets the
+        transaction see and write only that hospital's rows, whatever the SQL
+        says. Without org_id the transaction runs as the system (sign-in,
+        session lookup, setup, seeding) and may touch every organization's
+        rows, so routes must always pass one."""
         with self.engine.begin() as sa:
+            set_rls_context(sa, org_id)
             yield DBConnection(sa)
 
     def dispose(self) -> None:
@@ -398,6 +445,7 @@ class Database:
             conn = outer
             if conn.dialect.name == "postgresql":
                 conn.exec_driver_sql(f"SELECT pg_advisory_xact_lock({_MIGRATION_LOCK_ID})")
+            set_rls_context(conn, None)  # data migrations see every organization
             cfg.attributes["connection"] = conn
             adopt_legacy_sqlite(conn)
             command.upgrade(cfg, revision)
@@ -462,4 +510,4 @@ class Database:
                                                     target=target, ip=ip))
 
 
-__all__ = ["Database", "DBConnection", "Record", "normalize_url", "qmark_to_format", "redact", "utcnow_text"]
+__all__ = ["set_rls_context", "rls_inert_reason", "Database", "DBConnection", "Record", "normalize_url", "qmark_to_format", "redact", "utcnow_text"]

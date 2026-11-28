@@ -84,7 +84,7 @@ def db_has_data(root: Path, env: dict[str, str]) -> bool:
     from sqlalchemy.pool import NullPool
 
     from app.config import database_target
-    from app.db import _sqlite_file, normalize_url
+    from app.db import _sqlite_file, normalize_url, set_rls_context
 
     try:
         url = normalize_url(database_target(env, root))
@@ -103,6 +103,10 @@ def db_has_data(root: Path, env: dict[str, str]) -> bool:
         return True  # unusable URL: assume it matters
     try:
         with engine.connect() as conn:
+            # Count every hospital's documents: row-level security would
+            # otherwise hide them all, and a "no data" answer lets setup
+            # replace DATA_KEY under records it can no longer decrypt.
+            set_rls_context(conn, None)
             if not inspect(conn).has_table("documents"):
                 return False  # an empty or never-migrated database holds no records
             return conn.execute(select(func.count()).select_from(table("documents"))).scalar_one() > 0

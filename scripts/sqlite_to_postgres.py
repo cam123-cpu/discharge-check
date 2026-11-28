@@ -33,7 +33,7 @@ from sqlalchemy.exc import ArgumentError, DBAPIError, SQLAlchemyError
 
 from app import models as m
 from app.config import sqlite_path
-from app.db import Database, normalize_url, redact
+from app.db import Database, normalize_url, redact, set_rls_context
 
 DEFAULT_BATCH = 1000
 KEY_NOTE = ("Encrypted columns are copied byte-for-byte and never decrypted: run the app on "
@@ -143,6 +143,7 @@ def _copy(source: Database, target: Database, batch: int, report: Report, log=pr
     # One read transaction on the source (a consistent snapshot) and one write
     # transaction on the target: either every table is copied or none is.
     with source.engine.connect() as src, target.engine.begin() as dst:
+        set_rls_context(dst, None)  # the copy writes every organization's rows
         # Block other writers on the target until the copy commits.
         dst.exec_driver_sql("LOCK TABLE " + ", ".join(f'"{n}"' for n in names) + " IN EXCLUSIVE MODE")
         busy = [n for n, c in _counts(dst).items() if c]
@@ -210,6 +211,7 @@ def run(source_path: Path, target_url: URL, *, batch: int = DEFAULT_BATCH, dry_r
                 with source.engine.connect() as c:
                     report.source_counts = _counts(c, only_existing=True)
                 with target.engine.connect() as c:
+                    set_rls_context(c, None)
                     report.target_counts = _counts(c, only_existing=True)
                 log(f"Revisions: sqlite {source.current_revision() or 'none (legacy or empty)'}, "
                     f"postgres {target.current_revision() or 'none (schema not created yet)'}")
@@ -225,6 +227,7 @@ def run(source_path: Path, target_url: URL, *, batch: int = DEFAULT_BATCH, dry_r
             log(f"Both databases are at revision {rev}. Copying in batches of {batch}...")
             _copy(source, target, batch, report, log)
             with target.engine.connect() as c:
+                set_rls_context(c, None)
                 report.target_counts = _counts(c)
         except SQLAlchemyError as exc:
             raise _safe_error(exc) from None

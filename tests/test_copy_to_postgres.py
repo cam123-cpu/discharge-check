@@ -13,7 +13,7 @@ from sqlalchemy import select
 
 from app import models as m
 from app.config import Settings
-from app.db import Database, normalize_url
+from app.db import Database, normalize_url, set_rls_context
 from app.main import create_app
 from app.security import Cipher, hash_password
 from scripts import sqlite_to_postgres as copier
@@ -44,6 +44,7 @@ def _settings(tmp_path, data_key, pepper, database_url=""):
 def _dump(db: Database) -> dict[str, list[tuple]]:
     out = {}
     with db.engine.connect() as conn:
+        set_rls_context(conn, None)  # every organization's rows
         for t in m.metadata.sorted_tables:
             rows = conn.execute(select(t).order_by(*t.primary_key.columns)).fetchall()
             out[t.name] = [tuple(bytes(v) if isinstance(v, memoryview) else v for v in r) for r in rows]
@@ -161,6 +162,7 @@ def test_refuses_non_empty_target(sqlite_install, target, capsys):
         copier.run(path, target)
     pg = Database(TEST_DATABASE_URL)
     with pg.engine.connect() as conn:
+        set_rls_context(conn, None)
         assert conn.exec_driver_sql("SELECT count(*) FROM orgs").scalar() == 1
         assert conn.exec_driver_sql("SELECT count(*) FROM users").scalar() == 0
     pg.dispose()

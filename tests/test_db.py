@@ -3,6 +3,8 @@ wrapper, transactions, encryption at rest, org isolation and foreign keys.
 
 Every test runs on SQLite, and on Postgres when TEST_DATABASE_URL is set."""
 import pytest
+
+from app.db import set_rls_context
 from fastapi.testclient import TestClient
 from sqlalchemy import event
 from sqlalchemy.exc import IntegrityError
@@ -241,6 +243,7 @@ def test_uploaded_document_is_encrypted_at_rest(app, client):
 
     # The raw driver value, below the Record wrapper (Postgres returns bytea).
     with app.state.db.engine.connect() as sa:
+        set_rls_context(sa, None)
         doc_id, blob = sa.exec_driver_sql("SELECT id, body_enc FROM documents WHERE patient_id = %s" if
                                           sa.dialect.name == "postgresql" else
                                           "SELECT id, body_enc FROM documents WHERE patient_id = ?", (pid,)).one()

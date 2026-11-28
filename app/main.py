@@ -234,7 +234,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.post("/logout")
     def logout(request: Request, user=Depends(check_csrf)):
         sessions.destroy(request.cookies.get(SESSION_COOKIE))
-        with db.connect() as conn:
+        with db.connect(user["org_id"]) as conn:
             db.audit(conn, user["org_id"], user["user_id"], "logout", ip=client_ip(request))
         resp = go("/login", notice="You are signed out.")
         resp.delete_cookie(SESSION_COOKIE, path="/")
@@ -244,7 +244,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.get("/patients", response_class=HTMLResponse)
     def patients(request: Request, user=Depends(current_user)):
-        with db.connect() as conn:
+        with db.connect(user["org_id"]) as conn:
             rows = db.patients(conn, user["org_id"])
         return render(request, "patients.html", {"user": user, "patients": rows, "nav": "patients"})
 
@@ -274,7 +274,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             errors.append("Choose a disposition from the list.")
         if errors:
             return render(request, "patient_new.html", {"user": user, "dispositions": DISPOSITIONS, "errors": errors, "form": data, "nav": "patients"}, 400)
-        with db.connect() as conn:
+        with db.connect(user["org_id"]) as conn:
             cur = conn.execute(
                 "INSERT INTO patients (org_id, label, unit, attending, discharge_date, disposition, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 (user["org_id"], data["label"], data["unit"], data["attending"], data["discharge_date"], data["disposition"], user["user_id"]),
@@ -298,7 +298,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.get("/patients/{patient_id}", response_class=HTMLResponse)
     def patient_detail(request: Request, patient_id: Id, user=Depends(current_user)):
-        with db.connect() as conn:
+        with db.connect(user["org_id"]) as conn:
             p = load_patient(conn, user, patient_id)
             docs = db.documents(conn, user["org_id"], patient_id)
             a = db.latest_analysis(conn, user["org_id"], patient_id)
@@ -322,7 +322,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.post("/patients/{patient_id}/documents")
     async def upload_document(request: Request, patient_id: Id, user=Depends(check_csrf),
                               kind: str = Form(..., max_length=40), confirm: str = Form(""), file: UploadFile = File(...)):
-        with db.connect() as conn:
+        with db.connect(user["org_id"]) as conn:
             load_patient(conn, user, patient_id)
         back = f"/patients/{patient_id}"
         if confirm != "yes":
@@ -334,7 +334,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             parsed = parse_upload(raw, file.filename or "upload.txt", kind, settings.max_upload_bytes)
         except IngestError as exc:
             return go(back, error=str(exc))
-        with db.connect() as conn:
+        with db.connect(user["org_id"]) as conn:
             conn.execute(
                 "INSERT INTO documents (org_id, patient_id, kind, filename, author, body_enc, uploaded_by) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 (user["org_id"], patient_id, parsed.kind, parsed.filename, parsed.author, cipher.encrypt(parsed.text), user["user_id"]),
@@ -344,7 +344,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.get("/patients/{patient_id}/documents/{doc_id}", response_class=HTMLResponse)
     def view_document(request: Request, patient_id: Id, doc_id: Id, user=Depends(current_user)):
-        with db.connect() as conn:
+        with db.connect(user["org_id"]) as conn:
             p = load_patient(conn, user, patient_id)
             row = db.document(conn, user["org_id"], patient_id, doc_id)
             if row is None:
@@ -356,7 +356,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def delete_document(request: Request, patient_id: Id, doc_id: Id, user=Depends(check_csrf)):
         """Removal is a soft delete: the record leaves the patient's file and
         every check, but stays in the database for the retention period."""
-        with db.connect() as conn:
+        with db.connect(user["org_id"]) as conn:
             load_patient(conn, user, patient_id)
             row = db.document(conn, user["org_id"], patient_id, doc_id)
             if row is None:
@@ -370,7 +370,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.post("/patients/{patient_id}/check")
     def run_check(request: Request, patient_id: Id, user=Depends(check_csrf)):
         back = f"/patients/{patient_id}"
-        with db.connect() as conn:
+        with db.connect(user["org_id"]) as conn:
             p = load_patient(conn, user, patient_id)
             docs = load_docs(conn, user, patient_id)
         if not docs:
@@ -379,7 +379,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             return go(back, error=f"You have run {settings.checks_per_hour} checks in the last hour. Try again later.")
         result = analysis.analyze(docs, disposition_hint=p["disposition"], discharge_hint=p["discharge_date"],
                                   client=client, model=settings.model)
-        with db.connect() as conn:
+        with db.connect(user["org_id"]) as conn:
             analysis.store(db, conn, cipher, user["org_id"], patient_id, user["user_id"], result)
             db.audit(conn, user["org_id"], user["user_id"], "check_run", f"patient:{patient_id}", client_ip(request))
         if result["message"]:
@@ -389,7 +389,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     # ---------- compliance ----------
 
     def compliance_summary(org_id: int) -> dict:
-        with db.connect() as conn:
+        with db.connect(org_id) as conn:
             latest = conn.execute(
                 """SELECT f.rule_id, f.status, p.unit, p.attending, p.id AS patient_id, p.label
                    FROM findings f JOIN patients p ON p.id = f.patient_id AND p.org_id = f.org_id
@@ -429,14 +429,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/compliance", response_class=HTMLResponse)
     def compliance(request: Request, user=Depends(require_role("compliance", "admin"))):
         s = compliance_summary(user["org_id"])
-        with db.connect() as conn:  # the page lists patient labels with their gaps
+        with db.connect(user["org_id"]) as conn:  # the page lists patient labels with their gaps
             db.audit(conn, user["org_id"], user["user_id"], "compliance_view", ip=client_ip(request))
         return render(request, "compliance.html", {"user": user, "s": s, "nav": "compliance"})
 
     @app.get("/api/compliance/summary")
     def compliance_api(request: Request, user=Depends(require_role("compliance", "admin"))):
         s = compliance_summary(user["org_id"])
-        with db.connect() as conn:
+        with db.connect(user["org_id"]) as conn:
             db.audit(conn, user["org_id"], user["user_id"], "compliance_api", ip=client_ip(request))
         # Aggregates only: no patient labels or document text leave through the API.
         return {"rules_version": RULES_VERSION, "patients_checked": s["patients_checked"],
@@ -454,7 +454,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if action:
             where += " AND a.action = ?"
             args.append(action)
-        with db.connect() as conn:
+        with db.connect(user["org_id"]) as conn:
             rows = conn.execute(
                 f"""SELECT a.at, a.action, a.target, a.ip, u.display_name FROM audit_log a
                     LEFT JOIN users u ON u.id = a.user_id WHERE {where} ORDER BY a.id DESC LIMIT ? OFFSET ?""",

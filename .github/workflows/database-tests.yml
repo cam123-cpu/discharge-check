@@ -37,9 +37,6 @@ jobs:
         ports: ["5432:5432"]
         options: >-
           --health-cmd "pg_isready -U dc" --health-interval 5s --health-timeout 5s --health-retries 10
-    env:
-      # The suite wipes this database's public schema before each test.
-      TEST_DATABASE_URL: postgresql://dc:dc@localhost:5432/dc_test
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -47,4 +44,18 @@ jobs:
           python-version: "3.13"
           cache: pip
       - run: pip install -r requirements-dev.txt
-      - run: python -m pytest -q
+      - name: Suite as the superuser (row-level security tests switch to an ordinary role)
+        env:
+          # The suite wipes this database's public schema before each test.
+          TEST_DATABASE_URL: postgresql://dc:dc@localhost:5432/dc_test
+        run: python -m pytest -q
+      - name: Create an ordinary role, as a deployment uses
+        env:
+          PGPASSWORD: dc
+        run: |
+          psql -h localhost -U dc -d dc_test -c "CREATE ROLE dc_app LOGIN PASSWORD 'dc_app'"
+          psql -h localhost -U dc -d dc_test -c "CREATE DATABASE dc_app OWNER dc_app"
+      - name: Suite as the ordinary role (every route runs with policies enforced)
+        env:
+          TEST_DATABASE_URL: postgresql://dc_app:dc_app@localhost:5432/dc_app
+        run: python -m pytest -q

@@ -97,6 +97,10 @@ The app runs on Postgres 14 or newer through SQLAlchemy; the driver
    ```
 
    On a server: `CREATE ROLE dc LOGIN PASSWORD '...'; CREATE DATABASE discharge OWNER dc;`
+   The app's role must **not** be a superuser or have `BYPASSRLS`, or
+   row-level security is skipped (the app logs a warning at start if so).
+   The default `postgres` user in the Docker image is a superuser, so create
+   an ordinary role like `dc` above for anything beyond a quick try.
 2. Set `DATABASE_URL` in `.env` (it wins over `DATABASE_PATH`):
 
    ```
@@ -121,6 +125,18 @@ editing the models:
 alembic revision --autogenerate -m "describe the change"   # review the file in migrations/versions/
 alembic upgrade head
 ```
+
+**Row-level security.** On Postgres each hospital's rows are also kept apart
+by the database (migration `0004`). Every request opens its transaction with
+`db.connect(user["org_id"])`, which sets `app.org_id`; policies on `orgs`,
+`users`, `patients`, `documents`, `analyses`, `findings` and `audit_log` then
+hide and refuse other hospitals' rows, even for a query that forgets its
+`org_id` filter. Sign-in, session lookup, setup and the copy script run as
+the system with `db.connect()`. A transaction with neither setting sees
+nothing, so a mistake fails closed. A test checks that every route passes an
+org_id. This backs up the org-scoped queries; it is not a defense against SQL
+injection, which parameterized queries handle. SQLite has no row-level
+security and relies on the org-scoped queries alone.
 
 Run autogenerate against a fresh database at head, never against a
 `data/app.db` carried over from before this change: those files work fine but
@@ -161,7 +177,7 @@ app sees the real scheme and client IP (rate limits and the access log use it).
 | --- | --- |
 | Hide API keys | Keys only from environment / `.env`; `.env` is git-ignored; the browser never sees them |
 | Purge Git secrets | No secrets in the repo; run `gitleaks detect` before the first push |
-| Public DB key / row-level security | No browser-side database access at all. Every patient query requires the user's `org_id` (`app/db.py`); a cross-org test proves another hospital gets a 404. Move to Postgres RLS when multi-tenant |
+| Public DB key / row-level security | No browser-side database access at all. Every patient query requires the user's `org_id` (`app/db.py`), and on Postgres row-level security enforces the same split in the database (`migrations/versions/0004_row_level_security.py`). Tests prove another hospital gets a 404 and that the database refuses cross-hospital reads and writes |
 | Encrypt sensitive data | Document text and results encrypted at rest (Fernet, key from `DATA_KEY`) |
 | Server-side auth | Every route checks the session server-side; roles enforced on compliance pages and API |
 | Lock record access / block field tampering | `org_id`, `role` and authorship come from the session, never from the form; forms accept only named fields with validation |
@@ -190,5 +206,5 @@ Full findings from the November 2026 penetration test: [docs/security-review-202
 - No accuracy measurement: next step is a hand-labeled set of 100 to 200
   MIMIC-IV-Note summaries to measure agreement per rule.
 - No EHR integration, SSO, or multi-factor sign-in. Privacy and Terms pages are drafts.
-- Postgres is supported, but isolation is still enforced in app code; add
-  Postgres RLS and managed keys before a pilot. SQLite is for local use only.
+- Managed encryption keys (KMS) are still to do before a pilot; `DATA_KEY`
+  lives in `.env`. SQLite is for local use only.

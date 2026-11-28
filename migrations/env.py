@@ -56,8 +56,8 @@ def run_migrations_online() -> None:
     # Postgres advisory lock, SQLite foreign keys off for batch rebuilds,
     # adoption of pre-Alembic SQLite files).
     from app.config import database_target
-    from app.db import (_MIGRATION_LOCK_ID, Database, adopt_legacy_sqlite, sqlite_fk_check, sqlite_fk_off,
-                        sqlite_fk_on)
+    from app.db import (_MIGRATION_LOCK_ID, Database, adopt_legacy_sqlite, set_rls_context, sqlite_fk_check,
+                        sqlite_fk_off, sqlite_fk_on)
     db = Database(database_target(), migrate=False)
     try:
         with db.engine.connect() as conn:
@@ -68,6 +68,7 @@ def run_migrations_online() -> None:
                 with conn.begin():
                     if conn.dialect.name == "postgresql":
                         conn.exec_driver_sql(f"SELECT pg_advisory_xact_lock({_MIGRATION_LOCK_ID})")
+                    set_rls_context(conn, None)
                     adopt_legacy_sqlite(conn)
                     _configure(conn)
                     with context.begin_transaction():
