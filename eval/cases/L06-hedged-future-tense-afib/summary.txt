@@ -1,0 +1,47 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+Cardiology Step-Down Unit
+
+Admission Date: 2026-11-21
+Discharge Date: 2026-11-24
+Attending: Dr. Kalinda Brightwater-Osei
+
+Chief Complaint: Palpitations and shortness of breath since the morning of admission.
+
+Discharge Diagnosis:
+1. New-onset atrial fibrillation with rapid ventricular response, rate controlled
+2. CHA2DS2-VASc 3 (age, sex, hypertension); anticoagulation started
+3. Hypertension
+
+Brief Hospital Course:
+62-year-old woman presented in atrial fibrillation at 148 bpm, hemodynamically stable. Rate controlled with IV then oral metoprolol. Transthoracic echo showed normal LV function (EF 60%) and a mildly dilated left atrium; no valvular disease. TSH was drawn on 11/23. Apixaban started for stroke prevention after shared decision-making. She remained in rate-controlled atrial fibrillation (heart rate 70s to 80s at rest) and was asymptomatic walking the unit at discharge.
+
+Condition at Discharge: Stable. Alert and oriented x3, mental status normal. Heart rate 78 at rest.
+
+Discharge Disposition: Home with her husband.
+
+Discharge Medications:
+- Apixaban 5 mg by mouth twice daily
+- Metoprolol succinate 50 mg by mouth daily
+- Losartan 50 mg by mouth daily
+
+Medication Changes:
+- New: apixaban 5 mg twice daily (stroke prevention)
+- New: metoprolol succinate 50 mg daily (rate control)
+- Losartan unchanged
+
+Pending Results: TSH sent 11/23, result expected in a few days; plan to have someone from the team follow up.
+
+Code Status: Full code. She wants to keep teaching through the end of the school year.
+
+Functional Status: Independent with ADLs and ambulation.
+
+PCP: Dr. Samuel Achterberg (555-0173)
+
+Follow-up: Will likely need cardiology follow-up in 2-3 weeks to discuss cardioversion; patient to call the office to arrange if symptoms persist.
+
+Discharge Planning Evaluation: Will be completed by case management prior to discharge.
+
+Plan discussed with the patient and her husband, who agree with the plan.
+Discharge summary to be faxed to PCP Dr. Achterberg once signed.
+
+Electronically signed by Kalinda Brightwater-Osei, MD on 2026-11-24 13:47

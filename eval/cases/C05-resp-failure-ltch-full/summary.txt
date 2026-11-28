@@ -1,0 +1,60 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Patient: Thaddeus Okonkwo (synthetic)
+Unit: Medical Intensive Care Unit / Step-down
+Admission Date: 2026-10-21
+Discharge Date: 2026-11-13
+Attending: Dr. Celeste Arnaud (Pulmonary and Critical Care)
+
+Chief Complaint: Fever, confusion and respiratory distress.
+
+Discharge Diagnosis:
+1. Acute hypoxemic respiratory failure due to influenza A pneumonia complicated by ARDS, now with prolonged ventilator dependence via tracheostomy (principal)
+2. Ventilator-associated pneumonia, Pseudomonas aeruginosa, treated
+3. ICU-acquired weakness
+4. Type 2 diabetes mellitus
+5. Stage 2 sacral pressure injury
+
+Brief Hospital Course:
+63-year-old man admitted with influenza A pneumonia who progressed to ARDS and was intubated on hospital day 1. He received oseltamivir, lung-protective ventilation and prone positioning for 3 days. Course was complicated by Pseudomonas ventilator-associated pneumonia on day 9, treated with 7 days of cefepime. He failed three spontaneous breathing trials and underwent percutaneous tracheostomy on day 14 and PEG placement on day 15. He now tolerates trach collar for up to 6 hours per day and requires pressure support ventilation overnight. He is hemodynamically stable, off sedation and afebrile for 6 days. He needs continued ventilator weaning, which is the reason for transfer to a long-term acute care hospital.
+
+Condition at Discharge: Stable for transfer. Mental status awake, alert, follows commands and communicates by mouthing words and letter board. Ventilator dependent overnight via tracheostomy.
+
+Discharge Disposition: Long-term acute care hospital (LTCH), Cedar Ridge Specialty Hospital, for ventilator weaning
+
+Discharge Medications:
+- Insulin glargine 18 units subcutaneously nightly
+- Insulin lispro correction scale subcutaneously every 6 hours via sliding scale
+- Heparin 5000 units subcutaneously every 8 hours
+- Famotidine 20 mg per PEG twice daily
+- Chlorhexidine 0.12% oral rinse 15 mL twice daily
+- Acetaminophen 650 mg per PEG every 6 hours as needed for fever or pain
+- Albuterol 2.5 mg nebulized every 4 hours as needed for wheezing
+- Enteral nutrition: high-protein formula at 60 mL/hour continuous via PEG
+
+Medication Changes:
+- New: insulin glargine and lispro (replace home metformin while on continuous tube feeds)
+- Stopped: metformin 500 mg twice daily
+- New: heparin prophylaxis, famotidine, chlorhexidine oral care, albuterol as needed
+- Completed and stopped: oseltamivir (course finished 2026-10-26) and cefepime (course finished 2026-11-05)
+
+Allergies: Lisinopril (angioedema)
+
+Pending Results: None pending at discharge; all cultures finalized.
+
+Goals of Care: Full code. Discussed with the patient and his wife (healthcare proxy) on 2026-11-11: the patient's goal is to come off the ventilator and go home; he wants all life-sustaining treatment continued, including re-intubation if needed.
+
+Functional Status: Bedbound; sits on the edge of the bed with maximal assistance of two and transfers to a chair with a mechanical lift. Dependent for all ADLs.
+
+PCP: Dr. Beatrix Holloway, Fernvale Community Clinic, 555-0181
+
+Followup Instructions:
+- LTCH physician to assume care on arrival 2026-11-13; LTCH pulmonologist to reassess weaning within 24 hours
+- Pulmonary clinic, Dr. Celeste Arnaud, within 4 weeks of LTCH discharge for tracheostomy follow-up
+- PCP Dr. Beatrix Holloway within 2 weeks of return home
+
+Discharge planning evaluation completed by case management (note 2026-11-10). Plan discussed with the patient and his wife, who agree with LTCH transfer.
+
+Discharge summary, ventilator settings and wound care plan sent electronically to Cedar Ridge Specialty Hospital and copied to PCP Dr. Beatrix Holloway on 2026-11-13.
+
+Electronically signed by Celeste Arnaud, MD on 2026-11-13 11:30

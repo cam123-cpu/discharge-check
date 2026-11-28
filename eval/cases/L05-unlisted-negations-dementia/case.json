@@ -1,0 +1,49 @@
+{
+  "id": "L05-unlisted-negations-dementia",
+  "category": "linguistic",
+  "title": "AKI in a man with dementia, home; goals, pending results, plan discussion and transmission each negated in wording the negation filter misses",
+  "disposition": "Home",
+  "discharge_date": "2026-11-21",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"},
+    {"file": "casemgmt.txt", "kind": "case_management"},
+    {"file": "nursing.txt", "kind": "nursing_instructions"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "unclear",
+    "goals_of_care": "unclear",
+    "functional_status": "pass",
+    "info_transmitted": "fail",
+    "dp_evaluation": "pass",
+    "dp_discussed": "unclear",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "pass"
+  },
+  "also_acceptable": {
+    "info_transmitted": ["unclear"],
+    "dp_discussed": ["fail"],
+    "goals_of_care": ["fail"]
+  },
+  "rationale": {
+    "pending_results": "The pending urine culture is listed, but the note says 'No one has been assigned to follow up on the result', so the follow-up owner the rule requires is missing.",
+    "goals_of_care": "The section only records that the proxy 'declined to discuss' and that the topic was 'never addressed'; no code status, directive or goals are documented.",
+    "info_transmitted": "The fax was rejected and the note says 'Never transmitted'; an attempted send is not evidence the summary reached the PCP.",
+    "dp_discussed": "The patient lacks capacity and the CM note says the plan was 'to be reviewed' with the daughter but 'no one available'; nursing confirms no teach-back, so no discussion with the patient or representative is documented.",
+    "med_changes": "Hydrochlorothiazide stopped with reason and lisinopril continued unchanged are both stated.",
+    "pac_list": "Home without services, so the post-acute rules do not apply."
+  },
+  "tags": ["negation", "dementia", "representative"]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "G02-unsigned-window-pneumonia",
+  "category": "gap",
+  "title": "Community-acquired pneumonia, home; unsigned 7 days after discharge, med list only referenced, no functional status",
+  "disposition": "Home",
+  "discharge_date": "2026-11-20",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "fail",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "fail",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "fail",
+    "timeliness": "unclear",
+    "meds_consistent": "not_applicable"
+  },
+  "also_acceptable": {
+    "discharge_meds": [
+      "unclear"
+    ]
+  },
+  "rationale": {
+    "authenticated": "No signature line; the footer says the document is not yet authenticated.",
+    "timeliness": "Unsigned, but only 7 days have passed since the 2026-11-20 discharge as of 2026-11-27, so it is still inside the 30-day window.",
+    "discharge_meds": "The section only points to a portal list; the summary itself contains no medication list (the changes list covers three drugs, not the full regimen).",
+    "functional_status": "Nothing describes mobility or ability to perform daily activities; the condition section covers vitals and mental status only.",
+    "pac_list": "Not referred to home health, SNF, IRF or LTCH, so the three post-acute rules do not apply.",
+    "meds_consistent": "No nursing discharge instructions were provided, so there is nothing to compare."
+  },
+  "tags": [
+    "signature",
+    "in-window",
+    "multi-gap"
+  ]
+}

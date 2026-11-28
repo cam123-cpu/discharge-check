@@ -1,0 +1,42 @@
+{
+  "id": "E02-hospice-no-nursing",
+  "category": "edge",
+  "title": "Discharged home with hospice (pac_* not applicable) and no nursing instructions uploaded (meds_consistent not applicable); metastatic pancreatic cancer",
+  "disposition": "Home with hospice",
+  "discharge_date": "2026-11-18",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"},
+    {"file": "casemgmt.txt", "kind": "case_management"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "not_applicable"
+  },
+  "rationale": {
+    "pac_list": "EDGE: hospice is not home health, SNF, IRF or LTCH, so the post-acute provider-list rules do not apply even though a hospice choice was offered.",
+    "pac_choice": "EDGE: hospice is outside the post-acute scope of this rule.",
+    "pac_quality_data": "EDGE: hospice is outside the post-acute scope of this rule.",
+    "meds_consistent": "EDGE: no nursing_instructions document was uploaded, so there is nothing to compare.",
+    "timeliness": "Signed 2026-11-19, one day after the 2026-11-18 discharge."
+  },
+  "tags": ["hospice", "no-nursing-instructions", "not-applicable"]
+}

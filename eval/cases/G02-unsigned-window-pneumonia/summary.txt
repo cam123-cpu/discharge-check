@@ -1,0 +1,37 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD) -- DRAFT
+
+Admission Date: 2026-11-17
+Discharge Date: 2026-11-20
+Attending: Dr. Marisol Quintero
+
+Principal Diagnosis: Community-acquired pneumonia, right lower lobe
+Secondary: Type 2 diabetes mellitus with hyperglycemia; obesity (BMI 34)
+
+Hospital Course:
+54-year-old man presented with four days of fever, productive cough and pleuritic right-sided chest pain. CXR showed right lower lobe consolidation; procalcitonin 1.9. Blood cultures x2 drawn at urgent care on 2026-11-14 are final with no growth at 5 days. Urine Legionella and pneumococcal antigens negative. Treated with IV ceftriaxone and azithromycin, transitioned to oral amoxicillin-clavulanate on day 3 once afebrile for 36 hours. Glucose ran 180-260 on admission; basal insulin was titrated with good effect. He never required supplemental oxygen after the first night. Clinically improved with resolution of fever and reduced cough.
+
+Condition at Discharge: Stable. Afebrile for 48 hours, SpO2 95% on room air, alert and oriented.
+
+Disposition: Home
+
+Discharge Medications: See reconciled medication list in the patient portal.
+
+Medication Changes:
+- New: amoxicillin-clavulanate 875-125 mg twice daily for 4 more days
+- New: insulin glargine 14 units at bedtime (A1c 9.4%)
+- Continue metformin 1000 mg twice daily, unchanged
+
+Pending Results: None. Blood cultures finalized negative.
+
+Goals of Care: Full code. Patient's goal is to return to work as a bus mechanic next week.
+
+Followup:
+- PCP Dr. Henrik Solberg on 2026-11-25, glucose log review and lung exam
+- Repeat chest X-ray in 6 weeks, ordered by Dr. Solberg
+- Diabetes education class 2026-12-02
+
+Discharge planning evaluation: no post-hospital needs identified; lives with wife.
+Discharge plan and insulin teaching reviewed with the patient and his wife, who verbalized understanding.
+Discharge information sent electronically to PCP Dr. Henrik Solberg on 2026-11-20.
+
+Prepared by Marisol Quintero, MD -- not yet authenticated

@@ -1,0 +1,49 @@
+{
+  "id": "L06-hedged-future-tense-afib",
+  "category": "linguistic",
+  "title": "New atrial fibrillation, home; follow-up, pending-result owner, DP evaluation and transmission are all hedged or future tense",
+  "disposition": "Home",
+  "discharge_date": "2026-11-24",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"},
+    {"file": "nursing.txt", "kind": "nursing_instructions"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "unclear",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "unclear",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "fail",
+    "dp_evaluation": "unclear",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "pass"
+  },
+  "also_acceptable": {
+    "followup": ["fail"],
+    "pending_results": ["fail"],
+    "info_transmitted": ["unclear"],
+    "dp_evaluation": ["fail"]
+  },
+  "rationale": {
+    "followup": "'Will likely need cardiology follow-up in 2-3 weeks' is a hedge, nothing is scheduled, and the nursing note only says to call 'if palpitations continue'; no committed who-and-when.",
+    "pending_results": "The pending TSH is listed, but 'plan to have someone from the team follow up' names no responsible clinician.",
+    "info_transmitted": "'To be faxed ... once signed' is future tense; there is no evidence the summary was actually sent.",
+    "dp_evaluation": "The section says the evaluation 'will be completed' by case management; no CM note was provided and no evaluation content is written.",
+    "pcp_named": "Dr. Samuel Achterberg is named as PCP even though no PCP visit is scheduled.",
+    "pac_list": "Home without services, so the post-acute rules do not apply."
+  },
+  "tags": ["hedged", "future-tense", "plan-not-done"]
+}

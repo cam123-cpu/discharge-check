@@ -1,0 +1,57 @@
+{
+  "id": "C05-resp-failure-ltch-full",
+  "category": "control",
+  "title": "ARDS with tracheostomy, transferred to LTCH for ventilator weaning, summary + nursing + case management complete",
+  "disposition": "Long-term acute care hospital (LTCH)",
+  "discharge_date": "2026-11-13",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    },
+    {
+      "file": "nursing.txt",
+      "kind": "nursing_instructions"
+    },
+    {
+      "file": "casemgmt.txt",
+      "kind": "case_management"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "pass",
+    "pac_choice": "pass",
+    "pac_quality_data": "pass",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "pass"
+  },
+  "rationale": {
+    "pac_list": "Case management note documents that a list of Medicare-certified providers of the referred level of care was given to the patient and family.",
+    "pac_choice": "Case management note documents freedom of choice and that the patient's selected provider was used.",
+    "pac_quality_data": "Case management note documents that Care Compare quality ratings were reviewed with the patient and family.",
+    "functional_status": "Bedbound, transfers with mechanical lift, dependent for ADLs: clearly described even though the status is poor.",
+    "meds_consistent": "Both lists contain the same eight items (glargine, lispro, heparin, famotidine, chlorhexidine, acetaminophen, albuterol, enteral nutrition).",
+    "followup": "LTCH physician on arrival 2026-11-13 and LTCH pulmonology within 24 hours give who and when."
+  },
+  "tags": [
+    "ltch",
+    "three-docs",
+    "icu"
+  ]
+}

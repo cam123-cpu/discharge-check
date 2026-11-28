@@ -1,0 +1,32 @@
+DC SUMMARY (SYNTHETIC RECORD)
+Admit 2026-11-21 / Discharge Date: 2026-11-23
+Attending: Dr. Priya Venkataraman
+
+Discharge Diagnosis: Moderate persistent asthma with acute exacerbation, triggered by viral URI.
+
+Hospital Course: Nebs + steroids. Improved.
+
+Condition at Discharge: Stable. Speaking full sentences, peak flow 78% of personal best, alert and oriented.
+
+Discharge Medications:
+- Budesonide-formoterol 160-4.5 mcg 2 puffs twice daily
+- Albuterol HFA 2 puffs every 4 hours as needed
+- Prednisone 40 mg daily x 3 more days
+- Cetirizine 10 mg daily
+
+Medication Changes:
+- New: budesonide-formoterol replaces fluticasone 110 mcg (stop fluticasone)
+- New: prednisone 40 mg daily, short burst
+- No change: cetirizine
+
+Pending Results: None.
+
+Code Status: Full code. Goal is to get back to teaching (she is a middle-school teacher) and avoid ED visits.
+
+Functional Status: Independent with ADLs, ambulating without dyspnea.
+
+Follow-up: Repeat spirometry in 4-6 weeks. Return to ED for worsening shortness of breath.
+
+Discharge plan and written asthma action plan reviewed with the patient, who verbalized understanding.
+
+Electronically signed by Priya Venkataraman, MD on 2026-11-23 13:20

@@ -1,0 +1,50 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+Nephrology Consult / Hospital Medicine
+
+Admission Date: 2026-11-19
+Discharge Date: 2026-11-24
+Attending: Dr. Rosalind Etxeberria
+
+Chief Complaint: Fatigue and low urine output; creatinine 3.9 on outpatient labs.
+
+Discharge Diagnosis:
+1. Acute kidney injury on chronic kidney disease stage 3b, from volume depletion and ACE inhibitor (creatinine 3.9, baseline 1.8)
+2. Non-anion-gap metabolic acidosis (bicarbonate 17)
+3. Heart failure with preserved ejection fraction, compensated
+4. Type 2 diabetes mellitus
+
+Brief Hospital Course:
+67-year-old man sent in from clinic after routine labs showed a creatinine of 3.9. He had had diarrhea for a week while continuing furosemide and lisinopril. Given cautious IV fluids with daily weights; lisinopril was taken off. Renal ultrasound showed no obstruction. Creatinine improved to 2.3 at discharge. Bicarbonate 19 after oral bicarbonate. No signs of volume overload; lungs clear and weight stable for 48 hours.
+
+Condition at Discharge: Improved. Alert and oriented x3, mental status normal. Up and walking on the unit.
+
+Discharge Disposition: Home with his wife.
+
+Discharge Medications:
+- Furosemide 20 mg by mouth daily
+- Sodium bicarbonate 650 mg by mouth twice daily
+- Amlodipine 10 mg by mouth daily
+- Insulin glargine 14 units at bedtime
+- Atorvastatin 40 mg by mouth nightly
+
+What's different from before:
+- Lisinopril 20 mg: off for now because of the kidney injury; nephrology will decide about restarting
+- Furosemide: dose went from 40 mg to 20 mg daily
+- Sodium bicarbonate 650 mg twice daily: added for low bicarbonate
+- Amlodipine: went from 5 mg to 10 mg daily to cover blood pressure without lisinopril
+
+Outstanding at discharge: urine protein-to-creatinine ratio sent 11/23; Dr. Raman's nephrology office will call him with the result.
+
+Goals of Care: Full code. Wants to avoid dialysis if at all possible and keep caring for his grandchildren after school.
+
+PCP: Dr. Kwame Achebe (555-0124)
+
+Followup Instructions:
+- Nephrology, Dr. Priya Raman; her office will call him with the appointment
+- Repeat basic metabolic panel before the nephrology visit (lab order given)
+
+Discharge planning evaluation: lives with wife in a one-level home; no post-hospital services needed.
+Plan discussed with the patient and his wife, who agree with the plan.
+Discharge summary sent electronically to PCP Dr. Kwame Achebe and to Dr. Priya Raman on 2026-11-24.
+
+Electronically signed by Rosalind Etxeberria, MD on 2026-11-24 15:48

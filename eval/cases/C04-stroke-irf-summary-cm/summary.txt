@@ -1,0 +1,58 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Patient: Augusto Benedetti (synthetic)
+Unit: Neuroscience Stroke Unit
+Admission Date: 2026-11-15
+Discharge Date: 2026-11-20
+Attending: Dr. Yasmin Thorne (Vascular Neurology)
+
+Chief Complaint: Sudden right arm and leg weakness and difficulty speaking.
+
+Discharge Diagnosis:
+1. Acute ischemic stroke, left middle cerebral artery territory, cardioembolic (principal)
+2. Newly diagnosed atrial fibrillation
+3. Hypertension
+4. Type 2 diabetes mellitus
+
+Brief Hospital Course:
+67-year-old right-handed man arrived 90 minutes after onset of right hemiparesis and expressive aphasia, NIHSS 11. He received IV tenecteplase; CT angiography showed no large vessel occlusion. MRI confirmed a left frontal and insular infarct. Telemetry captured paroxysmal atrial fibrillation; transthoracic echo showed no thrombus. Apixaban was started on day 4 after repeat imaging showed no hemorrhagic transformation. NIHSS improved to 5 at discharge with persistent right hand weakness and mild word-finding difficulty. Dysphagia screen was passed on day 2 and he is on a regular diet with thin liquids. Physical, occupational and speech therapy recommend intensive inpatient rehabilitation, and he can tolerate 3 hours of therapy per day.
+
+Condition at Discharge: Stable and improving. Mental status alert and oriented, follows multistep commands; mild expressive aphasia. NIHSS 5.
+
+Discharge Disposition: Inpatient rehabilitation facility (IRF), Riverbend Rehabilitation Institute
+
+Discharge Medications:
+- Apixaban 5 mg by mouth twice daily
+- Atorvastatin 80 mg by mouth nightly
+- Amlodipine 5 mg by mouth daily
+- Metformin 500 mg by mouth twice daily
+- Insulin lispro sliding scale subcutaneously before meals per rehab protocol
+
+Medication Changes:
+- New: apixaban 5 mg twice daily for atrial fibrillation with stroke
+- Changed: atorvastatin increased from 20 mg to 80 mg nightly (high-intensity statin after stroke)
+- Changed: metformin decreased from 1000 mg to 500 mg twice daily while oral intake is lower
+- New: insulin lispro sliding scale while in rehab
+- Stopped: aspirin 81 mg daily (now on apixaban; dual therapy not indicated)
+- Unchanged: amlodipine
+
+Allergies: No known drug allergies
+
+Pending Results: Hemoglobin A1c is pending (drawn 2026-11-19); Dr. Thorne's stroke team will forward the result to the IRF physician and PCP when it returns.
+
+Goals of Care: Full code. Patient's goal, stated with help of his wife, is to walk again and return to their home and his woodworking.
+
+Functional Status: Ambulates 50 feet with a hemi-walker and minimal assistance; right hand grip weak. Needs moderate assistance with upper-body dressing and bathing; independent with eating using adaptive utensils.
+
+PCP: Dr. Ingrid Solberg, Hillcrest Primary Care, 555-0129
+
+Followup Instructions:
+- Stroke clinic, Dr. Yasmin Thorne, in 6 weeks on 2026-12-31
+- PCP Dr. Ingrid Solberg within 1 week of discharge from rehab
+- Cardiology (atrial fibrillation), Dr. Rafael Montague, in 4 weeks on 2026-12-18
+
+Discharge planning evaluation documented by case management on 2026-11-18 (see note). Plan discussed with the patient and his wife, who agree with IRF admission.
+
+Discharge summary sent electronically to Riverbend Rehabilitation Institute admitting physician and copied to PCP Dr. Ingrid Solberg on 2026-11-20.
+
+Electronically signed by Yasmin Thorne, MD on 2026-11-21 08:12

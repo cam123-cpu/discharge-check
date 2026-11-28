@@ -1,0 +1,53 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-09-30
+Attending: Dr. Henrik Saarinen-Bose, Medical Intensive Care Unit
+
+Discharge Diagnoses:
+1. Acute hypoxemic respiratory failure due to severe influenza A pneumonia with ARDS
+2. Chronic respiratory failure, ventilator dependent, status post tracheostomy
+3. Dysphagia, status post percutaneous gastrostomy tube
+4. ICU-acquired weakness
+5. Type 2 diabetes mellitus
+6. Chronic obstructive pulmonary disease, moderate
+
+Hospital Course:
+71-year-old man with COPD presented with fever, cough and rapidly worsening hypoxemia and was intubated in the emergency department. Influenza A PCR was positive. He developed severe ARDS (P/F ratio 74) and was managed with lung-protective ventilation, prone positioning for five sessions, neuromuscular blockade for 48 hours and oseltamivir. A superimposed MRSA ventilator-associated pneumonia was treated with linezolid for 10 days. Oxygenation slowly improved, but two spontaneous breathing trials failed because of weakness and secretions. Tracheostomy was placed by ENT and a PEG tube by gastroenterology. Delirium resolved. He now tolerates trach collar for up to 4 hours a day and rests on pressure support overnight. Because he needs daily weaning attempts and respiratory therapy at a level beyond a skilled nursing facility, the team recommended a long-term acute care hospital.
+
+Condition at Discharge: Stable on ventilator. Alert, follows commands, communicates by mouthing words and writing; mental status intact. Afebrile, hemodynamically stable off pressors for over three weeks.
+
+Discharge Disposition: Long-term acute care hospital (LTCH), Pinecrest Specialty Hospital (fictional), for ventilator weaning.
+
+Ventilator settings at transfer: pressure support 10 / PEEP 5, FiO2 35% overnight; trach collar 35% for 4 hours twice daily as tolerated.
+
+Discharge Medications:
+- Insulin glargine 14 units subcutaneously at bedtime
+- Insulin lispro correction scale every 6 hours with tube feeds
+- Heparin 5,000 units subcutaneously every 8 hours
+- Tiotropium 18 mcg inhaled daily via in-line adapter
+- Albuterol-ipratropium nebulizer every 6 hours
+- Famotidine 20 mg per G-tube twice daily
+- Quetiapine 25 mg per G-tube at bedtime
+- Tube feeding: standard 1.5 kcal formula at 55 mL per hour continuous
+
+Medication Changes:
+- New: insulin glargine and correction scale (replaces home metformin, now held), heparin prophylaxis, famotidine, quetiapine
+- Stopped: metformin 1000 mg twice daily (tube feeds, insulin regimen)
+- Changed: home tiotropium Respimat changed to inhaled capsule with in-line adapter
+
+Pending Results: Final fungal culture of bronchoalveolar lavage from 2026-10-02 is pending (no growth to date). Dr. Saarinen-Bose will follow it and call the LTCH physician if it turns positive.
+
+Goals of Care: Full code. Patient and wife hope he can be liberated from the ventilator and return home. Advance directive on file names his wife as healthcare agent.
+
+Functional Status: Bedbound; sits on edge of bed with maximal assist of two; dependent for all ADLs. PT and OT to continue.
+
+Follow-up:
+- LTCH attending, Dr. Corinne Abiodun, to assume care on arrival
+- Pulmonology clinic, Dr. Saarinen-Bose, within 2 weeks after LTCH discharge
+- PCP Dr. Rasmus Ekwueme (555-0186) to be updated by phone the week of transfer
+
+Discharge planning evaluation by case management documented separately.
+Plan discussed with the patient and his wife at a family meeting; both agree with the plan.
+Discharge summary faxed to Pinecrest Specialty Hospital and copied to PCP Dr. Rasmus Ekwueme.
+
+Electronically signed by Henrik Saarinen-Bose, MD on 2026-11-25 11:02

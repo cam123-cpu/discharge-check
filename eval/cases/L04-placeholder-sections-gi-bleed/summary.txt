@@ -1,0 +1,45 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+Gastroenterology / Hospital Medicine
+
+Admission Date: 2026-11-15
+Discharge Date: 2026-11-19
+Attending: Dr. Benedikt Saarinen
+
+Chief Complaint: Black stools and lightheadedness for two days.
+
+Discharge Diagnosis:
+1. Upper GI bleed from a 1.2 cm duodenal bulb ulcer, treated endoscopically
+2. Acute blood loss anemia
+3. NSAID use (naproxen for knee osteoarthritis)
+
+Brief Hospital Course:
+70-year-old man admitted with melena and hemoglobin 7.2 (baseline 13). Received 2 units packed red cells and IV pantoprazole infusion. EGD on hospital day 1 showed a duodenal bulb ulcer with a visible vessel, treated with epinephrine injection and two clips. Gastric biopsies were obtained for H. pylori. No rebleeding; hemoglobin stable at 9.1 for 48 hours. Diet advanced to regular. Naproxen stopped permanently.
+
+Discharge Condition: See progress note.
+
+Discharge Disposition: Home with his wife.
+
+Discharge Medications:
+- Pantoprazole 40 mg by mouth twice daily for 8 weeks, then once daily
+- Ferrous sulfate 325 mg by mouth daily
+- Amlodipine 5 mg by mouth daily
+- Acetaminophen 650 mg by mouth every 6 hours as needed for knee pain
+
+Medication Changes:
+- New: pantoprazole 40 mg twice daily
+- New: ferrous sulfate 325 mg daily
+- Stopped: naproxen 500 mg twice daily (ulcer); do not restart any NSAID
+
+Pending Results: See above.
+
+Goals of Care: Per CM.
+
+Functional Status: Independent with ADLs and ambulation, no assistive device.
+
+PCP: Dr. Marguerite Ellison (555-0151)
+
+Followup Instructions: Per nursing discharge instructions.
+
+Discharge summary sent electronically to PCP Dr. Marguerite Ellison on 2026-11-19.
+
+Electronically signed by Benedikt Saarinen, MD on 2026-11-19 14:20

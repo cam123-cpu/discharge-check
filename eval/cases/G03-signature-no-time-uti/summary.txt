@@ -1,0 +1,43 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-13
+Discharge Date: 2026-11-17
+Attending Physician: Owen Park, MD
+
+DISCHARGE DIAGNOSIS:
+1. Acute cystitis due to Escherichia coli
+2. Delirium secondary to infection, resolved
+3. Alzheimer dementia, mild
+
+HOSPITAL COURSE:
+81-year-old woman with mild dementia brought in by her daughter for two days of new confusion, poor oral intake and urinary frequency. Urinalysis showed pyuria and nitrites; urine culture grew E. coli sensitive to cephalexin. Started on IV ceftriaxone, then narrowed to oral cephalexin. Delirium precautions with reorientation, sleep hygiene and family presence; no antipsychotics were needed. By day 3 she was back to her baseline per daughter, eating well, and continent.
+
+CONDITION AT DISCHARGE: Stable. Mental status at baseline (oriented to person and place, pleasant, follows commands).
+
+DISPOSITION: Discharged home to daughter's house, where she has lived for two years.
+
+DISCHARGE MEDICATIONS:
+1. Cephalexin 500 mg by mouth every 12 hours for 3 more days
+2. Donepezil 10 mg by mouth at bedtime
+3. Levothyroxine 75 mcg by mouth daily before breakfast
+4. Acetaminophen 650 mg by mouth every 6 hours as needed for pain
+
+MEDICATION CHANGES:
+- Started cephalexin 500 mg every 12 hours, short course
+- Stopped oxybutynin 5 mg daily (anticholinergic, may worsen confusion)
+
+PENDING RESULTS: None.
+
+CODE STATUS / GOALS OF CARE: DNR/DNI, confirmed with patient and daughter (healthcare proxy). Goal is comfort and staying at home with family; would accept rehospitalization for treatable illness.
+
+FUNCTIONAL STATUS: Ambulates with a rolling walker and standby assistance; needs assistance with bathing, independent with feeding.
+
+FOLLOW-UP:
+- PCP Dr. Beatrix Holloway (555-0163) within 7 days, appointment 2026-11-23
+- Memory clinic as previously scheduled on 2026-12-14
+
+Discharge planning evaluation: daughter provides 24-hour supervision; patient already has a shower chair and walker; no new post-hospital services needed.
+The discharge plan was discussed with the patient and her daughter, who agree with the plan.
+Summary faxed to PCP Dr. Beatrix Holloway's office on 2026-11-18.
+
+Electronically signed by Owen Park, MD on 2026-11-18

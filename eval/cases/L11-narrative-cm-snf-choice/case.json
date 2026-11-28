@@ -1,0 +1,42 @@
+{
+  "id": "L11-narrative-cm-snf-choice",
+  "category": "linguistic",
+  "title": "Wrist and pelvic fractures to SNF; plan discussion, provider list, choice and quality data all documented in plain-language CM narrative",
+  "disposition": "Skilled nursing facility (SNF)",
+  "discharge_date": "2026-11-24",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"},
+    {"file": "casemgmt.txt", "kind": "case_management"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "pass",
+    "pac_choice": "pass",
+    "pac_quality_data": "pass",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "not_applicable"
+  },
+  "rationale": {
+    "dp_discussed": "'Went over the plan with both of them ... They are on board' documents a discussion with the patient and her sister and their agreement.",
+    "pac_list": "'I gave them the county roster of Medicare-certified nursing homes that have rehab beds (14 facilities)' is the Medicare-participating provider list, phrased as a roster.",
+    "pac_choice": "The CM told her 'the decision is hers alone', offered referrals anywhere she wanted, and her first choice (Harbor View) is the facility she went to.",
+    "pac_quality_data": "'We went through the CMS five-star scores and the staffing and inspection results for each facility' is quality data shared to support the choice.",
+    "meds_consistent": "No nursing instructions were provided."
+  },
+  "tags": ["paraphrase", "narrative", "snf", "multi-doc"]
+}

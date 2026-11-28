@@ -1,0 +1,43 @@
+{
+  "id": "E07-ltch-no-discharge-date",
+  "category": "edge",
+  "title": "LTCH referral for ventilator weaning with the discharge date missing everywhere (hint blank, no discharge date in any document); timeliness unclear",
+  "disposition": "Long-term acute care hospital (LTCH)",
+  "discharge_date": "",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"},
+    {"file": "casemgmt.txt", "kind": "case_management"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "pass",
+    "pac_choice": "pass",
+    "pac_quality_data": "pass",
+    "authenticated": "pass",
+    "timeliness": "unclear",
+    "meds_consistent": "not_applicable"
+  },
+  "rationale": {
+    "timeliness": "EDGE: no discharge date appears in the hint or any document; admission was 2026-09-30 and the summary was signed 2026-11-25, so discharge could be anywhere in that 56-day window and the 30-day deadline cannot be derived.",
+    "followup": "The LTCH attending assumes care on arrival and pulmonology is within 2 weeks after LTCH discharge; who and when are both given.",
+    "pac_list": "LTCH is a post-acute referral; the Medicare-participating LTCH list is documented.",
+    "pac_quality_data": "Care Compare quality measures (ventilator liberation and pressure injury rates) were reviewed with the patient and wife.",
+    "info_transmitted": "The summary was faxed to the LTCH and copied to the PCP.",
+    "meds_consistent": "No nursing_instructions document was uploaded."
+  },
+  "tags": ["ltch", "missing-discharge-date", "timeliness", "post-acute", "ventilator"]
+}

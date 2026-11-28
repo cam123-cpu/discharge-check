@@ -1,0 +1,37 @@
+Discharge Summary (SYNTHETIC RECORD)
+Unit 5 West, General Medicine
+
+Admit date: 2026-09-29
+Discharge Date: 2026-10-02
+Attending: Dr. Felix Amador
+
+Final Diagnosis: Nonpurulent cellulitis of the left lower leg. Secondary: tinea pedis, venous stasis.
+
+Hospital Course: 45-year-old man, otherwise healthy apart from obesity, admitted with three days of spreading erythema, warmth and swelling of the left shin with fever to 38.6 C. No abscess on bedside ultrasound. Treated with IV cefazolin; erythema receded inside the marked borders within 48 hours and fever resolved. Interdigital tinea, the likely portal of entry, was treated with topical terbinafine. Transitioned to oral cephalexin on day 3. Discharged improved.
+
+Condition at Discharge: Good. Alert and oriented, afebrile, pain 2/10.
+
+Disposition: Home (self-care).
+
+Discharge Medications:
+- Cephalexin 500 mg by mouth four times daily for 5 more days
+- Terbinafine 1% cream to the toe webs twice daily for 2 weeks
+- Ibuprofen 400 mg by mouth every 8 hours as needed with food
+
+Medication Changes: New cephalexin, terbinafine cream and ibuprofen as needed, as above. No changes to home medications (he takes none).
+
+Pending Results: None pending.
+
+Goals of Care: Full code. Patient's goal is to return to his warehouse job in one week.
+
+Activity: Independent, ambulating without assistance. Elevate the leg when seated.
+
+Follow-up:
+- PCP Dr. Nadia Lindqvist in 3-5 days (scheduled 2026-10-06) for wound check
+- Compression stockings fitting with PCP after infection clears, in 2 weeks
+
+Discharge planning evaluation: independent, lives with partner, no post-hospital services needed.
+Plan discussed with the patient, who agrees with the plan and verbalized understanding.
+Summary sent electronically to PCP Dr. Nadia Lindqvist on 2026-11-04.
+
+Electronically signed by Felix Amador, MD on 2026-11-04 09:15

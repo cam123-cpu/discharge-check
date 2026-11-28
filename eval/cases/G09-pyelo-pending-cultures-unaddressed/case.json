@@ -1,0 +1,53 @@
+{
+  "id": "G09-pyelo-pending-cultures-unaddressed",
+  "category": "gap",
+  "title": "Pyelonephritis, home; summary never addresses results still outstanding at discharge (single gap)",
+  "disposition": "Home",
+  "discharge_date": "2026-11-22",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    },
+    {
+      "file": "nursing.txt",
+      "kind": "nursing_instructions"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "fail",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "pass"
+  },
+  "also_acceptable": {
+    "pending_results": [
+      "unclear"
+    ]
+  },
+  "rationale": {
+    "pending_results": "Urine culture susceptibilities and final blood cultures are still outstanding per the hospital course, but the summary neither lists results pending at discharge nor names who will follow them up.",
+    "pac_list": "Not referred to home health, SNF, IRF or LTCH, so the three post-acute rules do not apply."
+  },
+  "tags": [
+    "pending-results",
+    "single-gap"
+  ]
+}

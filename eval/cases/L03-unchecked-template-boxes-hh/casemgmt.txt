@@ -1,0 +1,22 @@
+CASE MANAGEMENT DISCHARGE PLANNING NOTE (SYNTHETIC RECORD)
+Template v3. Check all that apply.
+
+Discharge Planning Assessment:
+[x] Assessment completed on admission 2026-11-11
+Lives with husband (age 84) in a single-story home with 2 steps to enter.
+Prior level of function independent with a cane; husband able to help with meals.
+Anticipated post-hospital needs: skilled nursing visits for wound care and home PT.
+
+Patient and Representative Communication:
+[ ] Discharge plan discussed with patient/family
+[ ] Patient/representative verbalized understanding and agrees with plan
+
+Post-Acute Provider Selection:
+[ ] List of Medicare-certified home health agencies serving the patient's ZIP code provided
+[ ] Patient informed of freedom of choice of agency
+[ ] Quality data (Care Compare star ratings) reviewed with patient/representative
+Agency selected by patient: ____________
+
+Referral: home health referral faxed to Brightwater Home Health on 2026-11-14.
+
+Signed by: Joanne Pruitt, RN CM 2026-11-14

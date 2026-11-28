@@ -1,0 +1,56 @@
+{
+  "id": "G01-unsigned-delinquent-copd",
+  "category": "gap",
+  "title": "COPD exacerbation, home; summary never signed 46 days after discharge, medication changes not explained",
+  "disposition": "Home",
+  "discharge_date": "2026-10-12",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    },
+    {
+      "file": "nursing.txt",
+      "kind": "nursing_instructions"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "fail",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "fail",
+    "timeliness": "fail",
+    "meds_consistent": "pass"
+  },
+  "also_acceptable": {
+    "med_changes": [
+      "unclear"
+    ]
+  },
+  "rationale": {
+    "authenticated": "The summary has no signature line at all; it ends with a dictation note and 'Document status: preliminary'.",
+    "timeliness": "Unsigned, and 46 days have passed since the 2026-10-12 discharge as of 2026-11-27, so the record is delinquent.",
+    "med_changes": "Prednisone and doxycycline are clearly new, but neither document says which medications were started, stopped or changed, and there is no statement that nothing changed.",
+    "pac_list": "Not referred to home health, SNF, IRF or LTCH, so the three post-acute rules do not apply."
+  },
+  "tags": [
+    "signature",
+    "delinquent",
+    "multi-gap"
+  ]
+}

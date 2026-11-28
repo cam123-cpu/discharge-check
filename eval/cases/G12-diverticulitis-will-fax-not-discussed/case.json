@@ -1,0 +1,53 @@
+{
+  "id": "G12-diverticulitis-will-fax-not-discussed",
+  "category": "gap",
+  "title": "Diverticulitis, home; summary transmission only planned ('will fax') and plan never documented as discussed with the patient",
+  "disposition": "Home",
+  "discharge_date": "2026-11-25",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "unclear",
+    "dp_evaluation": "pass",
+    "dp_discussed": "fail",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "not_applicable"
+  },
+  "also_acceptable": {
+    "info_transmitted": [
+      "fail"
+    ]
+  },
+  "rationale": {
+    "info_transmitted": "The note only says the summary will be faxed; there is no evidence it was actually sent.",
+    "dp_discussed": "No document shows the discharge plan was discussed with the patient or a representative; the only patient preference noted concerns surgery, not the discharge plan.",
+    "pac_list": "Not referred to home health, SNF, IRF or LTCH, so the three post-acute rules do not apply.",
+    "meds_consistent": "No nursing discharge instructions were provided, so there is nothing to compare."
+  },
+  "tags": [
+    "transmission",
+    "planned-not-done",
+    "dp-discussed",
+    "multi-gap"
+  ]
+}

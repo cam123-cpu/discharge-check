@@ -1,0 +1,47 @@
+{
+  "id": "L09-copied-forward-signature",
+  "category": "linguistic",
+  "title": "Asthma exacerbation, home; only signature is a copied-forward H&P signature, 'PCP: None' and 'cc: None'",
+  "disposition": "Home",
+  "discharge_date": "2026-11-12",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "summary.txt", "kind": "discharge_summary"},
+    {"file": "nursing.txt", "kind": "nursing_instructions"}
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "fail",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "fail",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "fail",
+    "timeliness": "unclear",
+    "meds_consistent": "pass"
+  },
+  "also_acceptable": {
+    "pcp_named": ["unclear"],
+    "info_transmitted": ["unclear"]
+  },
+  "rationale": {
+    "authenticated": "The only signature line belongs to the H&P copied into the summary (Dr. Okonjo, 2026-11-08, before discharge); the attending signature line is blank and marked pending, so the summary itself is unsigned.",
+    "timeliness": "The summary is unsigned and only 15 days have passed since discharge on 2026-11-12, so it is still inside the 30-day window.",
+    "pcp_named": "'PCP: None' states there is no PCP, and follow-up is with a clinic, not a named clinician.",
+    "info_transmitted": "'cc: None' says the summary was copied to no one, and nothing else shows it was sent to the clinic.",
+    "followup": "Follow-up names the Eastside clinic and a timeframe of within 1 week.",
+    "pac_list": "Home without services, so the post-acute rules do not apply."
+  },
+  "tags": ["signature", "copy-forward", "negation", "none-value"]
+}

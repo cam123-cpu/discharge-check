@@ -1,0 +1,46 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-16
+Discharge Date: 2026-11-19
+Attending: Dr. Augustin Delacroix
+
+Discharge Diagnosis:
+1. Acute upper GI bleed from a 1.2 cm gastric ulcer, Forrest IIa, treated endoscopically
+2. Acute blood loss anemia
+3. Osteoarthritis of both knees
+
+Brief Hospital Course:
+66-year-old woman with knee osteoarthritis taking daily naproxen and aspirin for primary prevention presented with two days of melena and lightheadedness. Hemoglobin 7.1 from a baseline of 12.8. She received two units of packed red cells and IV pantoprazole. EGD on day 1 showed a gastric body ulcer with a visible vessel, treated with epinephrine injection and two clips. Gastric biopsies were obtained; H. pylori stool antigen was positive and treatment was started. No further bleeding; hemoglobin stable at 9.4 for 48 hours.
+
+Condition at Discharge: Stable, hemodynamically normal, tolerating a regular diet. Alert and oriented.
+
+Disposition: Home with husband.
+
+Discharge Medications:
+- Pantoprazole 40 mg by mouth twice daily for 8 weeks
+- Bismuth subcitrate-metronidazole-tetracycline capsules 3 capsules four times daily for 10 days
+- Acetaminophen 1000 mg by mouth every 8 hours as needed for knee pain
+- Ferrous sulfate 325 mg by mouth every other day
+- Losartan 50 mg by mouth daily
+
+Medication Changes:
+- Stopped: aspirin 81 mg daily (primary prevention only; risk now outweighs benefit)
+- Stopped: naproxen 500 mg twice daily (ulcer cause). Avoid all NSAIDs.
+- New: pantoprazole, bismuth quadruple therapy for H. pylori, ferrous sulfate
+- Acetaminophen replaces naproxen for knee pain
+
+Pending Results: Gastric biopsy pathology pending; Dr. Delacroix (GI) will review and call the patient.
+
+Goals of Care: Full code. Wants to keep walking with her hiking group; open to knee injections instead of pills.
+
+Functional Status: Independent with ADLs; ambulating without a device.
+
+Follow-up:
+- PCP Dr. Rhiannon Achebe (555-0151) in 1 week (2026-11-26) with CBC
+- GI clinic, Dr. Augustin Delacroix, in 8 weeks for repeat EGD and H. pylori test of cure
+
+Discharge planning evaluation: no post-hospital services needed; husband available.
+The discharge plan was discussed with the patient and her husband; she verbalized understanding of the NSAID avoidance.
+Discharge summary sent electronically to PCP Dr. Rhiannon Achebe on 2026-11-19.
+
+Electronically signed by Augustin Delacroix, MD on 2026-11-19 15:02

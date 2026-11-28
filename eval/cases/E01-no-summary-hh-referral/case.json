@@ -1,0 +1,54 @@
+{
+  "id": "E01-no-summary-hh-referral",
+  "category": "edge",
+  "title": "No discharge summary uploaded at all (nursing instructions + case management only); cellulitis, home with home health, 44 days after discharge",
+  "disposition": "Home with home health services",
+  "discharge_date": "2026-10-14",
+  "today": "2026-11-27",
+  "documents": [
+    {"file": "nursing.txt", "kind": "nursing_instructions"},
+    {"file": "casemgmt.txt", "kind": "case_management"}
+  ],
+  "expected": {
+    "final_diagnosis": "fail",
+    "hospital_course": "fail",
+    "discharge_condition": "fail",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "fail",
+    "med_changes": "pass",
+    "pending_results": "fail",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "unclear",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "pass",
+    "pac_choice": "pass",
+    "pac_quality_data": "pass",
+    "authenticated": "fail",
+    "timeliness": "fail",
+    "meds_consistent": "fail"
+  },
+  "also_acceptable": {
+    "info_transmitted": ["fail"],
+    "meds_consistent": ["unclear"]
+  },
+  "rationale": {
+    "final_diagnosis": "EDGE: no discharge summary was provided and this rule accepts only the discharge summary; the case management note mentioning cellulitis does not count.",
+    "hospital_course": "EDGE: summary-only rule and no discharge summary was provided.",
+    "discharge_condition": "EDGE: summary-only rule and no discharge summary was provided.",
+    "disposition": "Disposition is accepted from the case management note, which states home with home health services.",
+    "discharge_meds": "EDGE: the nursing medication list does not satisfy this summary-only rule.",
+    "med_changes": "Accepted from nursing instructions, which list the new cephalexin and the increased insulin glargine dose.",
+    "pending_results": "EDGE: summary-only rule and no discharge summary was provided.",
+    "info_transmitted": "A referral packet was faxed to the agency, but the case manager states the physician discharge summary was not yet available and only promises to forward it, so transmission of the summary is incomplete.",
+    "pac_list": "Home health referral, so the post-acute rules apply; the case management note documents the Medicare-participating agency list.",
+    "pac_quality_data": "Care Compare star ratings were printed beside each agency and reviewed with the patient.",
+    "authenticated": "EDGE: there is no discharge summary to be signed.",
+    "timeliness": "EDGE: no discharge summary exists 44 days after the 2026-10-14 discharge, so the record was not completed within 30 days.",
+    "meds_consistent": "EDGE: nursing instructions exist but there is no summary medication list to match them against; the required document is missing (unclear is also defensible since no comparison is possible)."
+  },
+  "tags": ["missing-summary", "home-health", "summary-only-rules", "delinquent"]
+}

@@ -1,0 +1,59 @@
+{
+  "id": "C08-ugib-home-natural",
+  "category": "control",
+  "title": "Upper GI bleed, home without services, complete record written in natural clinical prose (summary + nursing)",
+  "disposition": "Home",
+  "discharge_date": "2026-11-23",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    },
+    {
+      "file": "nursing.txt",
+      "kind": "nursing_instructions"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "not_applicable",
+    "pac_choice": "not_applicable",
+    "pac_quality_data": "not_applicable",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "pass"
+  },
+  "rationale": {
+    "pac_list": "Discharged home without home health, SNF, IRF or LTCH services, so the three post-acute choice rules do not apply.",
+    "final_diagnosis": "Listed under 'Diagnoses at discharge, in order of importance' rather than a templated header.",
+    "discharge_condition": "'How he is at discharge: good condition' with vitals, mental status (alert and oriented) and walking unaided.",
+    "disposition": "'He goes home to his apartment. He doesn't need home services.'",
+    "med_changes": "Prose paragraph names started, stopped (ibuprofen), held (losartan) and unchanged medications with reasons.",
+    "pending_results": "Biopsies including H. pylori staining are outstanding and Dr. Nakamura's GI office is named to follow them up.",
+    "goals_of_care": "Code status (full code) and his stated priorities are documented.",
+    "info_transmitted": "Summary went to the PCP through the EHR inbox on the discharge date, with a copy to GI.",
+    "dp_evaluation": "Case manager's assessment of post-discharge needs, supports and medication access is described in prose.",
+    "dp_discussed": "Plan was gone over with the patient and his sister, who explained it back and agrees.",
+    "authenticated": "'E-signed by ... 11/23/2026 18:27' gives signer, date and time.",
+    "meds_consistent": "Both lists contain pantoprazole, amlodipine, ferrous sulfate and acetaminophen; losartan is held and absent from both."
+  },
+  "tags": [
+    "paraphrase",
+    "natural-wording",
+    "home"
+  ]
+}

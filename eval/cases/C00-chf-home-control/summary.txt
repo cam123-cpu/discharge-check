@@ -1,0 +1,50 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-10
+Discharge Date: 2026-11-14
+Attending: Dr. Amelia Rivera
+
+Chief Complaint: Shortness of breath and leg swelling for one week.
+
+Discharge Diagnosis:
+1. Acute on chronic heart failure with reduced ejection fraction (EF 30%)
+2. Hypertension
+3. Chronic kidney disease stage 3a
+
+Brief Hospital Course:
+71-year-old man with known HFrEF admitted with volume overload, 6 kg above dry weight. He was diuresed with IV furosemide 40 mg twice daily with net negative 5.8 L over four days. Creatinine peaked at 1.6 from baseline 1.4 and returned to 1.4 at discharge. Dyspnea resolved and he walked the unit without oxygen. Echocardiogram showed EF 30%, unchanged from 2025. Sacubitril-valsartan was started in place of lisinopril after a 36-hour washout.
+
+Condition at Discharge: Stable. Mental status alert and oriented. Ambulating independently without assistive device.
+
+Discharge Disposition: Home
+
+Discharge Medications:
+- Furosemide 40 mg by mouth daily
+- Sacubitril-valsartan 24-26 mg by mouth twice daily
+- Metoprolol succinate 50 mg by mouth daily
+- Spironolactone 12.5 mg by mouth daily
+- Atorvastatin 40 mg by mouth nightly
+
+Medication Changes:
+- New: sacubitril-valsartan 24-26 mg twice daily (replaces lisinopril for HFrEF)
+- Stopped: lisinopril 20 mg daily
+- Changed: furosemide increased from 20 mg to 40 mg daily
+
+Allergies: No known drug allergies
+
+Pending Results: None pending at discharge.
+
+Goals of Care: Full code. Patient wants to stay at home and keep gardening; he prefers oral medications over further hospital stays.
+
+Functional Status: Independent with ADLs. Ambulating 150 feet without a walker.
+
+Followup Instructions:
+- PCP Dr. Lena Okafor (555-0142) within 7 days for weight and potassium check, appointment 2026-11-19
+- Heart failure clinic, Dr. Rivera, in 2 weeks on 2026-11-28
+- Basic metabolic panel on 2026-11-18
+
+Discharge planning evaluation: screened on admission; no post-hospital services needed, family support at home.
+The discharge plan was discussed with the patient and his daughter, who verbalized understanding.
+Discharge summary sent electronically to PCP Dr. Lena Okafor on 2026-11-14.
+
+Electronically signed by Amelia Rivera, MD on 2026-11-14 16:42

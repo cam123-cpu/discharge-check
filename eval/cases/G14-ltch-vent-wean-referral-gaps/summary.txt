@@ -1,0 +1,33 @@
+DISCHARGE / TRANSFER SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-10-30
+Discharge Date: 2026-11-21
+Attending: Dr. Anselm Okonkwo-Reyes, Critical Care
+
+Hospital Course:
+61-year-old man with COPD and diabetes admitted through the ED with fever, hypoxemia and hypotension requiring norepinephrine. Intubated on arrival. Bronchoalveolar lavage grew methicillin-resistant Staphylococcus aureus; treated with IV vancomycin for 14 days, completed 2026-11-14. Vasopressors weaned off by day 4. Course complicated by ICU-acquired weakness and two failed spontaneous breathing trials; tracheostomy and PEG placed on 2026-11-12. Currently on pressure support 10/5, FiO2 35%, tolerating trach-collar trials up to 4 hours daily. Tube feeds at goal. Requires continued ventilator weaning, which cannot be provided at a lower level of care.
+
+Discharge Disposition: LTCH (long-term acute care hospital), Lakeshore Specialty Hospital; bed accepted for 2026-11-21.
+
+Discharge Medications: Refer to transfer MAR sent with the patient.
+
+Medication Changes:
+- Stopped: home lisinopril 10 mg (hypotension during admission; reassess at LTCH)
+- Stopped: home metformin 1000 mg twice daily (on tube feeds; insulin instead)
+- New: insulin glargine 12 units daily with correction scale via PEG feeding schedule
+- New: chlorhexidine oral care and pantoprazole 40 mg daily while ventilated
+
+Pending Results: Final 2026-11-19 sputum culture; ICU team will call the LTCH attending with the result.
+
+Code Status: Not addressed this admission; to be determined at LTCH with family.
+
+Functional Status: Bedbound; total assistance for ADLs and repositioning; follows simple commands; PT working on sitting balance.
+
+Follow-up:
+- LTCH attending to evaluate on arrival; pulmonology, Dr. Ines Varga, to follow at Lakeshore within 1 week
+- Tracheostomy clinic in 4 weeks (2026-12-19)
+- PCP Dr. Raymond Tull after LTCH discharge, within 2 weeks of returning home
+
+Discharge summary and transfer MAR faxed to Lakeshore Specialty Hospital admissions on 2026-11-21.
+
+Electronically signed by Anselm Okonkwo-Reyes, MD on 2026-11-21 08:55

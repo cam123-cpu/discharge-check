@@ -1,0 +1,27 @@
+NURSING TRANSFER AND DISCHARGE INSTRUCTIONS (SYNTHETIC RECORD)
+
+Patient: Thaddeus Okonkwo (synthetic)
+Discharge Date: 2026-11-13
+Receiving facility: Cedar Ridge Specialty Hospital (LTCH). Nurse-to-nurse report given by phone to 555-0172 at 10:15.
+
+Medications:
+- Insulin glargine 18 units at 21:00 (last given 2026-11-12 21:00)
+- Insulin lispro correction scale every 6 hours (last given 06:00)
+- Heparin 5000 units every 8 hours (last given 06:00)
+- Famotidine 20 mg per PEG twice daily (last given 08:00)
+- Chlorhexidine 0.12% oral rinse twice daily
+- Acetaminophen 650 mg per PEG every 6 hours as needed (last given 2026-11-12 18:00)
+- Albuterol 2.5 mg nebulized every 4 hours as needed
+- Enteral nutrition high-protein formula 60 mL/hour continuous
+
+Airway: Size 7 cuffed tracheostomy, placed 2026-11-03. Trach collar 28% FiO2 by day as tolerated, pressure support 10/5 overnight. Spare trach and obturator sent with patient.
+
+Skin: Stage 2 sacral pressure injury, foam dressing, change every 3 days; turn every 2 hours.
+
+Mobility: Bedbound, mechanical lift for transfers.
+
+Follow-up: LTCH pulmonology reassessment within 24 hours of arrival (2026-11-14).
+
+Transfer plan reviewed with patient and wife; wife verbalized understanding and will meet him at Cedar Ridge.
+
+Signed by: Rosalie Mbatha, RN

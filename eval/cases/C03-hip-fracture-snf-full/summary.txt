@@ -1,0 +1,60 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Patient: Wilhelmina Strand (synthetic)
+Unit: 6 East Orthopedics
+Admission Date: 2026-11-02
+Discharge Date: 2026-11-07
+Attending: Dr. Kwame Adjei
+Surgeon: Dr. Petra Lindqvist
+
+Chief Complaint: Fall at home with left hip pain and inability to bear weight.
+
+Discharge Diagnosis:
+1. Left intertrochanteric femur fracture, status post cephalomedullary nail fixation 2026-11-03 (principal)
+2. Acute blood loss anemia, postoperative
+3. Postoperative delirium, resolved
+4. Osteoporosis
+5. Hypothyroidism
+
+Brief Hospital Course:
+86-year-old woman who tripped over a rug at home and sustained a left intertrochanteric fracture. She underwent intramedullary nail fixation on hospital day 2 without complication. Hemoglobin fell from 11.8 to 8.1; she received one unit of packed red cells on postoperative day 1 with appropriate rise to 9.2, stable at 9.4 at discharge. She had hypoactive delirium on postoperative nights 1 and 2, managed with sleep hygiene, glasses and hearing aids, and avoidance of sedatives; it resolved by postoperative day 3. Pain is controlled on scheduled acetaminophen with rare oxycodone. Vitamin D level was 18 and supplementation was started. She is weight bearing as tolerated and working with PT, but is not yet safe to return home alone.
+
+Condition at Discharge: Stable. Mental status alert and oriented to person, place and date, at her cognitive baseline per her daughter. Pain 2/10 at rest.
+
+Discharge Disposition: Skilled nursing facility (SNF), Birchwood Health and Rehabilitation, for short-term rehabilitation
+
+Discharge Medications:
+- Acetaminophen 1000 mg by mouth every 8 hours
+- Oxycodone 2.5 mg by mouth every 6 hours as needed for severe pain
+- Enoxaparin 40 mg subcutaneously daily through 2026-12-01
+- Cholecalciferol 2000 units by mouth daily
+- Levothyroxine 75 mcg by mouth daily before breakfast
+- Senna 8.6 mg by mouth nightly
+- Polyethylene glycol 17 g by mouth daily as needed for constipation
+
+Medication Changes:
+- New: acetaminophen scheduled, oxycodone as needed, enoxaparin for VTE prophylaxis for 4 weeks after surgery, cholecalciferol for vitamin D deficiency, senna and polyethylene glycol for constipation prevention
+- Stopped: alendronate 70 mg weekly, held until orthopedic follow-up per surgeon, to be reconsidered at the 2-week visit
+- Stopped: zolpidem 5 mg nightly, discontinued because of delirium risk
+- Unchanged: levothyroxine
+
+Allergies: Codeine (nausea)
+
+Pending Results: None pending at discharge.
+
+Goals of Care: Full code, confirmed with patient and her daughter (healthcare proxy). Goal is to regain walking and return to her apartment with family help.
+
+Functional Status: Weight bearing as tolerated on the left leg. Ambulates 40 feet with a front-wheeled walker and moderate assistance of one. Needs assistance with lower-body dressing, toileting and bathing.
+
+PCP: Dr. Augustin Melrose, Riverside Geriatrics, 555-0158
+
+Followup Instructions:
+- Orthopedic surgery, Dr. Petra Lindqvist, in 2 weeks on 2026-11-17 for staple removal and radiographs
+- PCP Dr. Augustin Melrose within 7 days of SNF discharge to review osteoporosis treatment
+- SNF physician to check CBC on 2026-11-10
+
+Discharge planning evaluation completed by case management (note dated 2026-11-05); SNF level of care needed. Plan discussed with the patient and her daughter, who agree with SNF placement.
+
+Discharge summary, medication list and therapy notes sent electronically to Birchwood Health and Rehabilitation (SNF) and copied to PCP Dr. Augustin Melrose on 2026-11-07.
+
+Electronically signed by Kwame Adjei, MD on 2026-11-07 13:48

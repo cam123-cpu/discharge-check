@@ -1,0 +1,62 @@
+{
+  "id": "C09-urosepsis-snf-natural",
+  "category": "control",
+  "title": "E. coli urosepsis, discharged to SNF, complete record in natural clinical prose (summary + nursing + case management)",
+  "disposition": "Skilled nursing facility (SNF)",
+  "discharge_date": "2026-11-16",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    },
+    {
+      "file": "nursing.txt",
+      "kind": "nursing_instructions"
+    },
+    {
+      "file": "casemgmt.txt",
+      "kind": "case_management"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "pass",
+    "pac_choice": "pass",
+    "pac_quality_data": "pass",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "pass"
+  },
+  "rationale": {
+    "pac_list": "Case manager printed every Medicare-certified SNF within 10 miles (seven) and walked the patient and daughter through it.",
+    "pac_choice": "Note says the decision is theirs, any facility on the sheet, and the facility they chose was used.",
+    "pac_quality_data": "Care Compare star ratings, inspections, staffing and short-stay quality measures were reviewed with them.",
+    "hospital_course": "Narrative under 'Why she was here and what happened' describes treatment and recovery.",
+    "discharge_condition": "'Her state today: stable and back to herself' with mental status and mobility.",
+    "disposition": "'Where she is going: Fairhaven Gardens, a skilled nursing facility (SNF)'.",
+    "pending_results": "'Results not yet back: none. All cultures are final.'",
+    "dp_evaluation": "Summary refers to the case management assessment of post-hospital needs, which the CM note documents in full (needs, supports, availability).",
+    "dp_discussed": "Plan explained to the patient and daughter, who agreed (summary and CM note).",
+    "info_transmitted": "Summary and medication list faxed to the SNF and sent to the PCP on the discharge date."
+  },
+  "tags": [
+    "paraphrase",
+    "natural-wording",
+    "snf",
+    "three-docs"
+  ]
+}

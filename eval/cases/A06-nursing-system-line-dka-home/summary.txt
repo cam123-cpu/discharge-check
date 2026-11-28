@@ -1,0 +1,43 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-16
+Discharge Date: 2026-11-19
+Attending: Dr. Benedikt Haas
+PCP: Dr. Imani Wells (555-0134)
+
+Discharge Diagnosis:
+1. Diabetic ketoacidosis, moderate, resolved
+2. Type 1 diabetes mellitus, previously misclassified as type 2 (GAD-65 antibody positive)
+3. Viral gastroenteritis, precipitant
+
+Brief Hospital Course:
+29-year-old man diagnosed with "type 2 diabetes" one year ago and treated with metformin alone, admitted with vomiting, glucose 512, pH 7.14 and anion gap 26. Treated with IV fluids and insulin infusion per DKA protocol; gap closed at 14 hours and he was bridged to basal-bolus insulin. GAD-65 antibodies returned positive, confirming type 1 diabetes. Diabetes educator completed insulin pen and glucometer teaching; he demonstrated correct technique twice.
+
+Condition at Discharge: Good. Tolerating diet, glucose 110-180 on basal-bolus regimen. Alert and oriented.
+
+Discharge Disposition: Home
+
+Discharge Medications:
+- Insulin glargine 22 units subcutaneously at bedtime
+- Insulin lispro 6 units subcutaneously with meals plus correction scale
+- Glucagon 1 mg nasal powder as needed for severe hypoglycemia
+
+Medication Changes:
+- New: insulin glargine 22 units nightly
+- New: insulin lispro with meals
+- New: glucagon nasal powder for emergencies
+- Stopped: metformin 1000 mg twice daily (type 1 diabetes; not indicated)
+
+Pending Results: None pending at discharge.
+
+Functional Status: Independent; ambulating without assistance.
+
+Followup Instructions:
+- Endocrinology, Dr. Priya Shah, within 1 week (2026-11-26)
+- PCP Dr. Imani Wells in 2-3 weeks
+
+Discharge planning evaluation: lives with roommate, works as a line cook, insured; no post-hospital services needed. Insulin supplies covered.
+Plan explained with the patient at bedside; he verbalized understanding of the new diagnosis and insulin plan.
+Summary sent electronically to PCP Dr. Imani Wells and Dr. Priya Shah on 2026-11-19.
+
+Electronically signed by Benedikt Haas, MD on 2026-11-19 12:26

@@ -1,0 +1,58 @@
+{
+  "id": "G07-irf-stroke-nursing-omits-apixaban",
+  "category": "gap",
+  "title": "Ischemic stroke with new AF, to inpatient rehab; nursing transfer instructions omit apixaban (single gap)",
+  "disposition": "Inpatient rehabilitation facility (IRF)",
+  "discharge_date": "2026-11-24",
+  "today": "2026-11-27",
+  "documents": [
+    {
+      "file": "summary.txt",
+      "kind": "discharge_summary"
+    },
+    {
+      "file": "nursing.txt",
+      "kind": "nursing_instructions"
+    },
+    {
+      "file": "casemgmt.txt",
+      "kind": "case_management"
+    }
+  ],
+  "expected": {
+    "final_diagnosis": "pass",
+    "hospital_course": "pass",
+    "discharge_condition": "pass",
+    "disposition": "pass",
+    "followup": "pass",
+    "pcp_named": "pass",
+    "discharge_meds": "pass",
+    "med_changes": "pass",
+    "pending_results": "pass",
+    "goals_of_care": "pass",
+    "functional_status": "pass",
+    "info_transmitted": "pass",
+    "dp_evaluation": "pass",
+    "dp_discussed": "pass",
+    "pac_list": "pass",
+    "pac_choice": "pass",
+    "pac_quality_data": "pass",
+    "authenticated": "pass",
+    "timeliness": "pass",
+    "meds_consistent": "fail"
+  },
+  "rationale": {
+    "meds_consistent": "The summary's discharge list includes apixaban 5 mg twice daily; the nursing transfer list omits it, a high-risk anticoagulant omission.",
+    "dp_evaluation": "The case management note documents a discharge planning assessment of post-hospital needs (IRF level of care).",
+    "pac_list": "Case management gave a list of Medicare-participating IRFs.",
+    "pac_choice": "Freedom of choice was explained and the patient's chosen facility is the one he was referred to.",
+    "pac_quality_data": "Care Compare quality ratings were provided with the list."
+  },
+  "tags": [
+    "meds-mismatch",
+    "omission",
+    "post-acute",
+    "irf",
+    "single-gap"
+  ]
+}

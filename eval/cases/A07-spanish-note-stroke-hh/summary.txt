@@ -1,0 +1,43 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-12
+Discharge Date: 2026-11-17
+Attending: Dr. Farida Haddad
+Primary Care Physician: Dr. Tomasz Wierzbicki (555-0172)
+
+Discharge Diagnosis:
+1. Acute ischemic stroke, right middle cerebral artery territory, cardioembolic
+2. Newly diagnosed paroxysmal atrial fibrillation
+3. Hypertension
+
+Brief Hospital Course:
+69-year-old man presented 6 hours after onset of left arm and face weakness, outside the thrombolysis window, no large-vessel occlusion. MRI confirmed a right MCA cortical infarct. Telemetry captured paroxysmal atrial fibrillation; apixaban was started on day 4 after repeat CT showed no hemorrhagic transformation. Left arm strength improved from 3/5 to 4/5. Passed bedside swallow evaluation. PT/OT recommend home with home health therapy.
+
+Condition at Discharge: Stable. Alert and oriented x3, mild left arm weakness, mild dysarthria.
+
+Discharge Disposition: Home with home health (PT, OT, speech therapy), Clearwater Home Health
+
+Discharge Medications:
+- Apixaban 5 mg by mouth twice daily
+- Atorvastatin 80 mg by mouth nightly
+- Metoprolol tartrate 25 mg by mouth twice daily
+- Amlodipine 5 mg by mouth daily
+
+Medication Changes:
+- New: apixaban 5 mg twice daily for atrial fibrillation
+- New: metoprolol tartrate 25 mg twice daily for rate control
+- Increased: atorvastatin from 20 mg to 80 mg nightly
+- Stopped: aspirin 81 mg daily (now on apixaban)
+
+Pending Results: None pending at discharge.
+
+Functional Status: Ambulates 100 feet with a quad cane and standby assist; needs help with buttons and shoelaces.
+
+Followup Instructions:
+- Neurology stroke clinic, Dr. Haddad, in 4 weeks
+- PCP Dr. Wierzbicki within 7 days for blood pressure check
+- Home health start of care 2026-11-18
+
+Summary sent electronically to PCP Dr. Wierzbicki and to Clearwater Home Health on 2026-11-17.
+
+Electronically signed by Farida Haddad, MD on 2026-11-17 10:58

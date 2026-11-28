@@ -1,0 +1,44 @@
+DISCHARGE SUMMARY (SYNTHETIC RECORD)
+
+Admission Date: 2026-11-16
+Discharge Date: 2026-11-21
+Attending: Dr. Parisa Tehrani
+Primary Care Physician: Dr. Malcolm Iwu (555-0122)
+
+Discharge Diagnosis:
+1. Aspiration pneumonia, right lower lobe
+2. Parkinson disease with dysphagia
+3. Moderate protein-calorie malnutrition
+
+Brief Hospital Course:
+76-year-old man with Parkinson disease admitted with fever, cough and hypoxemia after a choking episode at dinner. Chest CT showed right lower lobe consolidation. Treated with ampicillin-sulbactam for 5 days, transitioned to oral amoxicillin-clavulanate. Speech-language pathology found thin-liquid aspiration on video swallow; diet changed to mildly thick liquids and soft and bite-sized solids. Carbidopa-levodopa timing adjusted around meals. Afebrile and on room air since day 3.
+
+Condition at Discharge: Improved. Alert and oriented x3, at cognitive baseline. SpO2 95% on room air.
+
+Discharge Disposition: Home with home health (skilled nursing, PT, speech therapy), Lantern Home Health
+
+Discharge Medications:
+- Amoxicillin-clavulanate 875-125 mg by mouth twice daily for 2 more days
+- Carbidopa-levodopa 25-100 mg by mouth four times daily at 7am, 11am, 3pm and 7pm
+- Mirtazapine 7.5 mg by mouth at bedtime
+- Polyethylene glycol 17 g by mouth daily
+
+Medication Changes:
+- New: amoxicillin-clavulanate to complete 7 days
+- New: mirtazapine 7.5 mg nightly for appetite and sleep
+- Changed: carbidopa-levodopa from three to four times daily, timed 30 minutes before meals
+
+Pending Results: None pending at discharge.
+
+Goals of Care: Full code after discussion with patient and wife. He wants to stay at home and keep eating by mouth; he does not want a feeding tube.
+
+Functional Status: Ambulates 100 feet with a rolling walker and standby assist; needs help with bathing.
+
+Followup Instructions:
+- PCP Dr. Malcolm Iwu within 7 days (2026-11-27)
+- Neurology, Dr. Ewa Lindgren, in 4 weeks (2026-12-18)
+- Home health start of care 2026-11-22
+
+Summary sent electronically to PCP Dr. Malcolm Iwu and to Lantern Home Health on 2026-11-21.
+
+Electronically signed by Parisa Tehrani, MD on 2026-11-21 16:30
