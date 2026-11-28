@@ -8,7 +8,11 @@ import anthropic
 
 from . import llm
 from .brief import build_brief
-from .rules import RULES, RULES_VERSION, Doc, Finding, is_post_acute, run_pattern_checks, tally
+from .rules import RULES, RULES_VERSION, Doc, Finding, is_post_acute, medication_reconciliation, run_pattern_checks, tally
+
+# Lower is more cautious. A model result may move a rule down this scale.
+# It may not move a rule up: a quoted sentence is not enough to clear a miss.
+_SEVERITY = {"fail": 0, "unclear": 1, "pass": 2}
 
 
 def merge(pattern: list[Finding], model: dict[str, Finding]) -> list[Finding]:
@@ -18,9 +22,36 @@ def merge(pattern: list[Finding], model: dict[str, Finding]) -> list[Finding]:
         if m is None:
             out.append(f)
             continue
-        if m.status != f.status:
-            m.pattern_status = f.status
-        out.append(m)
+        if f.status not in _SEVERITY or m.status not in _SEVERITY:
+            if m.status != f.status:
+                f.pattern_status = f.status
+                f.model_status = m.status
+            out.append(f)
+            continue
+        if m.status == f.status:
+            # Agreement. The pattern line stays under the citation.
+            out.append(f)
+            continue
+        if _SEVERITY[m.status] < _SEVERITY[f.status]:
+            # A harsher model call with no quote is a doubt, not a miss the
+            # queue can count. A quoted harsher call may still lower the status.
+            if m.status == "fail" and not (m.evidence or "").strip():
+                doubt = Finding(
+                    f.rule_id, "unclear", f.evidence, f.source,
+                    note=m.note or "Model review added a doubt and did not quote the record.",
+                    engine="model",
+                )
+                doubt.pattern_status = f.status
+                doubt.model_status = m.status
+                out.append(doubt)
+            else:
+                m.pattern_status = f.status
+                m.model_status = m.status
+                out.append(m)
+        else:
+            f.pattern_status = f.status
+            f.model_status = m.status
+            out.append(f)
     return out
 
 
@@ -43,8 +74,10 @@ def analyze(docs: list[Doc], *, disposition_hint: str, discharge_hint: str, clie
         "rules_version": RULES_VERSION,
         "brief": brief,
         "model_brief": model_brief,
+        "medication_reconciliation": medication_reconciliation(docs),
         "findings": [f.to_dict() for f in findings],
         "tally": tally(findings),
+        "document_ids": [d.doc_id for d in docs if d.doc_id],
     }
 
 
@@ -55,12 +88,10 @@ def store(db, conn, cipher, org_id: int, patient_id: int, user_id: int, result: 
            VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
         (org_id, patient_id, result["engine"], cipher.encrypt(json.dumps(result)), t["pass"], t["fail"], t["unclear"], user_id),
     )
-    aid = cur.lastrowid
-    conn.executemany(
-        "INSERT INTO findings (org_id, analysis_id, patient_id, rule_id, status) VALUES (?, ?, ?, ?, ?)",
-        [(org_id, aid, patient_id, f["rule_id"], f["status"]) for f in result["findings"]],
-    )
-    return aid
+    # Rule-level status stays inside result_enc. A plaintext findings row would
+    # let a copied database show which clinical rules failed, and a tampered
+    # row could change the dashboard without breaking the sealed blob.
+    return cur.lastrowid
 
 
 RULE_ORDER = [r.id for r in RULES]

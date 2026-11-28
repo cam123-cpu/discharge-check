@@ -57,11 +57,12 @@ def main() -> None:
         for label, unit, attending, dc, dispo, files in PATIENTS:
             pid = conn.execute(
                 "INSERT INTO patients (org_id, label, unit, attending, discharge_date, disposition) VALUES (?, ?, ?, ?, ?, ?)",
-                (org_id, label, unit, attending, dc, dispo)).lastrowid
+                (org_id, cipher.encrypt_field(label), cipher.encrypt_field(unit), cipher.encrypt_field(attending),
+                 cipher.encrypt_field(dc), cipher.encrypt_field(dispo))).lastrowid
             for fname, kind in files:
                 doc = parse_upload((SAMPLES / fname).read_bytes(), fname, kind, s.max_upload_bytes)
                 conn.execute("INSERT INTO documents (org_id, patient_id, kind, filename, author, body_enc) VALUES (?, ?, ?, ?, ?, ?)",
-                             (org_id, pid, doc.kind, doc.filename, doc.author, cipher.encrypt(doc.text)))
+                             (org_id, pid, doc.kind, doc.filename, cipher.encrypt_field(doc.author), cipher.encrypt(doc.text)))
     print("Seeded 5 synthetic discharges. Open each one and press Run check.")
 
 

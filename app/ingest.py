@@ -22,7 +22,15 @@ MAX_CHARS = 200_000
 
 
 class IngestError(ValueError):
-    """Shown to the user, so messages must not echo file contents."""
+    """Shown to the user, so messages must not echo file contents.
+
+    ``code`` is the only part that may appear in a URL. The message stays
+    server-side except where a fixed sentence is mapped from that code.
+    """
+
+    def __init__(self, message: str, code: str = "rejected"):
+        super().__init__(message)
+        self.code = code
 
 
 @dataclass
@@ -53,20 +61,20 @@ def decode_upload(raw: bytes, filename: str, max_bytes: int) -> tuple[str, str]:
     name = safe_filename(filename)
     ext = _extension(name)
     if ext not in ALLOWED_EXTENSIONS:
-        raise IngestError("Only .txt, .md and FHIR .json files are accepted.")
+        raise IngestError("Only .txt, .md and FHIR .json files are accepted.", "type")
     if len(raw) == 0:
-        raise IngestError("The file is empty.")
+        raise IngestError("The file is empty.", "empty")
     if len(raw) > max_bytes:
-        raise IngestError(f"The file is larger than {max_bytes // 1024} KB.")
+        raise IngestError(f"The file is larger than {max_bytes // 1024} KB.", "oversize")
     if b"\x00" in raw:
-        raise IngestError("The file looks binary, not text.")
+        raise IngestError("The file looks binary, not text.", "binary")
     try:
         text = raw.decode("utf-8-sig")
     except UnicodeDecodeError as exc:
-        raise IngestError("The file must be UTF-8 text.") from exc
+        raise IngestError("The file must be UTF-8 text.", "encoding") from exc
     text = re.sub(r"[\x01-\x08\x0b\x0c\x0e-\x1f\x7f]", "", text).replace("\r\n", "\n")
     if len(text) > MAX_CHARS:
-        raise IngestError("The file has too much text for one record.")
+        raise IngestError("The file has too much text for one record.", "toolong")
     return name, text
 
 
@@ -77,13 +85,41 @@ def decode_upload(raw: bytes, filename: str, max_bytes: int) -> tuple[str, str]:
 _SSN = re.compile(r"\b\d{3}-\d{2}-\d{4}\b")
 _EMAIL = re.compile(r"\b[\w.+-]+@[\w-]+\.[\w.-]+\b")
 _PHONE = re.compile(r"\(?\b(\d{3})\)?[-. ]?(\d{3})[-. ]?(\d{4})\b")
+_DOB = re.compile(
+    r"\b(?:DOB|D\.O\.B\.|date of birth|birth date)\b\s*[:#-]?\s*(?:\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|\d{4}-\d{2}-\d{2})\b",
+    re.I,
+)
+_MRN = re.compile(r"\b(?:MRN|medical record number)\b\s*[:#-]?\s*[A-Za-z0-9][A-Za-z0-9-]{3,}\b", re.I)
+_STREET = re.compile(
+    r"\b\d{1,6}\s+(?:[A-Za-z0-9.'-]+\s+){1,5}(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Court|Ct|Place|Pl)\b\.?",
+    re.I,
+)
 
 
 def phi_screen(text: str) -> list[str]:
     if _SSN.search(text):
         raise IngestError(
             "The file contains what looks like a Social Security number. "
-            "Only synthetic or de-identified records may be uploaded."
+            "Only synthetic or de-identified records may be uploaded.",
+            "phi-ssn",
+        )
+    if _DOB.search(text):
+        raise IngestError(
+            "The file contains what looks like a date of birth. "
+            "Only synthetic or de-identified records may be uploaded.",
+            "phi-dob",
+        )
+    if _MRN.search(text):
+        raise IngestError(
+            "The file contains what looks like a medical record number. "
+            "Only synthetic or de-identified records may be uploaded.",
+            "phi-mrn",
+        )
+    if _STREET.search(text):
+        raise IngestError(
+            "The file contains what looks like a street address. "
+            "Only synthetic or de-identified records may be uploaded.",
+            "phi-street",
         )
     warnings = []
     if _EMAIL.search(text):
@@ -143,7 +179,7 @@ def fhir_to_text(obj) -> tuple[str, str]:
     """Flatten a FHIR Bundle (or DocumentReference) into sectioned text.
     Patient names, addresses and identifiers are never copied."""
     if not isinstance(obj, dict) or obj.get("resourceType") not in ("Bundle", "DocumentReference"):
-        raise IngestError("JSON files must be a FHIR R4 Bundle or DocumentReference.")
+        raise IngestError("JSON files must be a FHIR R4 Bundle or DocumentReference.", "fhir-type")
     resources = (
         [e.get("resource") for e in obj.get("entry", []) if isinstance(e, dict)]
         if obj["resourceType"] == "Bundle"
@@ -209,7 +245,7 @@ def fhir_to_text(obj) -> tuple[str, str]:
     parts = [f"{k}:\n" + "\n".join(v) for k, v in out.items()]
     text = "\n\n".join(narrative + parts).strip()
     if not text:
-        raise IngestError("No usable clinical content was found in the FHIR file.")
+        raise IngestError("No usable clinical content was found in the FHIR file.", "fhir-empty")
     return text, author
 
 
@@ -218,14 +254,14 @@ _AUTHOR = re.compile(r"^\s*(?:Attending|Author|Signed by|Electronically signed b
 
 def parse_upload(raw: bytes, filename: str, kind: str, max_bytes: int) -> ParsedDocument:
     if kind not in DOC_KINDS:
-        raise IngestError("Choose a valid document type.")
+        raise IngestError("Choose a valid document type.", "kind")
     name, text = decode_upload(raw, filename, max_bytes)
     author = ""
     if name.lower().endswith(".json"):
         try:
             obj = json.loads(text)
         except json.JSONDecodeError as exc:
-            raise IngestError("The JSON file could not be parsed.") from exc
+            raise IngestError("The JSON file could not be parsed.", "json") from exc
         text, author = fhir_to_text(obj)
     warnings = phi_screen(text)
     if not author:

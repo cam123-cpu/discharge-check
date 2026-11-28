@@ -42,6 +42,7 @@ class Doc:
     filename: str
     text: str
     author: str = ""
+    doc_id: int = 0
     sections: dict[str, str] = field(default_factory=dict)
 
     def __post_init__(self):
@@ -57,7 +58,8 @@ class Finding:
     source: str = ""
     note: str = ""
     engine: str = "pattern"
-    pattern_status: str = ""  # what the pattern checker said, when the model overrode it
+    pattern_status: str = ""  # pattern result when it differs from the stored status
+    model_status: str = ""  # model result when it differs from the stored status
 
     def to_dict(self):
         return asdict(self)
@@ -118,6 +120,23 @@ def is_post_acute(docs: list[Doc], disposition_hint: str = "") -> bool:
     return False
 
 
+RECORD_DEADLINE_DAYS = 30
+
+
+def days_until_deadline(discharge: str | date | None, today: date | None = None) -> int | None:
+    """Days remaining in the 30-day completion window. Negative means past it."""
+    today = today or date.today()
+    if isinstance(discharge, date):
+        dc: date | None = discharge
+    elif isinstance(discharge, str) and discharge:
+        dc = parse_date(discharge)
+    else:
+        dc = None
+    if dc is None:
+        return None
+    return RECORD_DEADLINE_DAYS - (today - dc).days
+
+
 def discharge_date(docs: list[Doc], hint: str = "") -> date | None:
     if hint:
         d = parse_date(hint)
@@ -132,30 +151,74 @@ def discharge_date(docs: list[Doc], hint: str = "") -> date | None:
     return None
 
 
-_MED_LINE = re.compile(r"^\s*(?:[-*•]|\d+[.)])\s*([A-Za-z][A-Za-z-]{2,})", re.M)
+_MED_LINE = re.compile(r"^\s*(?:[-*•]|\d+[.)])\s*([A-Za-z][A-Za-z-]{2,})([^\n]*)", re.M)
+_MED_STRENGTH = re.compile(r"(\d+(?:\.\d+)?(?:\s*-\s*\d+(?:\.\d+)?)?)\s*(mg|mcg|g|ml|units?|%)\b", re.I)
 _MED_STOP = {"take", "the", "and", "new", "continue", "stop", "start", "hold", "resume", "none", "medications", "changed", "increase", "decrease"}
 
 
 def med_names(section_text: str) -> set[str]:
+    """First word of each bullet, plus the strength when the line has one.
+
+    Furosemide 40 mg and furosemide 20 mg are different lines. Two lines that
+    name the same drug and the same strength still match when the wording
+    around the dose differs.
+    """
     names = set()
     for m in _MED_LINE.finditer(section_text):
         w = m.group(1).lower()
-        if w not in _MED_STOP:
+        tail = m.group(2) or ""
+        if w in _MED_STOP:
+            # "Continue lisinopril 10 mg" should keep the drug, not drop the line.
+            nxt = re.match(r"[:\s-]*([A-Za-z][A-Za-z-]{2,})(.*)", tail)
+            if not nxt or nxt.group(1).lower() in _MED_STOP:
+                continue
+            w = nxt.group(1).lower()
+            tail = nxt.group(2) or ""
+        strength = _MED_STRENGTH.search(tail)
+        if strength:
+            dose = re.sub(r"\s+", "", strength.group(1))
+            names.add(f"{w} {dose} {strength.group(2).lower()}")
+        else:
             names.add(w)
     return names
 
 
 def _med_section(doc: Doc) -> str:
-    for key, val in doc.sections.items():
-        if "medication" in key and "stopped" not in key and "allerg" not in key:
+    """The discharge list, not a 'changes' block that happens to come first."""
+    matches = [
+        (key, val) for key, val in doc.sections.items()
+        if "medication" in key and "stopped" not in key and "allerg" not in key
+    ]
+    for key, val in matches:
+        if "change" not in key:
             return val
-    return ""
+    return matches[0][1] if matches else ""
 
 
 # ---------------- individual checks ----------------
 
+def _newest(docs: list[Doc], kind: str) -> Doc | None:
+    found = [d for d in docs if d.kind == kind]
+    return found[-1] if found else None
+
+
+def _newest_of_kinds(docs: list[Doc], kinds: tuple[str, ...] | list[str]) -> list[Doc]:
+    """Newest file of each allowed kind, with the newest file first.
+
+    An older document that happens to match must not hide a later miss.
+    """
+    seen: set[str] = set()
+    picked: list[Doc] = []
+    allowed = set(kinds)
+    for doc in reversed(docs):
+        if doc.kind in allowed and doc.kind not in seen:
+            seen.add(doc.kind)
+            picked.append(doc)
+    return picked
+
+
 def _check_generic(rule: Rule, docs: list[Doc]) -> Finding:
-    candidates = [d for d in docs if d.kind in rule.kinds] or []
+    candidates = _newest_of_kinds(docs, rule.kinds)
     if not candidates:
         names = ", ".join(k.replace("_", " ") for k in rule.kinds)
         return Finding(rule.id, "fail", note=f"No {names} uploaded for this patient.")
@@ -194,60 +257,78 @@ def _check_generic(rule: Rule, docs: list[Doc]) -> Finding:
 
 
 def _check_authenticated(rule: Rule, docs: list[Doc]) -> Finding:
-    summaries = [d for d in docs if d.kind == "discharge_summary"]
-    if not summaries:
+    d = _newest(docs, "discharge_summary")
+    if d is None:
         return Finding(rule.id, "fail", note="No discharge summary uploaded.")
-    for d in summaries:
-        m = _SIGNED.search(d.text)
-        if m:
-            line = m.group(0)
-            has_date, has_time = bool(_DATE.search(line)), bool(_TIME.search(line))
-            if has_date and has_time:
-                return Finding(rule.id, "pass", _clip(line), d.filename)
-            missing = " and ".join(x for x, ok in (("date", has_date), ("time", has_time)) if not ok)
-            return Finding(rule.id, "fail", _clip(line), d.filename, f"Signature line has no {missing}.")
-    return Finding(rule.id, "fail", source=summaries[0].filename, note="No signature line found; the summary looks unsigned.")
+    m = _SIGNED.search(d.text)
+    if m:
+        line = m.group(0)
+        has_date, has_time = bool(_DATE.search(line)), bool(_TIME.search(line))
+        if has_date and has_time:
+            return Finding(rule.id, "pass", _clip(line), d.filename)
+        missing = " and ".join(x for x, ok in (("date", has_date), ("time", has_time)) if not ok)
+        return Finding(rule.id, "fail", _clip(line), d.filename, f"Signature line has no {missing}.")
+    return Finding(rule.id, "fail", source=d.filename, note="No signature line found; the summary looks unsigned.")
 
 
 def _check_timeliness(rule: Rule, docs: list[Doc], dc_date: date | None, today: date) -> Finding:
     if dc_date is None:
         return Finding(rule.id, "unclear", note="Discharge date not found, so the 30-day deadline cannot be checked.")
-    for d in docs:
-        if d.kind != "discharge_summary":
-            continue
+    d = _newest(docs, "discharge_summary")
+    if d is not None:
         m = _SIGNED.search(d.text)
         if m:
-            dm = _DATE.search(m.group(0))
+            line = m.group(0)
+            # A date without a time does not complete the record. The signature
+            # check already fails that line; the clock must not call it on time.
+            if not _TIME.search(line):
+                return Finding(rule.id, "unclear", _clip(line), d.filename, "Signature line has no time, so the record is not complete.")
+            dm = _DATE.search(line)
             signed = parse_date(dm.group(1)) if dm else None
-            if signed:
-                days = (signed - dc_date).days
-                status = "pass" if days <= 30 else "fail"
-                return Finding(rule.id, status, _clip(m.group(0)), d.filename, f"Signed {days} days after discharge on {dc_date.isoformat()}.")
+            if signed is None:
+                return Finding(rule.id, "unclear", _clip(line), d.filename, "Signature line has no date.")
+            days = (signed - dc_date).days
+            if days < 0:
+                return Finding(rule.id, "unclear", _clip(line), d.filename, f"Signature date is before the discharge date ({dc_date.isoformat()}).")
+            status = "pass" if days <= 30 else "fail"
+            return Finding(rule.id, status, _clip(line), d.filename, f"Signed {days} days after discharge on {dc_date.isoformat()}.")
     elapsed = (today - dc_date).days
     if elapsed > 30:
         return Finding(rule.id, "fail", note=f"Unsigned {elapsed} days after discharge; the record is delinquent.")
     return Finding(rule.id, "unclear", note=f"Not signed yet. {30 - elapsed} days remain before the 30-day limit.")
 
 
-def _check_meds_consistent(rule: Rule, docs: list[Doc]) -> Finding:
-    summary = next((d for d in docs if d.kind == "discharge_summary"), None)
-    nursing = next((d for d in docs if d.kind == "nursing_instructions"), None)
+def medication_reconciliation(docs: list[Doc]) -> dict:
+    """Compare medication names in the summary and the nursing instructions."""
+    summary = _newest(docs, "discharge_summary")
+    nursing = _newest(docs, "nursing_instructions")
+    empty = {"only_summary": [], "only_nursing": [], "shared": []}
     if not nursing:
-        return Finding(rule.id, "not_applicable", note="No nursing discharge instructions uploaded.")
+        return {**empty, "status": "not_applicable", "note": "No nursing discharge instructions uploaded."}
     if not summary:
-        return Finding(rule.id, "unclear", note="No discharge summary to compare against.")
+        return {**empty, "status": "unclear", "note": "No discharge summary to compare against."}
     a, b = med_names(_med_section(summary)), med_names(_med_section(nursing))
     if not a or not b:
-        return Finding(rule.id, "unclear", note="Could not find a medication list in both documents.")
-    only_a, only_b = sorted(a - b), sorted(b - a)
+        return {**empty, "status": "unclear", "note": "Could not find a medication list in both documents."}
+    only_a, only_b, shared = sorted(a - b), sorted(b - a), sorted(a & b)
     if not only_a and not only_b:
-        return Finding(rule.id, "pass", note=f"Both documents list the same {len(a)} medications.", source=f"{summary.filename}, {nursing.filename}")
+        return {"status": "pass", "only_summary": [], "only_nursing": [], "shared": shared,
+                "note": f"Both documents list the same {len(a)} medications."}
     parts = []
     if only_a:
         parts.append("only in summary: " + ", ".join(only_a))
     if only_b:
         parts.append("only in nursing instructions: " + ", ".join(only_b))
-    return Finding(rule.id, "fail", note="Medication lists differ (" + "; ".join(parts) + ").", source=f"{summary.filename}, {nursing.filename}")
+    return {"status": "fail", "only_summary": only_a, "only_nursing": only_b, "shared": shared,
+            "note": "Medication lists differ (" + "; ".join(parts) + ")."}
+
+
+def _check_meds_consistent(rule: Rule, docs: list[Doc]) -> Finding:
+    diff = medication_reconciliation(docs)
+    summary = _newest(docs, "discharge_summary")
+    nursing = _newest(docs, "nursing_instructions")
+    names = [d.filename for d in (summary, nursing) if d is not None]
+    return Finding(rule.id, diff["status"], note=diff["note"], source=", ".join(names))
 
 
 def run_pattern_checks(docs: list[Doc], disposition_hint: str = "", discharge_hint: str = "", today: date | None = None) -> list[Finding]:

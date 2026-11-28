@@ -3,14 +3,28 @@
 {% block content %}
 <div class="pagehead">
   <div>
-    <h1>Compliance overview</h1>
-    <p class="meta">Latest check for each of {{ s.patients_checked }} discharges. Rates count only discharges where the rule applies.</p>
+    <h1>Open charts</h1>
+    <p class="meta">Latest sealed check for each of {{ s.patients_checked }} discharges. A missing item means the uploaded text does not show it. Rates count only discharges where the rule applies.</p>
   </div>
 </div>
+{% if s.unreadable %}<p class="alert" role="alert">{{ s.unreadable }} saved check{{ '' if s.unreadable == 1 else 's' }} could not be read and {{ 'is' if s.unreadable == 1 else 'are' }} left out of these counts.</p>{% endif %}
+
+<h2>Discharges still open</h2>
+{% if s.open %}
+<table class="grid">
+  <thead><tr><th>Patient</th><th>Attending</th><th>Record clock</th><th>Missing</th></tr></thead>
+  <tbody>{% for o in s.open %}<tr>
+    <td><a href="/patients/{{ o.patient_id }}">{{ o.label }}</a></td>
+    <td>{{ o.attending }}</td>
+    <td>{% if o.clock.tone == 'na' %}<span class="muted">{{ o.clock.label }}</span>{% else %}<span class="st st-{{ o.clock.tone }}">{{ o.clock.label }}</span>{% endif %}</td>
+    <td>{% if o.fails %}{{ o.fails | join('; ') }}{% endif %}{% if o.reviews %}{% if o.fails %}<br>{% endif %}<span class="muted">To review: {{ o.reviews | join('; ') }}</span>{% endif %}</td>
+  </tr>{% endfor %}</tbody>
+</table>
+{% else %}<p class="muted">None.</p>{% endif %}
 
 <h2>By rule</h2>
 <table class="grid">
-  <thead><tr><th>Rule</th><th>Citation</th><th class="num">Missing</th><th class="num">Review</th><th class="num">Complete</th><th>Missing rate</th></tr></thead>
+  <thead><tr><th>Rule</th><th>Citation</th><th class="num">Missing</th><th class="num">Review</th><th class="num">Shown</th><th>Missing rate</th></tr></thead>
   <tbody>
   {% for r in s.rules %}
   <tr>
@@ -27,26 +41,20 @@
 
 <div class="cols even">
   <section>
-    <h2>By attending</h2>
+    <h2>Where the gaps sit, by attending</h2>
+    <p class="muted small">Use this to find charts. It is not a score.</p>
     <table class="grid compact">
       <thead><tr><th>Attending</th><th class="num">Discharges</th><th class="num">Missing items</th><th class="num">To review</th></tr></thead>
       <tbody>{% for a in s.by_attending %}<tr><td>{{ a.name }}</td><td class="num">{{ a.checked }}</td><td class="num">{{ a.fail }}</td><td class="num">{{ a.unclear }}</td></tr>{% endfor %}</tbody>
     </table>
   </section>
   <section>
-    <h2>By unit</h2>
+    <h2>Where the gaps sit, by unit</h2>
+    <p class="muted small">Same counts, grouped so a manager can see which unit to walk.</p>
     <table class="grid compact">
       <thead><tr><th>Unit</th><th class="num">Discharges</th><th class="num">Missing items</th><th class="num">To review</th></tr></thead>
       <tbody>{% for a in s.by_unit %}<tr><td>{{ a.name }}</td><td class="num">{{ a.checked }}</td><td class="num">{{ a.fail }}</td><td class="num">{{ a.unclear }}</td></tr>{% endfor %}</tbody>
     </table>
   </section>
 </div>
-
-<h2>Discharges with missing items</h2>
-{% if s.open %}
-<table class="grid">
-  <thead><tr><th>Patient</th><th>Attending</th><th>Missing</th></tr></thead>
-  <tbody>{% for o in s.open %}<tr><td><a href="/patients/{{ o.patient_id }}">{{ o.label }}</a></td><td>{{ o.attending }}</td><td>{{ o.fails | join('; ') }}</td></tr>{% endfor %}</tbody>
-</table>
-{% else %}<p class="muted">None.</p>{% endif %}
 {% endblock %}

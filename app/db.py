@@ -1,9 +1,16 @@
 """SQLite storage. Every query is parameterized, and every read of patient
 data goes through a helper that requires the caller's org_id, so one
 organization can never read another's records (row-level isolation).
-Clinical text is encrypted before it is written."""
+
+Clinical text is encrypted before it is written. Names, units, attendings,
+dispositions and discharge dates are sealed by the caller (see Cipher.encrypt_field).
+Rule-level pass/fail lives only inside the sealed analysis blob. The findings
+table is kept so older databases still open; new checks do not write it.
+The passed/failed/unclear columns are a cache. Screens recompute from the blob.
+"""
 from __future__ import annotations
 
+import os
 import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
@@ -109,6 +116,15 @@ class Database:
         path.parent.mkdir(parents=True, exist_ok=True)
         with self.connect() as conn:
             conn.executescript(SCHEMA)
+        self._restrict()
+
+    def _restrict(self) -> None:
+        """Keep the database file owner-readable. A prototype stand-in for disk encryption."""
+        if os.name != "posix":
+            return
+        for path in (self.path, Path(str(self.path) + "-wal"), Path(str(self.path) + "-shm")):
+            if path.exists():
+                os.chmod(path, 0o600)
 
     @contextmanager
     def connect(self) -> Iterator[sqlite3.Connection]:
@@ -123,6 +139,7 @@ class Database:
             raise
         finally:
             conn.close()
+            self._restrict()
 
     # ---- org-scoped helpers: the only way routes read patient data ----
 
@@ -140,8 +157,10 @@ class Database:
                         ORDER BY a.id DESC LIMIT 1) AS last_unclear,
                       (SELECT a.passed FROM analyses a WHERE a.patient_id = p.id AND a.org_id = p.org_id
                         ORDER BY a.id DESC LIMIT 1) AS last_passed,
-                      (SELECT COUNT(*) FROM documents d WHERE d.patient_id = p.id AND d.org_id = p.org_id) AS doc_count
-               FROM patients p WHERE p.org_id = ? ORDER BY p.discharge_date DESC, p.id DESC""",
+                      (SELECT COUNT(*) FROM documents d WHERE d.patient_id = p.id AND d.org_id = p.org_id) AS doc_count,
+                      (SELECT a.result_enc FROM analyses a WHERE a.patient_id = p.id AND a.org_id = p.org_id
+                        ORDER BY a.id DESC LIMIT 1) AS result_enc
+               FROM patients p WHERE p.org_id = ? ORDER BY p.id DESC""",
             (org_id,),
         ).fetchall()
 
@@ -156,6 +175,33 @@ class Database:
             "SELECT * FROM analyses WHERE org_id = ? AND patient_id = ? ORDER BY id DESC LIMIT 1",
             (org_id, patient_id),
         ).fetchone()
+
+    def seal_existing_plaintext(self, encrypt) -> int:
+        """Re-encrypt identity fields and authors that were stored before field encryption.
+
+        Values that already start with enc:v1: are left alone. Decrypt still
+        accepts a legacy plaintext value, so a row this misses stays readable.
+        """
+        fields = ("label", "unit", "attending", "disposition", "discharge_date")
+        changed = 0
+        with self.connect() as conn:
+            for row in conn.execute("SELECT id, label, unit, attending, disposition, discharge_date FROM patients"):
+                sets, vals = [], []
+                for field in fields:
+                    val = row[field] or ""
+                    if val and not str(val).startswith("enc:v1:"):
+                        sets.append(f"{field} = ?")
+                        vals.append(encrypt(val))
+                if sets:
+                    vals.append(row["id"])
+                    conn.execute(f"UPDATE patients SET {', '.join(sets)} WHERE id = ?", vals)
+                    changed += 1
+            for row in conn.execute("SELECT id, author FROM documents"):
+                author = row["author"] or ""
+                if author and not str(author).startswith("enc:v1:"):
+                    conn.execute("UPDATE documents SET author = ? WHERE id = ?", (encrypt(author), row["id"]))
+                    changed += 1
+        return changed
 
     def audit(self, conn: sqlite3.Connection, org_id, user_id, action: str, target: str = "", ip: str = ""):
         conn.execute(
